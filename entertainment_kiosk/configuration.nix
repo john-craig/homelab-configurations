@@ -82,6 +82,12 @@
     #!${pkgs.bash}/bin/bash
     # End all lines with '&' to not halt startup script execution
 
+    # Keep screen on
+    xset -dpms     & # Disable DPMS (Energy Star) features
+    xset s off     & # Disable screensaver
+    xset s noblank & # Don't blank video device
+
+    # Start chromium
     chromium --remote-debugging-port=9222 --remote-allow-origins=* &
   '';
 
@@ -103,6 +109,12 @@
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
   };
+
+  environment.etc."pipewire/pipewire.d/31-default-sink.conf".source = pkgs.writeText "31-default-sink.conf" ''
+    "context.properties" = {
+      "default.configured.audio.sink" = { "name" = "alsa_output.pci-0000_00_0e.0.hdmi-stereo" }
+    }
+  '';
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
