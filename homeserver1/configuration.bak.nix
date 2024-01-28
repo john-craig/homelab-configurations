@@ -1,54 +1,21 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, lib, pkgs, nix, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+  imports = [
+    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
+  ];
+
+  let
+    python-packages = ps: with ps; [
+      requests
+      docker
     ];
-
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
-
-  networking.hostName = "homeserver1"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-  networking.firewall.enable = false;
-
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
+  in
   environment.systemPackages = with pkgs; [
     smartmontools
     nano
     curl
     git
-    #ssacli
-    #hpssacli
-    docker
     (python3.withPackages(ps: with ps; [
       requests
       urllib3
@@ -96,6 +63,8 @@
     autoPrune.enable = true;
   };
 
+  networking.hostName = "homeserver1";
+
   services.openssh = {
     enable = true;
 
@@ -124,11 +93,8 @@
     }
   ];
 
-  nix.extraOptions = ''
-    #tarball-ttl = 0
-  '';
-
-  # Do not change
-  system.stateVersion = "24.05";
+  fileSystems."/srv" =
+    { device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
+      fsType = "xfs";
+    };
 }
-
