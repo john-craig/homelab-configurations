@@ -46,8 +46,7 @@
     nano
     curl
     git
-    #ssacli
-    #hpssacli
+    btrfs-progs
     docker
     (python3.withPackages(ps: with ps; [
       requests
