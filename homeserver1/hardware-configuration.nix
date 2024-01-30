@@ -29,6 +29,7 @@
   fileSystems."/srv" = 
     { device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
       fsType = "xfs";
+      options = [ "nofail" ];
     };
 
   swapDevices = [ ];
