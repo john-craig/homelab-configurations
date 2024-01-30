@@ -5,7 +5,7 @@
 
   disko.devices = {
     disk.disk1 = {
-      device = lib.mkDefault "/dev/mmcblk1";
+      device = lib.mkDefault "/dev/mmcblk0";
       type = "disk";
       content = {
         type = "gpt";
