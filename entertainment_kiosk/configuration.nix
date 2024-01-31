@@ -23,18 +23,6 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
@@ -59,11 +47,6 @@
       };
     };
   };
-
-  # systemd.services."display-manager".after = [
-  #   "network-online.target"
-  #   "systemd-resolved.service"
-  # ];
 
   # Overlay to set custom autostart script for openbox
   nixpkgs.overlays = with pkgs; [
@@ -116,8 +99,33 @@
     }
   '';
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  # Bluetooth headest configuration
+  # environment.etc."wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+  #   # bluez_monitor.enabled = true
+	# 	# bluez_monitor.properties = {
+	# 	# 	# ["bluez5.enable-sbc-xq"] = true,
+	# 	# 	# ["bluez5.enable-msbc"] = true,
+	# 	# 	# ["bluez5.enable-hw-volume"] = true,
+	# 	# 	# bluez5.roles = "[ a2dp_sink a2dp_source bap_sink bap_source hsp_hs hsp_ag hfp_hf hfp_ag ]"
+	# 	# }
+
+  #   # monitor.bluez.rules = [
+  #   #   {
+  #   #     # Configuration for Anker PowerConf
+  #   #     matches = [ { "device.name" = "bluez_card.2C_FD_B3_1C_1C_10" } ]
+  #   #     actions = {
+  #   #       "update-props" = {
+  #   #         "bluez5.auto-connect" = [ "hfp_hf" "hsp_hs" ]
+  #   #       }
+  #   #     }
+  #   #   }
+  #   # ]
+	# '';
+
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -149,6 +157,7 @@
     git
     python3
     rsync
+    usbutils
   ];
 
   # List services that you want to enable:
