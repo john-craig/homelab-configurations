@@ -27,15 +27,21 @@
     };
 
   fileSystems."/srv" = 
+    { device = "/dev/disk/by-uuid/76d766f7-c25d-4ff0-8320-0dac846ba170";
+      fsType = "btrfs";
+    };
+
+  fileSystems."/mnt" = 
     { device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
       fsType = "xfs";
       options = [ "nofail" ];
     };
-
-  fileSystems."/mnt" = 
-    { device = "/dev/disk/by-uuid/76d766f7-c25d-4ff0-8320-0dac846ba170";
-      fsType = "btrfs";
-    };
+  
+  # Bind mount for NFS server
+  fileSystems."/export/media" = {
+    device = "/srv/media";
+    options = [ "bind" ];
+  };
 
   swapDevices = [ ];
 

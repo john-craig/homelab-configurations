@@ -20,25 +20,11 @@
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
   networking.hostName = "homeserver1"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
   networking.firewall.enable = false;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
@@ -96,12 +82,20 @@
     autoPrune.enable = true;
   };
 
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /export         192.168.1.0/24(rw,fsid=0,no_subtree_check)
+    /export/media   192.168.1.0/24(rw,nohide,insecure,no_subtree_check)
+  '';
+
   services.openssh = {
     enable = true;
 
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
   };
+
+  services.apcupsd.enable = true;
 
   users = {
     mutableUsers = true;
