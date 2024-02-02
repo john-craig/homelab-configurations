@@ -95,7 +95,13 @@
     settings.KbdInteractiveAuthentication = false;
   };
 
-  services.apcupsd.enable = true;
+  services.apcupsd = {
+    enable = true;
+    configText = ''
+      NISIP 0.0.0.0
+      NISPORT 3551
+    '';
+  };
 
   users = {
     mutableUsers = true;
