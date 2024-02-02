@@ -98,6 +98,8 @@
   services.apcupsd = {
     enable = true;
     configText = ''
+      UPSTYPE usb
+      UPSCABLE usb
       NISIP 0.0.0.0
       NISPORT 3551
     '';
