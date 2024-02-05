@@ -82,6 +82,9 @@
     autoPrune.enable = true;
   };
 
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "both";
+
   services.nfs.server.enable = true;
   services.nfs.server.exports = ''
     /export         192.168.1.0/24(rw,fsid=0,no_subtree_check)
@@ -103,6 +106,12 @@
       NISIP 0.0.0.0
       NISPORT 3551
     '';
+    hooks = {
+      doshutdown = ''
+        # Fire a message to Gotify
+        curl -s -S --data '{"message": "'"Home Server on Back-Up Power"'", "title": "'"Home Server Backup Notifier"'", "priority":'"10"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=AXFQr-2KNOgy-Vv"
+      '';
+    };
   };
 
   users = {
