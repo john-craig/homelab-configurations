@@ -93,6 +93,7 @@
 
   services.openssh = {
     enable = true;
+    allowSFTP = true;
 
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;

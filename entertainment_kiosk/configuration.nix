@@ -153,6 +153,12 @@
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];
+
+  virtualisation.docker = {
+    enable = true;
+    autoPrune.enable = true;
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -160,7 +166,6 @@
     wget
     ungoogled-chromium
     git
-    python3
     rsync
     usbutils
     docker
@@ -211,6 +216,7 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
+    allowSFTP = true;
 
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
