@@ -42,7 +42,7 @@
     displayManager = {
       defaultSession = "none+openbox";
       autoLogin = {
-        user = "evak";
+        user = "display";
         enable = true;
       };
     };
@@ -58,6 +58,19 @@
       });
     })
   ];
+
+  systemd.user.services."bluetooth-config" = {
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
+      #!${pkgs.runtimeShell}
+      ${pkgs.wireplumber}/bin/wpctl
+      ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
+        select 8C:88:4B:45:CC:11
+        connect 2C:FD:B3:1C:1C:10
+      EOF
+    '';
+  };
 
   # By defining the script source outside of the overlay, we don't have to
   # rebuild the package every time we change the startup script.
@@ -86,6 +99,8 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    socketActivation = true;
+
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -99,45 +114,52 @@
     }
   '';
 
-  # Bluetooth headest configuration
-  # environment.etc."wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-  #   bluez_monitor.properties = {
-  #     ["bluez5.roles"] = "[ handsfree_head_unit ]"
-  #   }
-  # '';
-
-  #   # bluez_monitor.enabled = true
-	# 	# bluez_monitor.properties = {
-	# 	# 	# ["bluez5.enable-sbc-xq"] = true,
-	# 	# 	# ["bluez5.enable-msbc"] = true,
-	# 	# 	# ["bluez5.enable-hw-volume"] = true,
-	# 	# 	# bluez5.roles = "[ a2dp_sink a2dp_source bap_sink bap_source hsp_hs hsp_ag hfp_hf hfp_ag ]"
-	# 	# }
-
-  #   # monitor.bluez.rules = [
-  #   #   {
-  #   #     # Configuration for Anker PowerConf
-  #   #     matches = [ { "device.name" = "bluez_card.2C_FD_B3_1C_1C_10" } ]
-  #   #     actions = {
-  #   #       "update-props" = {
-  #   #         "bluez5.auto-connect" = [ "hfp_hf" "hsp_hs" ]
-  #   #       }
-  #   #     }
-  #   #   }
-  #   # ]
-	# '';
-
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+      };
+    };
   };
+
+  # systemd.services."bluetooth-config" = {
+  #   enable = true;
+  #   after = [ "network.target" "sound.target" "bluetooth.target" ];
+  #   serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
+  #     #!${pkgs.runtimeShell}
+
+  #     # Wake up Wireplumber
+  #     ${pkgs.wireplumber}/bin/wpctl status || true
+
+  #     # Connect to devices through `bluetoothctl`
+  #     ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
+  #       select 8C:88:4B:45:CC:11
+  #       connect 2C:FD:B3:1C:1C:10
+  #     EOF || true;
+  #     true;
+  #   '';
+  #   wantedBy = [ "multi-user.target" ];
+  # };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     mutableUsers = true;
-    users."evak" = {
+    users."service" = {
       isNormalUser = true;
-      home = "/home/evak";
+      home = "/home/service";
+      initialPassword = null;
+      extraGroups = [ "wheel" "docker" ];
+
+      openssh.authorizedKeys.keys = [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDlROWOhaHkVxXszd4hfOVhjPx4k5CDJT+bkb+dK/hety+j0L5PbKb6ta1eQrOrhwL4DsKi13KLIVsIyteg7TdBd+fKW1NJzljztsool4dE/b6/hBN8ha4FGVY1IoS6uy44dE7rBJ8uXle/HxMwCmQwpKLDwOUGAun4DwtxQjY0Xy5fu4r3E21FUmRhF7QJ0lSZ2sHMhm2mvGsVKhZLeEyf3aXb+b81aR9anIeClazosPj9li9M8QgWamqQ+YD9w5J1RcmtbAKf4k4NAHYS786vsuR3NnaotF4jIV9olBZhRWfSeeR9E3hc6mRxbJKy2ME41sKpMoB/b7Of78voMWJ5CSvm0NQVK46QuEcA7fiwn9AsILM22e/VXbSAWa5oxW8lfUVLHax2jH4riq9pXkBM7NClmes0ns698B8ND2qpPOAEGX0oS9DCdmCERwHyRBQUAxYhye4yzq0iiH5d/CBz7UqoJ+eRucG/+uL08wFTCVA9NP5P/BZIN1sW7yZgyss=" 
+      ];
+    };
+
+    users."display" = {
+      isNormalUser = true;
+      home = "/home/display";
       initialPassword = null;
       extraGroups = [ "wheel" "docker" ];
 
@@ -149,7 +171,7 @@
 
   security.sudo.extraRules = [
     { 
-      users = [ "evak" ];
+      users = [ "service" ];
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];

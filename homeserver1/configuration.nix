@@ -117,9 +117,9 @@
 
   users = {
     mutableUsers = true;
-    users."evak" = {
+    users."service" = {
       isNormalUser = true;
-      home = "/home/evak";
+      home = "/home/service";
       initialPassword = null;
       extraGroups = [ "wheel" "docker" ];
 
@@ -131,7 +131,7 @@
 
   security.sudo.extraRules = [
     { 
-      users = [ "evak" ];
+      users = [ "service" ];
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];
