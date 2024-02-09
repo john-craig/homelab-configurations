@@ -64,11 +64,12 @@
     partOf = [ "graphical-session.target" ];
     serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
       #!${pkgs.runtimeShell}
-      ${pkgs.wireplumber}/bin/wpctl
+      ${pkgs.wireplumber}/bin/wpctl status
       ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
         select 8C:88:4B:45:CC:11
         connect 2C:FD:B3:1C:1C:10
       EOF
+      sleep 5
     '';
   };
 
@@ -85,6 +86,11 @@
 
     # Start chromium
     chromium --remote-debugging-port=9222 --remote-allow-origins=* &
+
+    # wpctl status &
+
+    # select 8C:88:4B:45:CC:11
+    # bluetoothctl connect 2C:FD:B3:1C:1C:10 &
   '';
 
   # Prevent hibernating
@@ -105,7 +111,36 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    
+    wireplumber.enable = true;
+  };
+
+  environment.etc = {
+    "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+      bluez_monitor.enabled = true
+
+      bluez_monitor.properties = {
+        ["bluez5.enable-sbc-xq"] = true,
+        ["bluez5.enable-msbc"] = true,
+        ["bluez5.enable-hw-volume"] = true,
+        ["bluez5.codecs"] = "[sbc sbc_xq]",
+        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+      }
+
+      bluez_monitor.rules = {
+        {
+          matches = {
+            {
+              -- This matches all cards.
+              { "device.name", "matches", "bluez_card.*" },
+            },
+          },
+          apply_properties = {
+            ["bluez5.auto-connect"]  = "[ hfp_hf hsp_hs a2dp_sink ]",
+          }
+        }
+      }
+    '';
   };
 
   environment.etc."pipewire/pipewire.d/31-default-sink.conf".source = pkgs.writeText "31-default-sink.conf" ''
@@ -117,6 +152,7 @@
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    package = pkgs.bluez;
     settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
@@ -171,7 +207,7 @@
 
   security.sudo.extraRules = [
     { 
-      users = [ "service" ];
+      users = [ "service" "display" ];
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];
