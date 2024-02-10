@@ -59,19 +59,19 @@
     })
   ];
 
-  systemd.user.services."bluetooth-config" = {
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
-      #!${pkgs.runtimeShell}
-      ${pkgs.wireplumber}/bin/wpctl status
-      ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
-        select 8C:88:4B:45:CC:11
-        connect 2C:FD:B3:1C:1C:10
-      EOF
-      sleep 5
-    '';
-  };
+  # systemd.user.services."bluetooth-config" = {
+  #   wantedBy = [ "graphical-session.target" ];
+  #   partOf = [ "graphical-session.target" ];
+  #   serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
+  #     #!${pkgs.runtimeShell}
+  #     ${pkgs.wireplumber}/bin/wpctl status
+  #     ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
+  #       select 8C:88:4B:45:CC:11
+  #       connect 2C:FD:B3:1C:1C:10
+  #     EOF
+  #     sleep 5
+  #   '';
+  # };
 
   # By defining the script source outside of the overlay, we don't have to
   # rebuild the package every time we change the startup script.
@@ -86,11 +86,6 @@
 
     # Start chromium
     chromium --remote-debugging-port=9222 --remote-allow-origins=* &
-
-    # wpctl status &
-
-    # select 8C:88:4B:45:CC:11
-    # bluetoothctl connect 2C:FD:B3:1C:1C:10 &
   '';
 
   # Prevent hibernating
@@ -218,7 +213,7 @@
 
   security.sudo.extraRules = [
     { 
-      users = [ "service" "display" ];
+      users = [ "service" ];
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];
@@ -231,7 +226,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     ungoogled-chromium
     git
