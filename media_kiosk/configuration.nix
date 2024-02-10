@@ -105,7 +105,7 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    socketActivation = true;
+    #socketActivation = true;
 
     alsa.enable = true;
     alsa.support32Bit = true;
@@ -137,6 +137,17 @@
           },
           apply_properties = {
             ["bluez5.auto-connect"]  = "[ hfp_hf hsp_hs a2dp_sink ]",
+          }
+        },
+        {
+          matches = {
+            {
+              -- This matches all cards.
+              { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
+            },
+          },
+          apply_properties = {
+            ["device.profile"] = "headset-head-unit",
           }
         }
       }

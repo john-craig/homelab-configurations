@@ -6,3 +6,10 @@ nix-build '<nixpkgs/nixos>' -I nixos-config=./homeserver-usb-image.nix -A config
 ```
 sudo dd bs=4M status=progress oflag=sync if=/nix/store/1gyrqxb9mi493qyg9acj3s17dax9wx9v-nixos-24.05pre-git-x86_64-linux.iso/iso/nixos-24.05pre-git-x86_64-linux.iso of=/dev/sde
 ```
+
+**For SD Images**
+```
+sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=.. nix-build '<nixpkgs/nixos>' -I nixos-config=./pizero/pizero-sd-image.nix -A config.system.build.sdImage
+
+sudo unzstd /nix/store/p8qxaay3la6kihqyimmsgpw0d4kj0kka-nixos-sd-image-24.05pre-git-armv7l-linux.img-armv7l-unknown-linux-gnueabihf/sd-image/nixos-sd-image-24.05pre-git-armv7l-linux.img.zst -o /dev/sdd
+```
