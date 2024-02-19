@@ -17,3 +17,8 @@ sudo unzstd /nix/store/p8qxaay3la6kihqyimmsgpw0d4kj0kka-nixos-sd-image-24.05pre-
 ```
 sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=.. nix-build '<nixpkgs/nixos>' -I nixos-config=./pizero2/pizero-sd-image.nix -A config.system.build.sdImage
 ```
+
+```
+sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=$HOME/programming_alt/by_language/nix/ nix-build '<nixpkgs/nixos>' -I nixos-config=s
+d-cards/pxe_server/sd-image.nix -A config.system.build.sdImage
+```

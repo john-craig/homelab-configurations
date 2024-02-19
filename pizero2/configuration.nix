@@ -15,6 +15,14 @@
   # Enables the generation of /boot/extlinux/extlinux.conf
   boot.loader.generic-extlinux-compatible.enable = true;
 
+  networking.hostName = "pizero2";
+  # Pick only one of the below networking options.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+
+  # Set your time zone.
+  time.timeZone = "America/New_York";
+
   environment.systemPackages = with pkgs; [
     smartmontools
     git
@@ -27,10 +35,6 @@
     #   ...
     # ]))
   ];
-  
-  networking.hostName = "pxe-server";
-
-  services.pixiecore.enable = true;
 
   services.openssh = {
     enable = true;
@@ -45,7 +49,7 @@
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv" 
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCb2oTTiI5D/Js2ZYHyruuECUUFNYrjErBOEFfvlxaqn4Q5w81PwHtMIwgbToNbCqglESa3v1F8i2isuTvoexauCr8CEqBO4xOEZAimv38kqQhORyHDoRJvFTrXnnkSr82jmK+NuTvM0M8YPFjIW2vPPTS8ubjINUOOsucVm0duK//8/2zw23cE87HE4fsy8TjvFrDFWYZdVni2Op7mYZ95/qjAmhNmtj9rkJ+Z111rg78rFf5Utp3tOMvfXiGS3OO24Z8YtCzlMYi1EIJMvps4/ENTT0X7F3GZXu3gv2WU662tPHhmBBYbVQXY2+GEhCG1VguL7BSRGAsvcTjPriMQVRvzpFuY5cR8feM38O2DTV1L87szLuOjwCusfrvtR0jWlpURGfHuxF8CtAldBopfBqfuNamwfVGaMR9T3mbbxC5CcdZh3vaZ1/6D9AuK80A9tYm5wqUHaROaNidOxLsLNto8G2BW+ABCFeQ81kUkGU4byhhsxLamYshtN6MMEN0=" 
     ];
   };
 
@@ -55,7 +59,7 @@
       commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
     }
   ];
-  #
+
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
   # and migrated your data accordingly.
   #

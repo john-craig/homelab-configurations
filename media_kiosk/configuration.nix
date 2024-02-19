@@ -59,20 +59,6 @@
     })
   ];
 
-  # systemd.user.services."bluetooth-config" = {
-  #   wantedBy = [ "graphical-session.target" ];
-  #   partOf = [ "graphical-session.target" ];
-  #   serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
-  #     #!${pkgs.runtimeShell}
-  #     ${pkgs.wireplumber}/bin/wpctl status
-  #     ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
-  #       select 8C:88:4B:45:CC:11
-  #       connect 2C:FD:B3:1C:1C:10
-  #     EOF
-  #     sleep 5
-  #   '';
-  # };
-
   # By defining the script source outside of the overlay, we don't have to
   # rebuild the package every time we change the startup script.
   environment.etc."openbox/autostart".source = pkgs.writeScript "autostart" ''
@@ -168,31 +154,11 @@
     };
   };
 
-  # systemd.services."bluetooth-config" = {
-  #   enable = true;
-  #   after = [ "network.target" "sound.target" "bluetooth.target" ];
-  #   serviceConfig.ExecStart = pkgs.writeScript "bluetooth-config" ''
-  #     #!${pkgs.runtimeShell}
-
-  #     # Wake up Wireplumber
-  #     ${pkgs.wireplumber}/bin/wpctl status || true
-
-  #     # Connect to devices through `bluetoothctl`
-  #     ${pkgs.bluez}/bin/bluetoothctl << 'EOF'
-  #       select 8C:88:4B:45:CC:11
-  #       connect 2C:FD:B3:1C:1C:10
-  #     EOF || true;
-  #     true;
-  #   '';
-  #   wantedBy = [ "multi-user.target" ];
-  # };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     mutableUsers = true;
     users."service" = {
       isNormalUser = true;
-      home = "/home/service";
       initialPassword = null;
       extraGroups = [ "wheel" "docker" ];
 
@@ -233,6 +199,7 @@
     git
     rsync
     usbutils
+    alsa-utils
     docker
     (python3.withPackages(ps: with ps; [
       requests

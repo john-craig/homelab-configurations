@@ -8,14 +8,8 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" ];
+  boot.initrd.availableKernelModules = [ "usb_storage" ];
   boot.initrd.kernelModules = [ ];
-  # boot.initrd.luks.devices."crypted" = {
-  #   device = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
-  #   keyFile = "/root/databrick.keyfile";
-  #   preLVM = false; # If this is true the decryption is attempted before the postDeviceCommands can run
-  # };
-
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
@@ -24,21 +18,17 @@
       fsType = "ext4";
     };
   
-  environment.etc."crypttab".text = ''
-    crypt0            UUID=82f1cf56-3768-4b4e-bb7f-f46db57d8513    /root/databrick.keyfile
-  '';
-
-  fileSystems."/srv" =
-    { device = "/dev/mapper/crypt0";
+  fileSystems."/srv" = 
+    { device = "/dev/disk/by-uuid/c67c3747-2271-48e6-b636-de93c17bbb3a";
       fsType = "btrfs";
       options = [ "nofail" ];
 
-      # encrypted = {
-      #   enable = true;
-      #   blkDev = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
-      #   keyFile = "/root/databrick.keyfile";
-      #   label = "crypt0";
-      # };
+      encrypted = {
+        enable = true;
+        blkDev = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
+        keyFile = "/root/databrick.keyfile";
+        label = "crypted";
+      };
     };
 
   swapDevices = [ ];
@@ -48,7 +38,7 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.end0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enu1u4.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlan0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
