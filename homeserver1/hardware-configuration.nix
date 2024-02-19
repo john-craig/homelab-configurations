@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ata_piix" "hpsa" "usb_storage" "sd_mod" "sr_mod" ];
@@ -17,26 +18,30 @@
   hardware.raid.HPSmartArray.enable = true;
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/458028a2-54fa-405a-92eb-c7b0b375a16d";
+    {
+      device = "/dev/disk/by-uuid/458028a2-54fa-405a-92eb-c7b0b375a16d";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2A6A-27B0";
+    {
+      device = "/dev/disk/by-uuid/2A6A-27B0";
       fsType = "vfat";
     };
 
-  fileSystems."/srv" = 
-    { device = "/dev/disk/by-uuid/76d766f7-c25d-4ff0-8320-0dac846ba170";
+  fileSystems."/srv" =
+    {
+      device = "/dev/disk/by-uuid/76d766f7-c25d-4ff0-8320-0dac846ba170";
       fsType = "btrfs";
     };
 
-  fileSystems."/mnt" = 
-    { device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
+  fileSystems."/mnt" =
+    {
+      device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
       fsType = "xfs";
       options = [ "nofail" ];
     };
-  
+
   # Bind mount for NFS server
   fileSystems."/export/media" = {
     device = "/srv/media";

@@ -18,14 +18,15 @@
     "E4:5F:01:0E:69:79" = pifarm3;
     "D8:3A:DD:2D:7E:AC" = pifarm4;
   };
-  
-  networking.hostName = if builtins.hasAttr "end0" networking.interfaces
+
+  networking.hostName =
+    if builtins.hasAttr "end0" networking.interfaces
     then builtins.getAttr networking.interfaces."end0".macAddress pifarmHosts or ""
     else "";
 
   services.openssh = {
     enable = true;
-    
+
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
   };
@@ -36,7 +37,7 @@
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILKHQov74e/vYGd62Xfvm8WAwNOwUuiClRBhybl4Gv9x" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILKHQov74e/vYGd62Xfvm8WAwNOwUuiClRBhybl4Gv9x"
     ];
   };
 }

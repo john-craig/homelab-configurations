@@ -20,12 +20,12 @@
     #   ...
     # ]))
   ];
-  
+
   networking.hostName = "key-server";
 
   services.openssh = {
     enable = true;
-    
+
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
   };
@@ -36,7 +36,7 @@
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILKHQov74e/vYGd62Xfvm8WAwNOwUuiClRBhybl4Gv9x" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILKHQov74e/vYGd62Xfvm8WAwNOwUuiClRBhybl4Gv9x"
     ];
   };
 }

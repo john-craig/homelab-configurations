@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       #./disk-configuration.nix
     ];
@@ -20,7 +21,7 @@
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
   networking.hostName = "homeserver1"; # Define your hostname.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.firewall.enable = false;
 
   # Set your time zone.
@@ -35,17 +36,17 @@
     git
     btrfs-progs
     docker
-    (python3.withPackages(ps: with ps; [
+    (python3.withPackages (ps: with ps; [
       requests
       urllib3
       websocket-client
-      (pkgs.python3Packages.docker.overrideAttrs(oldAttrs: rec {
-         pname = "docker";
-         version = "6.1.3";
-         src = fetchPypi {
-           inherit pname version;
-           sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
-         };
+      (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
+        pname = "docker";
+        version = "6.1.3";
+        src = fetchPypi {
+          inherit pname version;
+          sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
+        };
       }))
       (buildPythonPackage rec {
         pname = "docker-compose";
@@ -56,7 +57,7 @@
         };
         doCheck = false;
         propagatedBuildInputs = [
-          (pkgs.python3Packages.docker.overrideAttrs(oldAttrs: rec {
+          (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
             pname = "docker";
             version = "6.1.3";
             src = fetchPypi {
@@ -127,15 +128,15 @@
       extraGroups = [ "wheel" "docker" "selfhosting" ];
 
       openssh.authorizedKeys.keys = [
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC5QNL0MP8yr7OD5rt4PpnL4Go++4rdmLFhhA5ypdpLbwfXqVEKOBnjxSn4Ux0BtHk8cIK5TT9wcigx9gLKaVX2aDSROITz5DMy2EuR09/kBp8xbaAeZQgyDB0C8YHPclPBN/25krDJNocWbJTnmBSwswXYJWGMUQZxfPMUyql3jy2fcxKUg39ATz9Qe9CmJpiBVGgTva0QpNWteTHOn7zwoHDhlIYCUygR/+X9LJCv7TvDPWaeYe9Z4+q58FMt9njTFAY9mXpa2qataIjk1KwoJWs2a8/vW2kYzbdOXH8KVxZuEpqgr4HCF+qdnFbuLtUfCFRKmCr3EI/+qPtUulUggusPm4d9tkfXlLytmydX7u4wJeOwYzsbtMLOPIOmGI8Q+jQUpc9zgbd34nat8LdD+vIayjpv8fU5lziaVVvkVP6EBF4UGGo/K0cdK8GGPoODJfUrNSr5m0Rh9IFHCp5QCvYxhOn4RXtIenx+0D9Am06Ab2G8S53l8yZwuMy7NBM=" 
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC5QNL0MP8yr7OD5rt4PpnL4Go++4rdmLFhhA5ypdpLbwfXqVEKOBnjxSn4Ux0BtHk8cIK5TT9wcigx9gLKaVX2aDSROITz5DMy2EuR09/kBp8xbaAeZQgyDB0C8YHPclPBN/25krDJNocWbJTnmBSwswXYJWGMUQZxfPMUyql3jy2fcxKUg39ATz9Qe9CmJpiBVGgTva0QpNWteTHOn7zwoHDhlIYCUygR/+X9LJCv7TvDPWaeYe9Z4+q58FMt9njTFAY9mXpa2qataIjk1KwoJWs2a8/vW2kYzbdOXH8KVxZuEpqgr4HCF+qdnFbuLtUfCFRKmCr3EI/+qPtUulUggusPm4d9tkfXlLytmydX7u4wJeOwYzsbtMLOPIOmGI8Q+jQUpc9zgbd34nat8LdD+vIayjpv8fU5lziaVVvkVP6EBF4UGGo/K0cdK8GGPoODJfUrNSr5m0Rh9IFHCp5QCvYxhOn4RXtIenx+0D9Am06Ab2G8S53l8yZwuMy7NBM="
       ];
     };
   };
 
   security.sudo.extraRules = [
-    { 
+    {
       users = [ "service" ];
-      commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
+      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
 

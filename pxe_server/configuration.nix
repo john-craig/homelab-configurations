@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -27,14 +28,14 @@
     #   ...
     # ]))
   ];
-  
+
   networking.hostName = "pxe-server";
 
   services.pixiecore.enable = true;
 
   services.openssh = {
     enable = true;
-    
+
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
   };
@@ -45,14 +46,14 @@
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
     ];
   };
 
   security.sudo.extraRules = [
-    { 
+    {
       users = [ "service" ];
-      commands = [ { command = "ALL"; options = [ "NOPASSWD" ]; } ];
+      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
   #
