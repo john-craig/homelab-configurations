@@ -93,6 +93,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
+    jack.enable = true;
 
     wireplumber.enable = true;
   };
@@ -136,13 +137,61 @@
         }
       }
     '';
+
+    # "pipewire/pipewire.conf.d/99-null-sink".text = ''
+    #   context.objects = [
+    #       {   factory = adapter
+    #           args = {
+    #               factory.name     = support.null-audio-sink
+    #               node.name        = "my-sink"
+    #               media.class      = Audio/Sink
+    #               audio.position   = [ FL FR FC LFE RL RR ]
+    #               monitor.channel-volumes = true
+    #               adapter.auto-port-config = {
+    #                   mode = dsp
+    #                   monitor = true
+    #                   position = preserve
+    #               }
+    #           }
+    #       }
+    #   ]
+    # '';
   };
 
-  environment.etc."pipewire/pipewire.d/31-default-sink.conf".source = pkgs.writeText "31-default-sink.conf" ''
-    "context.properties" = {
-      "default.configured.audio.sink" = { "name" = "alsa_output.pci-0000_00_0e.0.hdmi-stereo" }
-    }
-  '';
+  services.pipewire.extraConfig.pipewire = {
+    "31-default-sink.conf" = {
+      context.properties = {
+        default.configured.audio.sink = {
+          #name = "alsa_output.pci-0000_00_0e.0.hdmi-stereo"; 
+          name = "broadcast-sink";
+        };
+      };
+    };
+
+    "91-broadcast-sink" = {
+      context.modules = [
+        {
+          name = "libpipewire-module-combine-stream";
+          args = {
+            combine.mode = "sink";
+            node.name = "broadcast-sink";
+            node.description = "This sink broadcasts to all available sinks";
+            combine.latency-compensate = false; # if true, match latencies by adding delays
+            combine.props = {
+              audio.position = [ "FL" "FR" ];
+            };
+            stream.props = { };
+            stream.rules = [
+              {
+                matches = [{ media.class = "Audio/Sink"; }];
+                actions = { create-stream = { }; };
+              }
+            ];
+          };
+        }
+      ];
+    };
+  };
 
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
@@ -158,10 +207,13 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     mutableUsers = true;
+
+    groups."selfhosting".name = "selfhosting";
+
     users."service" = {
       isNormalUser = true;
       initialPassword = null;
-      extraGroups = [ "wheel" "docker" ];
+      extraGroups = [ "wheel" "docker" "selfhosting" ];
 
       openssh.authorizedKeys.keys = [
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDlROWOhaHkVxXszd4hfOVhjPx4k5CDJT+bkb+dK/hety+j0L5PbKb6ta1eQrOrhwL4DsKi13KLIVsIyteg7TdBd+fKW1NJzljztsool4dE/b6/hBN8ha4FGVY1IoS6uy44dE7rBJ8uXle/HxMwCmQwpKLDwOUGAun4DwtxQjY0Xy5fu4r3E21FUmRhF7QJ0lSZ2sHMhm2mvGsVKhZLeEyf3aXb+b81aR9anIeClazosPj9li9M8QgWamqQ+YD9w5J1RcmtbAKf4k4NAHYS786vsuR3NnaotF4jIV9olBZhRWfSeeR9E3hc6mRxbJKy2ME41sKpMoB/b7Of78voMWJ5CSvm0NQVK46QuEcA7fiwn9AsILM22e/VXbSAWa5oxW8lfUVLHax2jH4riq9pXkBM7NClmes0ns698B8ND2qpPOAEGX0oS9DCdmCERwHyRBQUAxYhye4yzq0iiH5d/CBz7UqoJ+eRucG/+uL08wFTCVA9NP5P/BZIN1sW7yZgyss="

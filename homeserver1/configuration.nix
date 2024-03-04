@@ -83,8 +83,11 @@
     autoPrune.enable = true;
   };
 
-  services.tailscale.enable = true;
-  services.tailscale.useRoutingFeatures = "both";
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "both";
+    extraUpFlags = [ "--snat-subnet-routes=false" ];
+  };
 
   services.nfs.server.enable = true;
   services.nfs.server.exports = ''
