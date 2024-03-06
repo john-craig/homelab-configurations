@@ -158,6 +158,31 @@
     # '';
   };
 
+  environment.etc."pipewire/pipewire.conf.d/50-proxy-output-2_0.conf".text = ''
+    context.modules = [
+      {
+        name = libpipewire-module-combine-stream
+        args = {
+          combine.mode = sink
+          node.name = "proxy-output-2_0"
+          node.description = "Output Proxy 2.0"
+          combine.latency-compensate = true   # if true, match latencies by adding delays
+          combine.props = {
+            audio.position = [ FL FR ]
+          }
+          stream.props = {
+          }
+          stream.rules = [
+            {
+              matches = [ { media.class = "Audio/Sink" } ]
+              actions = { create-stream = { } }
+            }
+          ]
+        }
+      }
+    ]
+  '';
+
   services.pipewire.extraConfig.pipewire = {
     "31-default-sink.conf" = {
       context.properties = {
