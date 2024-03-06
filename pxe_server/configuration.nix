@@ -29,7 +29,7 @@
     # ]))
   ];
 
-  networking.hostName = "pxe-server";
+  networking.hostName = "key-server";
 
   services.pixiecore.enable = true;
 
@@ -42,11 +42,10 @@
 
   users.users."service" = {
     isNormalUser = true;
-    home = "/home/service";
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPqBcW+bqGBdL/KMWXEVsWfQHDREvzAc/mlFJWTmtw4c"
     ];
   };
 
