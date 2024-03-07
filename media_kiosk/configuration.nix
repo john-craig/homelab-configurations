@@ -127,6 +127,15 @@
             {
               -- Anker PowerConf
               { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
+            },
+          },
+          apply_properties = {
+            ["device.profile"] = "headset-head-unit",
+          }
+        },
+        {
+          matches = {
+            {
               -- Cavalier Air (CAV5)
               { "device.name", "matches", "bluez_card.28_37_13_08_6E_30" },
             },
@@ -138,85 +147,57 @@
       }
     '';
 
-    # "pipewire/pipewire.conf.d/99-null-sink".text = ''
-    #   context.objects = [
-    #       {   factory = adapter
-    #           args = {
-    #               factory.name     = support.null-audio-sink
-    #               node.name        = "my-sink"
-    #               media.class      = Audio/Sink
-    #               audio.position   = [ FL FR FC LFE RL RR ]
-    #               monitor.channel-volumes = true
-    #               adapter.auto-port-config = {
-    #                   mode = dsp
-    #                   monitor = true
-    #                   position = preserve
-    #               }
-    #           }
-    #       }
-    #   ]
-    # '';
-  };
-
-  environment.etc."pipewire/pipewire.conf.d/50-proxy-output-2_0.conf".text = ''
-    context.modules = [
-      {
-        name = libpipewire-module-combine-stream
-        args = {
-          combine.mode = sink
-          node.name = "proxy-output-2_0"
-          node.description = "Output Proxy 2.0"
-          combine.latency-compensate = true   # if true, match latencies by adding delays
-          combine.props = {
-            audio.position = [ FL FR ]
-          }
-          stream.props = {
-          }
-          stream.rules = [
-            {
-              matches = [ { media.class = "Audio/Sink" } ]
-              actions = { create-stream = { } }
-            }
-          ]
-        }
-      }
-    ]
-  '';
-
-  services.pipewire.extraConfig.pipewire = {
-    "31-default-sink.conf" = {
-      context.properties = {
-        default.configured.audio.sink = {
-          #name = "alsa_output.pci-0000_00_0e.0.hdmi-stereo"; 
-          name = "broadcast-sink";
-        };
-      };
-    };
-
-    "91-broadcast-sink" = {
+    "pipewire/pipewire.conf.d/50-broadcast-sink.conf".text = ''
       context.modules = [
         {
-          name = "libpipewire-module-combine-stream";
+          name = libpipewire-module-combine-stream
           args = {
-            combine.mode = "sink";
-            node.name = "broadcast-sink";
-            node.description = "This sink broadcasts to all available sinks";
-            combine.latency-compensate = false; # if true, match latencies by adding delays
+            combine.mode = sink
+            node.name = "broadcast-sink"
+            node.description = "This sink broadcasts to all available sinks"
+            combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
-              audio.position = [ "FL" "FR" ];
-            };
-            stream.props = { };
+              audio.position = [ FL FR ]
+            }
+            stream.props = {
+            }
             stream.rules = [
               {
-                matches = [{ media.class = "Audio/Sink"; }];
-                actions = { create-stream = { }; };
+                matches = [ { media.class = "Audio/Sink" } ]
+                actions = { create-stream = { } }
               }
-            ];
-          };
+            ]
+          }
         }
-      ];
-    };
+      ]
+    '';
+
+    "pipewire/pipewire.conf.d/50-reciever-source.conf".text = ''
+      context.modules = [
+        {
+          name = libpipewire-module-combine-stream
+          args = {
+            combine.mode = source
+            node.name = "reciever-source"
+            node.description = "This source recieves input from all available sources"
+            combine.latency-compensate = true   # if true, match latencies by adding delays
+            combine.props = {
+              audio.position = [ FL FR ]
+            }
+            stream.props = {
+            }
+            stream.rules = [
+              {
+                matches = [ { media.class = "Audio/Source" } ]
+                actions = { create-stream = { } }
+              }
+            ]
+          }
+        }
+      ]
+    '';
   };
+
 
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
