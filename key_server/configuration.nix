@@ -17,8 +17,11 @@
   boot.loader.generic-extlinux-compatible.enable = true;
 
   environment.systemPackages = with pkgs; [
-    smartmontools
     git
+    openssl
+    libfido2
+    cryptsetup
+    yubikey-manager4
 
     python3
     # Uncomment the below if you need python3 with specific packages 
@@ -31,43 +34,45 @@
 
   networking.hostName = "key-server";
 
-  services.tang =
+  # Required for Yubikey
+  services.pcscd.enable = true;
+
+  services.tang = {
+    enable = true;
+
+    ipAddressAllow = [ "192.168.1.0/24" ];
+    listenStream = [ "7654" ];
+  };
+
+  services.openssh = {
+    enable = true;
+
+    settings.PasswordAuthentication = false;
+    settings.KbdInteractiveAuthentication = false;
+  };
+
+  users.users."service" = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
+    ];
+  };
+
+  security.sudo.extraRules = [
     {
-      enable = true;
-
-      ipAddressAllow = [ "192.168.1.0/24" ];
-      listenStream = 7654;
+      users = [ "service" ];
+      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
+  ];
 
-      services.openssh = {
-  enable = true;
-
-  settings.PasswordAuthentication = false;
-  settings.KbdInteractiveAuthentication = false;
-};
-
-users.users."service" = {
-isNormalUser = true;
-home = "/home/service";
-extraGroups = [ "wheel" ];
-
-openssh.authorizedKeys.keys = [
-"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
-];
-};
-
-security.sudo.extraRules = [
-{
-users = [ "service" ];
-commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
-}
-];
-#
-# Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-# and migrated your data accordingly.
-#
-# For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-system.stateVersion = "24.05"; # Did you read the comment?
+  #
+  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
+  # and migrated your data accordingly.
+  #
+  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+  system.stateVersion = "24.05"; # Did you read the comment?
 
 }
 

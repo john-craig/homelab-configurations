@@ -71,6 +71,7 @@
           pkgs.python3Packages.distro
           pkgs.python3Packages.pyyaml
           pkgs.python3Packages.jsonschema
+          pkgs.python3Packages.jsondiff
           pkgs.python3Packages.docopt
           pkgs.python3Packages.texttable
         ];

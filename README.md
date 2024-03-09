@@ -19,6 +19,10 @@ sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=.. nix-build '<nixpkgs/nixos>' -I nixos-con
 ```
 
 ```
+sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=../../../by_language/nix/ ix-build '<nixpkgs/nixos>' -I nixos-config=./key_server/configuration.nix -A config.system.build.sdImage
+```
+
+```
 sudo NIXPKGS_ALLOW_BROKEN=1 NIX_PATH=$HOME/programming_alt/by_language/nix/ nix-build '<nixpkgs/nixos>' -I nixos-config=s
 d-cards/pxe_server/sd-image.nix -A config.system.build.sdImage
 ```

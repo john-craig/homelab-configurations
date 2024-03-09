@@ -11,11 +11,6 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  # boot.initrd.luks.devices."crypted" = {
-  #   device = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
-  #   keyFile = "/root/databrick.keyfile";
-  #   preLVM = false; # If this is true the decryption is attempted before the postDeviceCommands can run
-  # };
 
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
@@ -25,6 +20,24 @@
       device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
       fsType = "ext4";
     };
+
+  environment.etc."crypttab".text = ''
+    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f    none luks,discard,fido2-device=auto
+  '';
+
+  # fileSystems."/srv" =
+  #   {
+  #     device = "/dev/mapper/crypt0";
+  #     fsType = "btrfs";
+  #     options = [ "nofail" ];
+
+  #     # encrypted = {
+  #     #   enable = true;
+  #     #   blkDev = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
+  #     #   keyFile = "/root/databrick.keyfile";
+  #     #   label = "crypt0";
+  #     # };
+  #   };
 
   swapDevices = [ ];
 
