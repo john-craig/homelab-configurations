@@ -119,7 +119,7 @@
             },
           },
           apply_properties = {
-            ["bluez5.auto-connect"]  = "[ hfp_hf hsp_hs a2dp_sink ]",
+            ["bluez5.auto-connect"]  = "[ hfp_hf hsp_hs a2dp_sink a2dp_source ]",
           }
         },
         {
@@ -143,18 +143,33 @@
           apply_properties = {
             ["device.profile"] = "headset-head-unit",
           }
-        }
+        },
+        {
+          matches = {
+            {
+              -- Pixel 4a 5G
+              { "device.name", "matches", "bluez_card.58_24_29_71_24_CF" },
+            },
+          },
+          apply_properties = {
+            ["api.bluez.profile"] = "a2dp-source",
+            ["device.profile"] = "a2dp-source",
+            ["bluez5.codecs"] = "[ldac]",
+            ["bluez5.a2dp.ldac.quality"] = "hq",
+            ["bluez5.media-source-role"] = "input",
+          }
+        },
       }
     '';
 
-    "pipewire/pipewire.conf.d/50-broadcast-sink.conf".text = ''
+    "pipewire/pipewire.conf.d/50-combined-sink.conf".text = ''
       context.modules = [
         {
           name = libpipewire-module-combine-stream
           args = {
             combine.mode = sink
             node.name = "broadcast-sink"
-            node.description = "This sink broadcasts to all available sinks"
+            node.description = "broadcast-sink"
             combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
               audio.position = [ FL FR ]
@@ -169,17 +184,40 @@
             ]
           }
         }
+        {
+          name = libpipewire-module-combine-stream
+          args = {
+            combine.mode = sink
+            node.name = "multiroom-sink"
+            node.description = "multiroom-sink"
+            combine.latency-compensate = true   # if true, match latencies by adding delays
+            combine.props = {
+              audio.position = [ FL FR ]
+            }
+            stream.props = {
+            }
+            stream.rules = [
+              {
+                matches = [ { 
+                  node.name = "!alsa_output.pci-0000_00_0e.0.hdmi-stereo"
+                  media.class = "Audio/Sink"
+                } ]
+                actions = { create-stream = { } }
+              }
+            ]
+          }
+        }
       ]
     '';
 
-    "pipewire/pipewire.conf.d/50-reciever-source.conf".text = ''
+    "pipewire/pipewire.conf.d/50-combined-source.conf".text = ''
       context.modules = [
         {
           name = libpipewire-module-combine-stream
           args = {
             combine.mode = source
             node.name = "reciever-source"
-            node.description = "This source recieves input from all available sources"
+            node.description = "reciever-source"
             combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
               audio.position = [ FL FR ]
@@ -196,8 +234,28 @@
         }
       ]
     '';
-  };
 
+    "pipewire/pipewire.conf.d/50-loopback.conf".text = ''
+      context.modules = [
+        {
+          name = libpipewire-module-loopback
+          node.description = "Pixel 4a 5G Loopback"
+          args = {
+            capture.props = {
+              node.name = "capture.pixel5g"
+              target.object = "alsa_output.pci-0000_00_0e.0.hdmi-stereo"
+              media.class = "Audio/Sink"
+            }
+            playback.props = {
+              node.name = "playback.pixel5g"
+              target.object = "bluez_card.58_24_29_71_24_CF"
+              media.class = "Audio/Source"
+            }
+          }
+        }
+      ]
+    '';
+  };
 
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
@@ -205,10 +263,21 @@
     package = pkgs.bluez;
     settings = {
       General = {
-        Enable = "Source,Sink,Media,Socket";
+        Name = "Media Kiosk";
+        Enable = "Source,Sink,Headset,Gateway,Control,Media";
+        Disable = "Socket";
+        ControllerMode = "bredr";
+        FastConnectable = "true";
+        Experimental = "true";
+        KernelExperimental = "true";
       };
     };
   };
+  # This is ugly but it's the best way to override ExecStart, apparently
+  systemd.services."bluetooth".serviceConfig.ExecStart = [
+    ""
+    "${pkgs.bluez}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --compat"
+  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -259,6 +328,7 @@
     rsync
     usbutils
     alsa-utils
+    pavucontrol
     docker
     (python3.withPackages (ps: with ps; [
       requests
