@@ -119,7 +119,7 @@
             },
           },
           apply_properties = {
-            ["bluez5.auto-connect"]  = "[ hfp_hf hsp_hs a2dp_sink a2dp_source ]",
+            ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
           }
         },
         {
@@ -152,11 +152,20 @@
             },
           },
           apply_properties = {
-            ["api.bluez.profile"] = "a2dp-source",
+            ["api.bluez5.codec"] = "sbc_xq",
             ["device.profile"] = "a2dp-source",
-            ["bluez5.codecs"] = "[ldac]",
-            ["bluez5.a2dp.ldac.quality"] = "hq",
-            ["bluez5.media-source-role"] = "input",
+            ["bluez5.codecs"] = "[ sbc_xq ]",
+          }
+        },
+        {
+          matches = {
+            {
+              -- Pixel 4a 5G
+              { "node.name", "matches", "bluez_input.58_24_29_71_24_CF.2" },
+            },
+          },
+          apply_properties = {
+            ["target.object"] = "multiroom-sink",
           }
         },
       }
@@ -172,7 +181,7 @@
             node.description = "broadcast-sink"
             combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
-              audio.position = [ FL FR ]
+              audio.position = [ MONO ]
             }
             stream.props = {
             }
@@ -183,7 +192,7 @@
               }
             ]
           }
-        }
+        } 
         {
           name = libpipewire-module-combine-stream
           args = {
@@ -192,7 +201,7 @@
             node.description = "multiroom-sink"
             combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
-              audio.position = [ FL FR ]
+              audio.position = [ MONO ]
             }
             stream.props = {
             }
@@ -220,7 +229,7 @@
             node.description = "reciever-source"
             combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
-              audio.position = [ FL FR ]
+              audio.position = [ MONO ]
             }
             stream.props = {
             }
@@ -235,26 +244,45 @@
       ]
     '';
 
-    "pipewire/pipewire.conf.d/50-loopback.conf".text = ''
-      context.modules = [
-        {
-          name = libpipewire-module-loopback
-          node.description = "Pixel 4a 5G Loopback"
-          args = {
-            capture.props = {
-              node.name = "capture.pixel5g"
-              target.object = "alsa_output.pci-0000_00_0e.0.hdmi-stereo"
-              media.class = "Audio/Sink"
-            }
-            playback.props = {
-              node.name = "playback.pixel5g"
-              target.object = "bluez_card.58_24_29_71_24_CF"
-              media.class = "Audio/Source"
-            }
-          }
-        }
-      ]
-    '';
+    # "pipewire/pipewire.conf.d/50-mobile-phone-stream.conf".text = ''
+
+    # '';
+
+    # "pipewire/pipewire.conf.d/50-mobile-phone-stream.conf".text = ''
+    #   stream.rules = [
+    #       {
+    #           matches = [
+    #               {
+    #                   node.name = "bluez_input.58_24_29_71_24_CF.2"
+    #               }
+    #           ]
+    #           actions = {
+    #               update-props = {
+    #                   target.object = "multiroom-sink"
+    #               }
+    #           }
+    #       }
+    #   ]
+    # '';
+    #   context.modules = [
+    #     {
+    #       name = libpipewire-module-loopback
+    #       node.description = "Pixel 4a 5G Loopback"
+    #       args = {
+    #         capture.props = {
+    #           node.name = "capture.pixel5g"
+    #           -- target.object = "bluez_input.2C_FD_B3_1C_1C_10.0"
+    #           -- target.object = "bluez_input.58_24_29_71_24_CF.2"
+
+    #         }
+    #         playback.props = {
+    #           node.name = "playback.pixel5g"
+    #           target.object = "multiroom-sink"
+    #         }
+    #       }
+    #     }
+    #   ]
+    # '';
   };
 
   hardware.bluetooth = {
@@ -329,6 +357,7 @@
     usbutils
     alsa-utils
     pavucontrol
+    qpwgraph
     docker
     (python3.withPackages (ps: with ps; [
       requests
