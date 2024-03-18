@@ -179,7 +179,7 @@
             combine.mode = sink
             node.name = "broadcast-sink"
             node.description = "broadcast-sink"
-            combine.latency-compensate = true   # if true, match latencies by adding delays
+            -- combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
               audio.position = [ MONO ]
             }
@@ -199,7 +199,7 @@
             combine.mode = sink
             node.name = "multiroom-sink"
             node.description = "multiroom-sink"
-            combine.latency-compensate = true   # if true, match latencies by adding delays
+            -- combine.latency-compensate = true   # if true, match latencies by adding delays
             combine.props = {
               audio.position = [ MONO ]
             }
