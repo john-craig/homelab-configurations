@@ -82,6 +82,19 @@
   systemd.targets.hybrid-sleep.enable = false;
   powerManagement.enable = false;
 
+  services.prometheus.exporters = {
+    node = {
+      enable = true;
+      port = 9100;
+    };
+
+    smartctl = {
+      enable = true;
+      port = 9633;
+      devices = [ "/dev/mmcblk1" ];
+    };
+  };
+
   # Enable sound.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -243,46 +256,6 @@
         }
       ]
     '';
-
-    # "pipewire/pipewire.conf.d/50-mobile-phone-stream.conf".text = ''
-
-    # '';
-
-    # "pipewire/pipewire.conf.d/50-mobile-phone-stream.conf".text = ''
-    #   stream.rules = [
-    #       {
-    #           matches = [
-    #               {
-    #                   node.name = "bluez_input.58_24_29_71_24_CF.2"
-    #               }
-    #           ]
-    #           actions = {
-    #               update-props = {
-    #                   target.object = "multiroom-sink"
-    #               }
-    #           }
-    #       }
-    #   ]
-    # '';
-    #   context.modules = [
-    #     {
-    #       name = libpipewire-module-loopback
-    #       node.description = "Pixel 4a 5G Loopback"
-    #       args = {
-    #         capture.props = {
-    #           node.name = "capture.pixel5g"
-    #           -- target.object = "bluez_input.2C_FD_B3_1C_1C_10.0"
-    #           -- target.object = "bluez_input.58_24_29_71_24_CF.2"
-
-    #         }
-    #         playback.props = {
-    #           node.name = "playback.pixel5g"
-    #           target.object = "multiroom-sink"
-    #         }
-    #       }
-    #     }
-    #   ]
-    # '';
   };
 
   hardware.bluetooth = {

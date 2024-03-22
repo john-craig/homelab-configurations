@@ -82,6 +82,10 @@
   virtualisation.docker = {
     enable = true;
     autoPrune.enable = true;
+    daemon.settings = {
+      experimental = true;
+      metrics-addr = "0.0.0.0:9323";
+    };
   };
 
   services.tailscale = {
@@ -102,6 +106,19 @@
 
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
+  };
+
+  services.prometheus.exporters = {
+    node = {
+      enable = true;
+      port = 9100;
+    };
+
+    apcupsd = {
+      enable = true;
+      port = 9162;
+      apcupsdAddress = "0.0.0.0:3551";
+    };
   };
 
   services.apcupsd = {
