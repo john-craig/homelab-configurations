@@ -19,7 +19,7 @@
   environment.systemPackages = with pkgs; [
     smartmontools
     git
-
+    clevis
     python3
     # Uncomment the below if you need python3 with specific packages 
     #
@@ -29,7 +29,7 @@
     # ]))
   ];
 
-  networking.hostName = "key-server";
+  networking.hostName = "pxe-server";
 
   services.pixiecore.enable = true;
 
@@ -45,7 +45,7 @@
     extraGroups = [ "wheel" ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPqBcW+bqGBdL/KMWXEVsWfQHDREvzAc/mlFJWTmtw4c"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
     ];
   };
 
