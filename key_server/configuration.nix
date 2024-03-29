@@ -22,7 +22,9 @@
     libfido2
     cryptsetup
     yubikey-manager4
-
+    nano
+    curl
+    btrfs-progs
     python3
     # Uncomment the below if you need python3 with specific packages 
     #

@@ -22,22 +22,15 @@
     };
 
   environment.etc."crypttab".text = ''
-    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f    none luks,discard,fido2-device=auto
+    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f - fido2-device=auto
   '';
 
-  # fileSystems."/srv" =
-  #   {
-  #     device = "/dev/mapper/crypt0";
-  #     fsType = "btrfs";
-  #     options = [ "nofail" ];
-
-  #     # encrypted = {
-  #     #   enable = true;
-  #     #   blkDev = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
-  #     #   keyFile = "/root/databrick.keyfile";
-  #     #   label = "crypt0";
-  #     # };
-  #   };
+  fileSystems."/sec" =
+    {
+      device = "/dev/mapper/crypt0";
+      fsType = "btrfs";
+      options = [ "nofail" ];
+    };
 
   swapDevices = [ ];
 
