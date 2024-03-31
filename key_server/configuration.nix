@@ -36,6 +36,14 @@
 
   networking.hostName = "key-server";
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      22 # SSH
+      7654 # Tang
+    ];
+  };
+
   # Required for Yubikey
   services.pcscd.enable = true;
 
@@ -43,7 +51,7 @@
     enable = true;
 
     ipAddressAllow = [ "192.168.1.0/24" ];
-    listenStream = [ "7654" ];
+    listenStream = [ "0.0.0.0:7654" ];
   };
 
   services.openssh = {

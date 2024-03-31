@@ -11,11 +11,6 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  # boot.initrd.luks.devices."crypted" = {
-  #   device = "/dev/disk/by-uuid/82f1cf56-3768-4b4e-bb7f-f46db57d8513";
-  #   keyFile = "/root/databrick.keyfile";
-  #   preLVM = false; # If this is true the decryption is attempted before the postDeviceCommands can run
-  # };
 
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
@@ -27,7 +22,7 @@
     };
 
   environment.etc."crypttab".text = ''
-    crypt0            UUID=82f1cf56-3768-4b4e-bb7f-f46db57d8513    /root/databrick.keyfile
+    crypt0            UUID=82f1cf56-3768-4b4e-bb7f-f46db57d8513    - nofail
   '';
 
   fileSystems."/srv" =

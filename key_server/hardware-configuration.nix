@@ -22,7 +22,7 @@
     };
 
   environment.etc."crypttab".text = ''
-    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f - fido2-device=auto
+    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f - nofail,fido2-device=auto,token-timeout=0,headless=true
   '';
 
   fileSystems."/sec" =
@@ -31,6 +31,13 @@
       fsType = "btrfs";
       options = [ "nofail" ];
     };
+
+  # Bind mount from the `sec` filesystem
+  fileSystems."/var/lib/private" = {
+    device = "/sec/private";
+    options = [ "bind" "nofail" ];
+    depends = "/sec";
+  };
 
   swapDevices = [ ];
 

@@ -19,6 +19,7 @@
   environment.systemPackages = with pkgs; [
     smartmontools
     git
+    cryptsetup
     clevis
     python3
     # Uncomment the below if you need python3 with specific packages 
