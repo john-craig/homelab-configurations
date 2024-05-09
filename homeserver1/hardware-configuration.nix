@@ -9,58 +9,103 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ata_piix" "hpsa" "usb_storage" "sd_mod" "sr_mod" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  # Use the GRUB 2 boot loader.
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
 
-  # Needed for HP utils
-  nixpkgs.config.allowUnfree = true;
-  hardware.raid.HPSmartArray.enable = true;
-
-  fileSystems."/" =
-    {
-      device = "/dev/disk/by-uuid/458028a2-54fa-405a-92eb-c7b0b375a16d";
-      fsType = "ext4";
-    };
-
-  fileSystems."/boot" =
-    {
-      device = "/dev/disk/by-uuid/2A6A-27B0";
-      fsType = "vfat";
-    };
-
-  fileSystems."/srv" =
-    {
-      device = "/dev/disk/by-uuid/76d766f7-c25d-4ff0-8320-0dac846ba170";
-      fsType = "btrfs";
-    };
-
-  fileSystems."/mnt" =
-    {
-      device = "/dev/disk/by-uuid/f5082114-527a-4439-befc-11740365987e";
-      fsType = "xfs";
-      options = [ "nofail" ];
-    };
-
-  # Bind mount for NFS server
-  fileSystems."/export/media" = {
-    device = "/srv/media";
-    options = [ "bind" ];
+  boot.initrd.luks.devices."crypt0" = {
+    device = "/dev/disk/by-uuid/3b4a5072-1cfa-4c31-92ac-bf676d92470d";
+    preLVM = true;
+    allowDiscards = true;
   };
 
-  swapDevices = [ ];
+  # Configuration needed for clevis
+  boot.initrd.clevis = {
+    enable = true;
+    useTang = true;
+    devices."/dev/disk/by-uuid/3b4a5072-1cfa-4c31-92ac-bf676d92470d" = {
+      secretFile = "/root/crypt0/keyfile.jwe";
+    }
+      };
+    boot.initrd.systemd = {
+      enable = true;
 
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.docker0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp3s0f0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp3s0f1.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp4s0f0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp4s0f1.useDHCP = lib.mkDefault true;
+      network = {
+        enable = true;
+        wait-online.enable = true;
+        networks."10-wan" = {
+          matchConfig.Type = "ether";
+          networkConfig.DHCP = "ipv4";
+        };
+      };
+    };
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-}
+    boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ata_piix" "hpsa" "usb_storage" "sd_mod" "sr_mod" ];
+    boot.kernelModules = [ "kvm-intel" ];
+    boot.extraModulePackages = [ ];
+
+    # Needed for HP utils
+    nixpkgs.config.allowUnfree = true;
+    hardware.raid.HPSmartArray.enable = true;
+
+    fileSystems."/" =
+      {
+        device = "/dev/disk/by-uuid/f8ab5f67-ae83-4ef2-9cc5-851efe583f52";
+        fsType = "btrfs";
+        options = [ "subvol=root" "compress=zstd" ];
+      };
+
+    fileSystems."/nix" =
+      {
+        device = "/dev/disk/by-uuid/f8ab5f67-ae83-4ef2-9cc5-851efe583f52";
+        fsType = "btrfs";
+        options = [ "subvol=nix" "compress=zstd" ];
+      };
+
+    fileSystems."/var" =
+      {
+        device = "/dev/disk/by-uuid/f8ab5f67-ae83-4ef2-9cc5-851efe583f52";
+        fsType = "btrfs";
+        options = [ "subvol=var" "compress=zstd" ];
+      };
+
+    fileSystems."/boot" =
+      {
+        device = "/dev/disk/by-uuid/D2DF-3FBB";
+        fsType = "vfat";
+      };
+
+    environment.etc."crypttab".text = ''
+      crypt1            UUID=2d09e83f-a7e9-4e48-aab4-7cfbedf6a907    /root/crypt1/keyfile.bin
+    '';
+
+    fileSystems."/srv" =
+      {
+        device = "/dev/disk/by-uuid/f5e3d6a2-7610-4052-9ff0-feed6053c55a";
+        fsType = "btrfs";
+      };
+
+    # Bind mount for NFS server
+    fileSystems."/export/media" = {
+      device = "/srv/media";
+      options = [ "bind" ];
+    };
+
+    swapDevices =
+      [{ device = "/dev/disk/by-uuid/1464b5c0-6a27-443d-84e8-bd5b7383febc"; }];
+
+
+    # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+    # (the default) this is the recommended approach. When using systemd-networkd it's
+    # still possible to use this option, but it's recommended to use it in conjunction
+    # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+    networking.useDHCP = lib.mkDefault true;
+    # networking.interfaces.docker0.useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp3s0f0.useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp3s0f1.useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp4s0f0.useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp4s0f1.useDHCP = lib.mkDefault true;
+
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  }

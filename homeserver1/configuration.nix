@@ -9,16 +9,10 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      #./disk-configuration.nix
     ];
+  # disabledModules = [ "services/monitoring/prometheus/exporters.nix" ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
+  # services.prometheus.exporters.smartctl-ssacli.enable = true;
 
   networking.hostName = "homeserver1"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
@@ -31,6 +25,7 @@
   # services.xserver.enable = true;
   environment.systemPackages = with pkgs; [
     smartmontools
+    lsscsi
     nano
     curl
     git
