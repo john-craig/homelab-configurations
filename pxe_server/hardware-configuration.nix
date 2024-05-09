@@ -32,6 +32,13 @@
       options = [ "nofail" ];
     };
 
+  fileSystems."/sec" =
+    {
+      device = "/srv/secure";
+      options = [ "bind" "nofail" ];
+      depends = "/srv";
+    };
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

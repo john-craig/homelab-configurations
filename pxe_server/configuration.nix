@@ -19,6 +19,7 @@
   environment.systemPackages = with pkgs; [
     smartmontools
     git
+    rsync
     cryptsetup
     clevis
     python3
@@ -28,9 +29,37 @@
     #   requests
     #   ...
     # ]))
+    ansible
   ];
 
   networking.hostName = "pxe-server";
+
+  # Backup script
+  services.cron =
+    let
+      backupScript = pkgs.writeScriptBin "backupScript" ''
+        #!${pkgs.bash}/bin/bash
+
+        [[ -f /var/run/backupScript.pid ]] && exit
+        echo $$ > /var/run/backupScript.pid
+
+        git clone -n https://gitea.chiliahedron.wtf/john-craig/homelab-backup-playbook.git --depth 1 /tmp/backup-playbook
+        pushd /tmp/backup-playbook
+          git checkout HEAD main.yaml
+
+          ansible-playbook main.yaml
+        popd
+
+        rm -rf /tmp/backup-playbook
+        rm /var/run/backupScript.pid
+      '';
+    in
+    {
+      enable = true;
+      systemCronJobs = [
+        "0 0 * * *     root    ${backupScript}/bin/backupScript > /var/log/backup-script.log"
+      ];
+    };
 
   services.pixiecore.enable = true;
 
