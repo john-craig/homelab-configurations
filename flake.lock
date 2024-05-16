@@ -1,0 +1,83 @@
+{
+  "nodes": {
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1715445235,
+        "narHash": "sha256-SUu+oIWn+xqQIOlwfwNfS9Sek4i1HKsrLJchsDReXwA=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "159d87ea5b95bbdea46f0288a33c5e1570272725",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1715266358,
+        "narHash": "sha256-doPgfj+7FFe9rfzWo1siAV2mVCasW+Bh8I1cToAXEE4=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "f1010e0469db743d14519a1efd37e23f8513d714",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1715447595,
+        "narHash": "sha256-VsVAUQOj/cS1LCOmMjAGeRksXIAdPnFIjCQ0XLkCsT0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "062ca2a9370a27a35c524dc82d540e6e9824b652",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "private-pkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1715566871,
+        "narHash": "sha256-4odOHwSrWzf1X1FiO4jMACXTf86T0Vtb8iiulj20DQY=",
+        "ref": "refs/heads/main",
+        "rev": "9f227d5ca091bcece6030fb6bb4b4f0096ee5ac2",
+        "revCount": 4,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
+      }
+    },
+    "root": {
+      "inputs": {
+        "disko": "disko",
+        "nixpkgs": "nixpkgs",
+        "private-pkgs": "private-pkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

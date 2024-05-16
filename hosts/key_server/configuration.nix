@@ -21,7 +21,7 @@
     openssl
     libfido2
     cryptsetup
-    yubikey-manager4
+    yubikey-manager
     nano
     curl
     btrfs-progs

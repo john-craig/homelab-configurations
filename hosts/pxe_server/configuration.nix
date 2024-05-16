@@ -34,6 +34,21 @@
 
   networking.hostName = "pxe-server";
 
+  # Ansible hosts
+  environment.etc = {
+    "ansible/hosts".text = ''
+      all:
+        vars:
+          ansible_ssh_extra_args: -F /sec/service/.ssh/config
+
+      ungrouped:
+        hosts:
+          media_kiosk:
+          homeserver1:
+          pxe_server:
+    '';
+  };
+
   # Backup script
   services.cron =
     let

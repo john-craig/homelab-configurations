@@ -7,7 +7,6 @@
 {
   imports =
     [
-      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
   # disabledModules = [ "services/monitoring/prometheus/exporters.nix" ];
@@ -26,6 +25,7 @@
   environment.systemPackages = with pkgs; [
     smartmontools
     lsscsi
+    lshw
     nano
     curl
     git
@@ -155,10 +155,6 @@
       commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
-
-  nix.extraOptions = ''
-    #tarball-ttl = 0
-  '';
 
   # Do not change
   system.stateVersion = "24.05";

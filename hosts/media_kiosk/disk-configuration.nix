@@ -1,8 +1,5 @@
-# Example to create a bios compatible gpt partition
 { lib, ... }:
 {
-  imports = [ "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix" ];
-
   disko.devices = {
     disk.disk1 = {
       device = lib.mkDefault "/dev/mmcblk0";

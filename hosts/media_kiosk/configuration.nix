@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 
 {
   imports =
@@ -11,6 +11,8 @@
       ./hardware-configuration.nix
       ./disk-configuration.nix
     ];
+
+  basicPackages.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -100,7 +102,57 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    #socketActivation = true;
+
+    configPackages = [
+      (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-sink.conf" ''
+        context.modules = [
+          {
+            name = libpipewire-module-combine-stream
+            args = {
+              combine.mode = sink
+              node.name = "broadcast-sink"
+              node.description = "broadcast-sink"
+              -- combine.latency-compensate = true   # if true, match latencies by adding delays
+              combine.props = {
+                audio.position = [ MONO ]
+              }
+              stream.props = {
+              }
+              stream.rules = [
+                {
+                  matches = [ { media.class = "Audio/Sink" } ]
+                  actions = { create-stream = { } }
+                }
+              ]
+            }
+          } 
+        ]
+      '')
+      (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-source.conf" ''
+        context.modules = [
+          {
+            name = libpipewire-module-combine-stream
+            args = {
+              combine.mode = source
+              node.name = "reciever-source"
+              node.description = "reciever-source"
+              combine.latency-compensate = true   # if true, match latencies by adding delays
+              combine.props = {
+                audio.position = [ MONO ]
+              }
+              stream.props = {
+              }
+              stream.rules = [
+                {
+                  matches = [ { media.class = "Audio/Source" } ]
+                  actions = { create-stream = { } }
+                }
+              ]
+            }
+          }
+        ]
+      '')
+    ];
 
     alsa.enable = true;
     alsa.support32Bit = true;
@@ -108,154 +160,85 @@
     # If you want to use JACK applications, uncomment this
     jack.enable = true;
 
-    wireplumber.enable = true;
-  };
+    wireplumber = {
+      enable = true;
 
-  environment.etc = {
-    "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-      bluez_monitor.enabled = true
+      configPackages = [
+        (pkgs.writeTextDir "wireplumber/bluetooth.lua.d/51-bluez-config.lua" ''
+          bluez_monitor.enabled = true
 
-      bluez_monitor.properties = {
-        ["bluez5.enable-sbc-xq"] = true,
-        ["bluez5.enable-msbc"] = true,
-        ["bluez5.enable-hw-volume"] = true,
-        ["bluez5.codecs"] = "[sbc sbc_xq]",
-        ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-      }
+          bluez_monitor.properties = {
+            ["bluez5.enable-sbc-xq"] = true,
+            ["bluez5.enable-msbc"] = true,
+            ["bluez5.enable-hw-volume"] = true,
+            ["bluez5.codecs"] = "[sbc sbc_xq]",
+          }
 
-      bluez_monitor.rules = {
-        {
-          matches = {
+          bluez_monitor.rules = {
             {
-              -- This matches all cards.
-              { "device.name", "matches", "bluez_card.*" },
-            },
-          },
-          apply_properties = {
-            ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-          }
-        },
-        {
-          matches = {
-            {
-              -- Anker PowerConf
-              { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
-            },
-          },
-          apply_properties = {
-            ["device.profile"] = "headset-head-unit",
-          }
-        },
-        {
-          matches = {
-            {
-              -- Cavalier Air (CAV5)
-              { "device.name", "matches", "bluez_card.28_37_13_08_6E_30" },
-            },
-          },
-          apply_properties = {
-            ["device.profile"] = "headset-head-unit",
-          }
-        },
-        {
-          matches = {
-            {
-              -- Pixel 4a 5G
-              { "device.name", "matches", "bluez_card.58_24_29_71_24_CF" },
-            },
-          },
-          apply_properties = {
-            ["api.bluez5.codec"] = "sbc_xq",
-            ["device.profile"] = "a2dp-source",
-            ["bluez5.codecs"] = "[ sbc_xq ]",
-          }
-        },
-        {
-          matches = {
-            {
-              -- Pixel 4a 5G
-              { "node.name", "matches", "bluez_input.58_24_29_71_24_CF.2" },
-            },
-          },
-          apply_properties = {
-            ["target.object"] = "multiroom-sink",
-          }
-        },
-      }
-    '';
-
-    "pipewire/pipewire.conf.d/50-combined-sink.conf".text = ''
-      context.modules = [
-        {
-          name = libpipewire-module-combine-stream
-          args = {
-            combine.mode = sink
-            node.name = "broadcast-sink"
-            node.description = "broadcast-sink"
-            -- combine.latency-compensate = true   # if true, match latencies by adding delays
-            combine.props = {
-              audio.position = [ MONO ]
-            }
-            stream.props = {
-            }
-            stream.rules = [
-              {
-                matches = [ { media.class = "Audio/Sink" } ]
-                actions = { create-stream = { } }
+              matches = {
+                {
+                  -- This matches all cards.
+                  { "device.name", "matches", "bluez_card.*" },
+                },
+              },
+              apply_properties = {
+                ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
+                ["device.profile"] = "a2dp-sink",
               }
-            ]
-          }
-        } 
-        {
-          name = libpipewire-module-combine-stream
-          args = {
-            combine.mode = sink
-            node.name = "multiroom-sink"
-            node.description = "multiroom-sink"
-            -- combine.latency-compensate = true   # if true, match latencies by adding delays
-            combine.props = {
-              audio.position = [ MONO ]
-            }
-            stream.props = {
-            }
-            stream.rules = [
-              {
-                matches = [ { 
-                  node.name = "!alsa_output.pci-0000_00_0e.0.hdmi-stereo"
-                  media.class = "Audio/Sink"
-                } ]
-                actions = { create-stream = { } }
+            },
+            {
+              matches = {
+                {
+                  -- Anker PowerConf
+                  { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
+                },
+              },
+              apply_properties = {
+                ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
+                ["device.profile"] = "a2dp-sink",
               }
-            ]
-          }
-        }
-      ]
-    '';
-
-    "pipewire/pipewire.conf.d/50-combined-source.conf".text = ''
-      context.modules = [
-        {
-          name = libpipewire-module-combine-stream
-          args = {
-            combine.mode = source
-            node.name = "reciever-source"
-            node.description = "reciever-source"
-            combine.latency-compensate = true   # if true, match latencies by adding delays
-            combine.props = {
-              audio.position = [ MONO ]
-            }
-            stream.props = {
-            }
-            stream.rules = [
-              {
-                matches = [ { media.class = "Audio/Source" } ]
-                actions = { create-stream = { } }
+            },
+            {
+              matches = {
+                {
+                  -- Cavalier Air (CAV5)
+                  { "device.name", "matches", "bluez_card.28_37_13_08_6E_30" },
+                },
+              },
+              apply_properties = {
+                ["device.profile"] = "headset-head-unit",
+                ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
               }
-            ]
+            },
+            {
+              matches = {
+                {
+                  -- Pixel 4a 5G
+                  { "device.name", "matches", "bluez_card.58_24_29_71_24_CF" },
+                },
+              },
+              apply_properties = {
+                ["api.bluez5.codec"] = "sbc_xq",
+                ["device.profile"] = "a2dp-source",
+                ["bluez5.codecs"] = "[ sbc_xq ]",
+              }
+            },
+            {
+              matches = {
+                {
+                  -- Pixel 4a 5G
+                  { "node.name", "matches", "bluez_input.58_24_29_71_24_CF.2" },
+                },
+              },
+              apply_properties = {
+                ["target.object"] = "broadcast-sink",
+              }
+            },
           }
-        }
-      ]
-    '';
+        '')
+      ];
+    };
   };
 
   hardware.bluetooth = {
@@ -267,17 +250,17 @@
         Name = "Media Kiosk";
         Enable = "Source,Sink,Headset,Gateway,Control,Media";
         Disable = "Socket";
-        ControllerMode = "bredr";
         FastConnectable = "true";
         Experimental = "true";
         KernelExperimental = "true";
+        MultiProfile = "mutliple";
       };
     };
   };
   # This is ugly but it's the best way to override ExecStart, apparently
   systemd.services."bluetooth".serviceConfig.ExecStart = [
     ""
-    "${pkgs.bluez}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --compat"
+    "${pkgs.bluez}/libexec/bluetooth/bluetoothd -d -f /etc/bluetooth/main.conf --compat"
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -326,11 +309,13 @@
     wget
     ungoogled-chromium
     git
-    rsync
+    #rsync
     usbutils
     alsa-utils
-    pavucontrol
-    qpwgraph
+
+    inputs.private-pkgs.packages."x86_64-linux".rhasspy-microphone-cli-hermes
+    inputs.private-pkgs.packages."x86_64-linux".rhasspy-speakers-cli-hermes
+
     docker
     (python3.withPackages (ps: with ps; [
       requests
