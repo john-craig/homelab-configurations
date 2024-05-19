@@ -291,6 +291,28 @@
     };
   };
 
+  systemd.timers."morning-alarm" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 6:00:00";
+      Unit = "morning-alarm.service";
+    };
+  };
+
+  systemd.services."morning-alarm" = {
+    enable = true;
+    script = ''
+      set -eu
+      pushd /home/display/smarthome-chrome-controller/
+        source env/bin/activate && python driver.py
+      popd
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "display";
+    };
+  };
+
   security.sudo.extraRules = [
     {
       users = [ "service" ];
