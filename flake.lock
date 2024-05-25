@@ -57,11 +57,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1715566871,
-        "narHash": "sha256-4odOHwSrWzf1X1FiO4jMACXTf86T0Vtb8iiulj20DQY=",
+        "lastModified": 1716665610,
+        "narHash": "sha256-1IbalEU/02vWZ5oZE9mWa4xMBFNjhzgDgsm56F+O3FM=",
         "ref": "refs/heads/main",
-        "rev": "9f227d5ca091bcece6030fb6bb4b4f0096ee5ac2",
-        "revCount": 4,
+        "rev": "185bb6a7be9c61c9fa4e0ac41815aacd96230960",
+        "revCount": 5,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
       },
