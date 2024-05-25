@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, nix, ... }:
+{ inputs, config, lib, pkgs, nix, ... }:
 
 {
   imports =
@@ -31,6 +31,7 @@
     git
     btrfs-progs
     docker
+    inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver
     (python3.withPackages (ps: with ps; [
       requests
       urllib3
@@ -80,6 +81,31 @@
     daemon.settings = {
       experimental = true;
       metrics-addr = "0.0.0.0:9323";
+    };
+  };
+
+  # System Daemon Timers
+  systemd.timers."archive-obsidian-links" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Unit = "archive-obsidian-links.service";
+    };
+  };
+
+  systemd.services."archive-obsidian-links" = {
+    enable = true;
+    script = ''
+      # Perform the archive
+      ${inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/notes
+      ${inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/projects
+      
+      # Restart archivebox to kill off erroneous Chrome processes
+      ${pkgs.docker}/bin/docker restart archivebox
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "service";
     };
   };
 

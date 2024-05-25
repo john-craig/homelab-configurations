@@ -14,6 +14,7 @@
 
     nixosConfigurations = {
       homeserver1 = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
         modules = [ ./hosts/homeserver1/configuration.nix ];
       };
 
