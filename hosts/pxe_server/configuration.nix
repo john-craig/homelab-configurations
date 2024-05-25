@@ -34,47 +34,93 @@
 
   networking.hostName = "pxe-server";
 
-  # Ansible hosts
-  environment.etc = {
-    "ansible/hosts".text = ''
-      all:
-        vars:
-          ansible_ssh_extra_args: -F /sec/service/.ssh/config
+  # Daily Backup
+  systemd.timers."daily-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Unit = "daily-backup.service";
+    };
+  };
 
-      ungrouped:
-        hosts:
-          media_kiosk:
-          homeserver1:
-          pxe_server:
+  systemd.services."daily-backup" = {
+    enable = true;
+    script = ''
+      ${pkgs.rsync}/bin/rsync --delete -ravP -e '${pkgs.openssh}/bin/ssh -F /sec/service/.ssh/config' --rsync-path="sudo rsync" homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
+      ${pkgs.rsync}/bin/rsync --delete -ravP -e '${pkgs.openssh}/bin/ssh -F /sec/service/.ssh/config' --rsync-path="sudo rsync" homeserver1:/srv/documents/ /srv/backup/daily/homeserver1/srv/documents
     '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  # Weekly Backup
+  systemd.timers."weekly-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Unit = "weekly-backup.service";
+    };
+  };
+
+  systemd.services."weekly-backup" = {
+    enable = true;
+    script = ''
+      ${pkgs.rsync}/bin/rsync --delete -ravP /srv/backup/daily/ /srv/backup/weekly
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  # Monthly Backup
+  systemd.timers."monthly-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "monthly";
+      Unit = "monthly-backup.service";
+    };
+  };
+
+  systemd.services."monthly-backup" = {
+    enable = true;
+    script = ''
+      ${pkgs.rsync}/bin/rsync --delete -ravP /srv/backup/weekly/ /srv/backup/monthly
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   # Backup script
-  services.cron =
-    let
-      backupScript = pkgs.writeScriptBin "backupScript" ''
-        #!${pkgs.bash}/bin/bash
+  # services.cron =
+  #   let
+  #     backupScript = pkgs.writeScriptBin "backupScript" ''
+  #       #!${pkgs.bash}/bin/bash
 
-        [[ -f /var/run/backupScript.pid ]] && exit
-        echo $$ > /var/run/backupScript.pid
+  #       [[ -f /var/run/backupScript.pid ]] && exit
+  #       echo $$ > /var/run/backupScript.pid
 
-        git clone -n https://gitea.chiliahedron.wtf/john-craig/homelab-backup-playbook.git --depth 1 /tmp/backup-playbook
-        pushd /tmp/backup-playbook
-          git checkout HEAD main.yaml
+  #       git clone -n https://gitea.chiliahedron.wtf/john-craig/homelab-backup-playbook.git --depth 1 /tmp/backup-playbook
+  #       pushd /tmp/backup-playbook
+  #         git checkout HEAD main.yaml
 
-          ansible-playbook main.yaml
-        popd
+  #         ansible-playbook main.yaml
+  #       popd
 
-        rm -rf /tmp/backup-playbook
-        rm /var/run/backupScript.pid
-      '';
-    in
-    {
-      enable = true;
-      systemCronJobs = [
-        "0 0 * * *     root    ${backupScript}/bin/backupScript > /var/log/backup-script.log"
-      ];
-    };
+  #       rm -rf /tmp/backup-playbook
+  #       rm /var/run/backupScript.pid
+  #     '';
+  #   in
+  #   {
+  #     enable = true;
+  #     systemCronJobs = [
+  #       "0 0 * * *     root    ${backupScript}/bin/backupScript > /var/log/backup-script.log"
+  #     ];
+  #   };
 
   services.pixiecore.enable = true;
 
