@@ -10,9 +10,10 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./disk-configuration.nix
-    ];
 
-  basicPackages.enable = true;
+      ./hostModules/kiosk.nix
+      ./hostModules/jukebox.nix
+    ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -26,63 +27,11 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    layout = "us"; # keyboard layout
-    libinput.enable = true;
+  # Kiosk Mode
+  kiosk.enable = true;
 
-    # Let lightdm handle autologin
-    displayManager.lightdm = {
-      enable = true;
-      # autoLogin = {
-      #   timeout = 0;
-      # };
-    };
-
-    # Start openbox after autologin
-    windowManager.openbox.enable = true;
-    displayManager = {
-      defaultSession = "none+openbox";
-      autoLogin = {
-        user = "display";
-        enable = true;
-      };
-    };
-  };
-
-  # Overlay to set custom autostart script for openbox
-  nixpkgs.overlays = with pkgs; [
-    (_self: super: {
-      openbox = super.openbox.overrideAttrs (_oldAttrs: rec {
-        postFixup = ''
-          ln -sf /etc/openbox/autostart $out/etc/xdg/openbox/autostart
-        '';
-      });
-    })
-  ];
-
-  # By defining the script source outside of the overlay, we don't have to
-  # rebuild the package every time we change the startup script.
-  environment.etc."openbox/autostart".source = pkgs.writeScript "autostart" ''
-    #!${pkgs.bash}/bin/bash
-    # End all lines with '&' to not halt startup script execution
-
-    # Keep screen on
-    xset -dpms     & # Disable DPMS (Energy Star) features
-    xset s off     & # Disable screensaver
-    xset s noblank & # Don't blank video device
-
-    # Start chromium
-    chromium --remote-debugging-port=9222 --remote-allow-origins=* &
-  '';
-
-  # Prevent hibernating
-  systemd.targets.sleep.enable = false;
-  systemd.targets.suspend.enable = false;
-  systemd.targets.hibernate.enable = false;
-  systemd.targets.hybrid-sleep.enable = false;
-  powerManagement.enable = false;
+  # Jukebox Mode
+  jukebox.enable = true;
 
   services.prometheus.exporters = {
     node = {
@@ -96,172 +45,6 @@
       devices = [ "/dev/mmcblk1" ];
     };
   };
-
-  # Enable sound.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-
-    configPackages = [
-      (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-sink.conf" ''
-        context.modules = [
-          {
-            name = libpipewire-module-combine-stream
-            args = {
-              combine.mode = sink
-              node.name = "broadcast-sink"
-              node.description = "broadcast-sink"
-              -- combine.latency-compensate = true   # if true, match latencies by adding delays
-              combine.props = {
-                audio.position = [ MONO ]
-              }
-              stream.props = {
-              }
-              stream.rules = [
-                {
-                  matches = [ { media.class = "Audio/Sink" } ]
-                  actions = { create-stream = { } }
-                }
-              ]
-            }
-          } 
-        ]
-      '')
-      (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-source.conf" ''
-        context.modules = [
-          {
-            name = libpipewire-module-combine-stream
-            args = {
-              combine.mode = source
-              node.name = "reciever-source"
-              node.description = "reciever-source"
-              combine.latency-compensate = true   # if true, match latencies by adding delays
-              combine.props = {
-                audio.position = [ MONO ]
-              }
-              stream.props = {
-              }
-              stream.rules = [
-                {
-                  matches = [ { media.class = "Audio/Source" } ]
-                  actions = { create-stream = { } }
-                }
-              ]
-            }
-          }
-        ]
-      '')
-    ];
-
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    jack.enable = true;
-
-    wireplumber = {
-      enable = true;
-
-      configPackages = [
-        (pkgs.writeTextDir "wireplumber/bluetooth.lua.d/51-bluez-config.lua" ''
-          bluez_monitor.enabled = true
-
-          bluez_monitor.properties = {
-            ["bluez5.enable-sbc-xq"] = true,
-            ["bluez5.enable-msbc"] = true,
-            ["bluez5.enable-hw-volume"] = true,
-            ["bluez5.codecs"] = "[sbc sbc_xq]",
-          }
-
-          bluez_monitor.rules = {
-            {
-              matches = {
-                {
-                  -- This matches all cards.
-                  { "device.name", "matches", "bluez_card.*" },
-                },
-              },
-              apply_properties = {
-                ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-                ["device.profile"] = "a2dp-sink",
-              }
-            },
-            {
-              matches = {
-                {
-                  -- Anker PowerConf
-                  { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
-                },
-              },
-              apply_properties = {
-                ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-                ["device.profile"] = "a2dp-sink",
-              }
-            },
-            {
-              matches = {
-                {
-                  -- Cavalier Air (CAV5)
-                  { "device.name", "matches", "bluez_card.28_37_13_08_6E_30" },
-                },
-              },
-              apply_properties = {
-                ["device.profile"] = "headset-head-unit",
-                ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-              }
-            },
-            {
-              matches = {
-                {
-                  -- Pixel 4a 5G
-                  { "device.name", "matches", "bluez_card.58_24_29_71_24_CF" },
-                },
-              },
-              apply_properties = {
-                ["api.bluez5.codec"] = "sbc_xq",
-                ["device.profile"] = "a2dp-source",
-                ["bluez5.codecs"] = "[ sbc_xq ]",
-              }
-            },
-            {
-              matches = {
-                {
-                  -- Pixel 4a 5G
-                  { "node.name", "matches", "bluez_input.58_24_29_71_24_CF.2" },
-                },
-              },
-              apply_properties = {
-                ["target.object"] = "broadcast-sink",
-              }
-            },
-          }
-        '')
-      ];
-    };
-  };
-
-  hardware.bluetooth = {
-    enable = true; # enables support for Bluetooth
-    powerOnBoot = true; # powers up the default Bluetooth controller on boot
-    package = pkgs.bluez;
-    settings = {
-      General = {
-        Name = "Media Kiosk";
-        Enable = "Source,Sink,Headset,Gateway,Control,Media";
-        Disable = "Socket";
-        FastConnectable = "true";
-        Experimental = "true";
-        KernelExperimental = "true";
-        MultiProfile = "mutliple";
-      };
-    };
-  };
-  # This is ugly but it's the best way to override ExecStart, apparently
-  systemd.services."bluetooth".serviceConfig.ExecStart = [
-    ""
-    "${pkgs.bluez}/libexec/bluetooth/bluetoothd -d -f /etc/bluetooth/main.conf --compat"
-  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -329,11 +112,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget
-    ungoogled-chromium
     git
-    #rsync
-    usbutils
-    alsa-utils
 
     inputs.private-pkgs.packages."x86_64-linux".rhasspy-microphone-cli-hermes
     inputs.private-pkgs.packages."x86_64-linux".rhasspy-speakers-cli-hermes
