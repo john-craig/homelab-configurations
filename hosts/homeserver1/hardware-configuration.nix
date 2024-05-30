@@ -44,7 +44,6 @@
   };
 
   # Needed for HP utils
-  nixpkgs.config.allowUnfree = true;
   hardware.raid.HPSmartArray.enable = true;
 
   fileSystems."/" =

@@ -2,16 +2,15 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ inputs, config, lib, pkgs, nix, ... }:
+{ config, lib, pkgs, nix, ... }:
 
 {
   imports =
     [
       ./hardware-configuration.nix
     ];
-  # disabledModules = [ "services/monitoring/prometheus/exporters.nix" ];
 
-  # services.prometheus.exporters.smartctl-ssacli.enable = true;
+  nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "homeserver1"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
@@ -31,7 +30,7 @@
     git
     btrfs-progs
     docker
-    inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver
+    obsidian-link-archiver
     (python3.withPackages (ps: with ps; [
       requests
       urllib3
@@ -97,8 +96,8 @@
     enable = true;
     script = ''
       # Perform the archive
-      ${inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/notes
-      ${inputs.private-pkgs.packages."x86_64-linux".obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/projects
+      ${pkgs.obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/notes
+      ${pkgs.obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/projects
       
       # Restart archivebox to kill off erroneous Chrome processes
       ${pkgs.docker}/bin/docker restart archivebox
@@ -139,6 +138,11 @@
       enable = true;
       port = 9162;
       apcupsdAddress = "0.0.0.0:3551";
+    };
+
+    smartctl-ssacli = {
+      port = 9633;
+      enable = true;
     };
   };
 

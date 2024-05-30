@@ -38,6 +38,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1716509168,
+        "narHash": "sha256-4zSIhSRRIoEBwjbPm3YiGtbd8HDWzFxJjw5DYSDy1n8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "bfb7a882678e518398ce9a31a881538679f6f092",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1715447595,
         "narHash": "sha256-VsVAUQOj/cS1LCOmMjAGeRksXIAdPnFIjCQ0XLkCsT0=",
         "owner": "nixos",
@@ -52,16 +68,70 @@
         "type": "github"
       }
     },
-    "private-pkgs": {
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1716509168,
+        "narHash": "sha256-4zSIhSRRIoEBwjbPm3YiGtbd8HDWzFxJjw5DYSDy1n8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "bfb7a882678e518398ce9a31a881538679f6f092",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "private-modules": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "private-pkgs": "private-pkgs"
       },
       "locked": {
-        "lastModified": 1716673794,
-        "narHash": "sha256-QSGI6DHyRuYEkbdMBQf2Tbw0y/rsbPox9tanAYegf34=",
+        "lastModified": 1717067926,
+        "narHash": "sha256-IjTzeOJwe6wtDaCCjlBHEIOZtFkplQQHeeFOpI0AW5Y=",
         "ref": "refs/heads/main",
-        "rev": "4c85992fdda6354ae0f06db8f42278f92087600d",
-        "revCount": 9,
+        "rev": "db9f44b84ebebe4e5a8bd3fe4d025f1392fd825e",
+        "revCount": 51,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-modules"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-modules"
+      }
+    },
+    "private-pkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1716851117,
+        "narHash": "sha256-GRdTiDndHJLaCHgF8YkkEnTzj1NaHq3XBVCW6XfQtxg=",
+        "ref": "refs/heads/main",
+        "rev": "b3b1606cabb95a600a74e65e9c167f6f6796086d",
+        "revCount": 11,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
+      }
+    },
+    "private-pkgs_2": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1717066478,
+        "narHash": "sha256-9TGQCpgdkaIDzFYw6wx0gR+oTDrhRzkzehcDDjJOWdg=",
+        "ref": "refs/heads/main",
+        "rev": "30c298c5a0caf211e720f2927ce5d15692d21fc0",
+        "revCount": 27,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
       },
@@ -74,7 +144,41 @@
       "inputs": {
         "disko": "disko",
         "nixpkgs": "nixpkgs",
-        "private-pkgs": "private-pkgs"
+        "private-modules": "private-modules",
+        "private-pkgs": "private-pkgs_2"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1710146030,
+        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },
