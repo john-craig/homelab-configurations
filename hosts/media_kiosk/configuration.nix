@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ inputs, config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -114,8 +114,8 @@
     wget
     git
 
-    inputs.private-pkgs.packages."x86_64-linux".rhasspy-microphone-cli-hermes
-    inputs.private-pkgs.packages."x86_64-linux".rhasspy-speakers-cli-hermes
+    rhasspy-microphone-cli-hermes
+    rhasspy-speakers-cli-hermes
 
     docker
     (python3.withPackages (ps: with ps; [

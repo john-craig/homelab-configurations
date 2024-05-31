@@ -7,29 +7,25 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    private-pkgs.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages";
-    private-modules.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/homelab-modules";
+    nixpkgs-apocrypha.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha";
   };
 
-  outputs = { self, nixpkgs, disko, private-pkgs, private-modules }@inputs: {
+  outputs = { self, nixpkgs, disko, nixpkgs-apocrypha }@inputs: {
 
     nixosConfigurations = {
       homeserver1 =
         nixpkgs.lib.nixosSystem {
           modules = [
-            { nixpkgs.overlays = [ private-pkgs.overlays.default ]; }
-            private-modules.nixosModules.smartctl-ssacli-exporter
+            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
+            nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
             ./hosts/homeserver1/configuration.nix
           ];
         };
 
       media_kiosk =
-        let
-          pkgs = import nixpkgs { overlays = [ private-pkgs.overlays ]; };
-        in
         nixpkgs.lib.nixosSystem {
           modules = [
-            { nixpkgs = { inherit pkgs; }; }
+            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
             ./hosts/media_kiosk/configuration.nix
             ./modules
             disko.nixosModules.disko

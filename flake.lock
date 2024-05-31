@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1715445235,
-        "narHash": "sha256-SUu+oIWn+xqQIOlwfwNfS9Sek4i1HKsrLJchsDReXwA=",
+        "lastModified": 1717177033,
+        "narHash": "sha256-G3CZJafCO8WDy3dyA2EhpUJEmzd5gMJ2IdItAg0Hijw=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "159d87ea5b95bbdea46f0288a33c5e1570272725",
+        "rev": "0274af4c92531ebfba4a5bd493251a143bc51f3c",
         "type": "github"
       },
       "original": {
@@ -20,13 +20,44 @@
         "type": "github"
       }
     },
+    "myNixosModules": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-RB13l7Cpl96ha2PH6ovViFA80Y3YLB9a/MKD6Nb7ay8=",
+        "path": "nixosModules",
+        "type": "path"
+      },
+      "original": {
+        "path": "nixosModules",
+        "type": "path"
+      }
+    },
+    "myPackages": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-+xZhwJpYUfPMnVc/zYVU9kST92znUHI1fh78lPohKRA=",
+        "path": "packages",
+        "type": "path"
+      },
+      "original": {
+        "path": "packages",
+        "type": "path"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1715266358,
-        "narHash": "sha256-doPgfj+7FFe9rfzWo1siAV2mVCasW+Bh8I1cToAXEE4=",
+        "lastModified": 1716948383,
+        "narHash": "sha256-SzDKxseEcHR5KzPXLwsemyTR/kaM9whxeiJohbL04rs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f1010e0469db743d14519a1efd37e23f8513d714",
+        "rev": "ad57eef4ef0659193044870c731987a6df5cf56b",
         "type": "github"
       },
       "original": {
@@ -34,6 +65,25 @@
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
+      }
+    },
+    "nixpkgs-apocrypha": {
+      "inputs": {
+        "myNixosModules": "myNixosModules",
+        "myPackages": "myPackages"
+      },
+      "locked": {
+        "lastModified": 1717188942,
+        "narHash": "sha256-uHs/E9jF/PZ+B0PTlAo0AsS7U/uTPPj88QHX1rIIsZ0=",
+        "ref": "refs/heads/main",
+        "rev": "a837ab01e043c41775bd09a5e118ffb7316c1ca3",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       }
     },
     "nixpkgs_2": {
@@ -54,22 +104,6 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1715447595,
-        "narHash": "sha256-VsVAUQOj/cS1LCOmMjAGeRksXIAdPnFIjCQ0XLkCsT0=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "062ca2a9370a27a35c524dc82d540e6e9824b652",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
         "lastModified": 1716509168,
         "narHash": "sha256-4zSIhSRRIoEBwjbPm3YiGtbd8HDWzFxJjw5DYSDy1n8=",
         "owner": "nixos",
@@ -84,68 +118,11 @@
         "type": "github"
       }
     },
-    "private-modules": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2",
-        "private-pkgs": "private-pkgs"
-      },
-      "locked": {
-        "lastModified": 1717067926,
-        "narHash": "sha256-IjTzeOJwe6wtDaCCjlBHEIOZtFkplQQHeeFOpI0AW5Y=",
-        "ref": "refs/heads/main",
-        "rev": "db9f44b84ebebe4e5a8bd3fe4d025f1392fd825e",
-        "revCount": 51,
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-modules"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-modules"
-      }
-    },
-    "private-pkgs": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_3"
-      },
-      "locked": {
-        "lastModified": 1716851117,
-        "narHash": "sha256-GRdTiDndHJLaCHgF8YkkEnTzj1NaHq3XBVCW6XfQtxg=",
-        "ref": "refs/heads/main",
-        "rev": "b3b1606cabb95a600a74e65e9c167f6f6796086d",
-        "revCount": 11,
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
-      }
-    },
-    "private-pkgs_2": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_4",
-        "utils": "utils"
-      },
-      "locked": {
-        "lastModified": 1717066478,
-        "narHash": "sha256-9TGQCpgdkaIDzFYw6wx0gR+oTDrhRzkzehcDDjJOWdg=",
-        "ref": "refs/heads/main",
-        "rev": "30c298c5a0caf211e720f2927ce5d15692d21fc0",
-        "revCount": 27,
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://gitea.chiliahedron.wtf/chiliahedron/homelab-packages"
-      }
-    },
     "root": {
       "inputs": {
         "disko": "disko",
         "nixpkgs": "nixpkgs",
-        "private-modules": "private-modules",
-        "private-pkgs": "private-pkgs_2"
+        "nixpkgs-apocrypha": "nixpkgs-apocrypha"
       }
     },
     "systems": {
