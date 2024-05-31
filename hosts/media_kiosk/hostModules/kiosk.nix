@@ -9,27 +9,28 @@
     ];
 
     # Enable the X11 windowing system.
-    services.xserver = {
-      enable = true;
-      layout = "us"; # keyboard layout
+    services = {
       libinput.enable = true;
 
-      # Let lightdm handle autologin
-      displayManager.lightdm = {
-        enable = true;
-        # autoLogin = {
-        #   timeout = 0;
-        # };
-      };
-
-      # Start openbox after autologin
-      windowManager.openbox.enable = true;
       displayManager = {
         defaultSession = "none+openbox";
         autoLogin = {
           user = "display";
           enable = true;
         };
+      };
+
+      xserver = {
+        enable = true;
+        xkb.layout = "us"; # keyboard layout
+
+        # Let lightdm handle autologin
+        displayManager.lightdm = {
+          enable = true;
+        };
+
+        # Start openbox after autologin
+        windowManager.openbox.enable = true;
       };
     };
 
