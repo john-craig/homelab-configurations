@@ -14,6 +14,7 @@
 
   networking.hostName = "homeserver1"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  systemd.services.NetworkManager-wait-online.enable = false;
   networking.firewall.enable = false;
 
   # Set your time zone.
