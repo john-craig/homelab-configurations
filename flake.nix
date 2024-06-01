@@ -43,6 +43,10 @@
       bastion0 = nixpkgs.lib.nixosSystem {
         modules = [ ./hosts/bastion0/configuration.nix ];
       };
+
+      test-vm = nixpkgs.lib.nixosSystem {
+        modules = [ ./hosts/test-vm/configuration.nix ];
+      };
     };
 
   };
