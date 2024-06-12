@@ -45,7 +45,10 @@
       };
 
       test-vm = nixpkgs.lib.nixosSystem {
-        modules = [ ./hosts/test-vm/configuration.nix ];
+        modules = [
+          ./hosts/test-vm/configuration.nix
+          nixpkgs-apocrypha.nixosModules.selfhosting
+        ];
       };
     };
 
