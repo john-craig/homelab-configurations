@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "apocryphalNixosModules": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2",
+        "services-library": "services-library"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-o6/z5McvLxDptY+D3vySMkkhBXSJMqgO2gl/r2AyjRk=",
+        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/nixosModules",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/nixosModules",
+        "type": "path"
+      }
+    },
+    "apocryphalPackages": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-3QG8NnuKJwnCkylmeBJHPwXeQLnf8FLN2ZsQBTuze5Y=",
+        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/packages",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/packages",
+        "type": "path"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -20,37 +52,6 @@
         "type": "github"
       }
     },
-    "myNixosModules": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-RB13l7Cpl96ha2PH6ovViFA80Y3YLB9a/MKD6Nb7ay8=",
-        "path": "nixosModules",
-        "type": "path"
-      },
-      "original": {
-        "path": "nixosModules",
-        "type": "path"
-      }
-    },
-    "myPackages": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_3",
-        "utils": "utils"
-      },
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-+xZhwJpYUfPMnVc/zYVU9kST92znUHI1fh78lPohKRA=",
-        "path": "packages",
-        "type": "path"
-      },
-      "original": {
-        "path": "packages",
-        "type": "path"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1716948383,
@@ -69,15 +70,15 @@
     },
     "nixpkgs-apocrypha": {
       "inputs": {
-        "myNixosModules": "myNixosModules",
-        "myPackages": "myPackages"
+        "apocryphalNixosModules": "apocryphalNixosModules",
+        "apocryphalPackages": "apocryphalPackages"
       },
       "locked": {
-        "lastModified": 1717188942,
-        "narHash": "sha256-uHs/E9jF/PZ+B0PTlAo0AsS7U/uTPPj88QHX1rIIsZ0=",
+        "lastModified": 1718192327,
+        "narHash": "sha256-luQsdEbN1iNCmLl9khSywd0xxBVmTzCe1M1ktWjkRC4=",
         "ref": "refs/heads/main",
-        "rev": "a837ab01e043c41775bd09a5e118ffb7316c1ca3",
-        "revCount": 1,
+        "rev": "2256eb5455e6c5cb6f8859517c6718800160a5ff",
+        "revCount": 10,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },
@@ -88,11 +89,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1716509168,
-        "narHash": "sha256-4zSIhSRRIoEBwjbPm3YiGtbd8HDWzFxJjw5DYSDy1n8=",
+        "lastModified": 1717196966,
+        "narHash": "sha256-yZKhxVIKd2lsbOqYd5iDoUIwsRZFqE87smE2Vzf6Ck0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bfb7a882678e518398ce9a31a881538679f6f092",
+        "rev": "57610d2f8f0937f39dbd72251e9614b1561942d8",
         "type": "github"
       },
       "original": {
@@ -104,11 +105,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1716509168,
-        "narHash": "sha256-4zSIhSRRIoEBwjbPm3YiGtbd8HDWzFxJjw5DYSDy1n8=",
+        "lastModified": 1716948383,
+        "narHash": "sha256-SzDKxseEcHR5KzPXLwsemyTR/kaM9whxeiJohbL04rs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bfb7a882678e518398ce9a31a881538679f6f092",
+        "rev": "ad57eef4ef0659193044870c731987a6df5cf56b",
         "type": "github"
       },
       "original": {
@@ -123,6 +124,21 @@
         "disko": "disko",
         "nixpkgs": "nixpkgs",
         "nixpkgs-apocrypha": "nixpkgs-apocrypha"
+      }
+    },
+    "services-library": {
+      "locked": {
+        "lastModified": 1718189466,
+        "narHash": "sha256-E/dgACFj99mW4l0zuecu/PtVgpw2RNVX7/IwDo3NJG0=",
+        "ref": "refs/heads/main",
+        "rev": "6ebd574855017825462f314add6be8017bceaa7b",
+        "revCount": 6,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/services-library"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/services-library"
       }
     },
     "systems": {

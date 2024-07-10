@@ -28,6 +28,7 @@
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
             ./hosts/media_kiosk/configuration.nix
             ./modules
+            nixpkgs-apocrypha.nixosModules.selfhosting
             disko.nixosModules.disko
           ];
         };

@@ -33,6 +33,8 @@
   # Jukebox Mode
   jukebox.enable = true;
 
+  virtualisation.containers.registries.search = [ "registry.chiliahedron.wtf" ];
+
   services.prometheus.exporters = {
     node = {
       enable = true;
@@ -103,9 +105,17 @@
     }
   ];
 
-  virtualisation.docker = {
+  # virtualisation.docker = {
+  #   enable = true;
+  #   autoPrune.enable = true;
+  # };
+
+  services.selfhosted = {
     enable = true;
-    autoPrune.enable = true;
+    services = [
+      "rhasspy-satellite"
+      "timeflip-tracker"
+    ];
   };
 
   # List packages installed in system profile. To search, run:
