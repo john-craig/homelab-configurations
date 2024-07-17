@@ -27,7 +27,7 @@
       useTang = true;
       devices = {
         crypt0 = {
-          secretFile = /root/crypt0/keyfile.jwe;
+          secretFile = /root/cryptsetup/crypt0/keyfile.jwe;
         };
       };
     };
@@ -74,7 +74,7 @@
     };
 
   environment.etc."crypttab".text = ''
-    crypt1            UUID=2d09e83f-a7e9-4e48-aab4-7cfbedf6a907    /root/crypt1/keyfile.bin
+    crypt1            UUID=2d09e83f-a7e9-4e48-aab4-7cfbedf6a907    /root/cryptsetup/crypt1/keyfile.bin
   '';
 
   fileSystems."/srv" =
