@@ -33,8 +33,8 @@
     };
 
   # Bind mount from the `sec` filesystem
-  fileSystems."/var/lib/private" = {
-    device = "/sec/private";
+  fileSystems."/var/lib/private/tang" = {
+    device = "/sec/tang";
     options = [ "bind" "nofail" ];
     depends = "/sec";
   };

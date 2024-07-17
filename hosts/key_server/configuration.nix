@@ -44,14 +44,92 @@
     ];
   };
 
+  # Node Exporter
+  services.prometheus.exporters = {
+    node = {
+      enable = true;
+      port = 9100;
+    };
+  };
+
   # Required for Yubikey
   services.pcscd.enable = true;
+
+  systemd.services."cryptsetup@" = {
+    onFailure = [
+      # TODO: add some kind of notifier here
+    ];
+  };
 
   services.tang = {
     enable = true;
 
     ipAddressAllow = [ "192.168.1.0/24" ];
     listenStream = [ "0.0.0.0:7654" ];
+  };
+
+  # Ensure that the tang server doesn't work if the bind mount
+  # for /var/lib/private isn't there
+  systemd.sockets.tangd = {
+    after = [
+      "var-lib-private-tang.mount"
+    ];
+    requires = [
+      "var-lib-private-tang.mount"
+    ];
+  };
+
+  # SSH Key Backups
+  systemd.timers."ssh-key-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Unit = "ssh-key-backup.service";
+    };
+  };
+
+  systemd.services."ssh-key-backup" = {
+    enable = true;
+    script =
+      let
+        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config'";
+      in
+      ''
+        ${rsync_cmd} galahad_workstation:/sec/openssh/galahad/.ssh/ /sec/openssh/workstation/galahad/.ssh || true
+        ${rsync_cmd} evak_laptop:/home/evak/.ssh/ /sec/openssh/laptop/evak/.ssh || true
+      '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+
+  # Cryptsetup backups
+  systemd.timers."cryptsetup-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Unit = "cryptsetup-backup.service";
+    };
+  };
+
+  systemd.services."cryptsetup-backup" = {
+    enable = true;
+    script =
+      let
+        rsync_cmdA = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config'";
+        rsync_cmdB = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config' --rsync-path='sudo rsync'";
+      in
+      ''
+        ${rsync_cmdA} sec_backup_workstation:/root/cryptsetup/ /sec/cryptsetup/workstation || true
+        ${rsync_cmdB} homeserver1:/root/cryptsetup/ /sec/cryptsetup/homeserver1 || true
+        ${rsync_cmdB} pxe_server:/root/cryptsetup/ /sec/cryptsetup/pxe_server || true
+      '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   services.openssh = {
