@@ -22,7 +22,7 @@
     };
 
   environment.etc."crypttab".text = ''
-    crypt0            UUID=82f1cf56-3768-4b4e-bb7f-f46db57d8513    - nofail
+    crypt0            UUID=82f1cf56-3768-4b4e-bb7f-f46db57d8513    /root/cryptsetup/crypt0/keyfile.bin nofail
   '';
 
   fileSystems."/srv" =

@@ -34,6 +34,17 @@
 
   networking.hostName = "pxe-server";
 
+  # Node Exporter
+  services.prometheus.exporters = {
+    node = {
+      enable = true;
+      port = 9100;
+    };
+  };
+
+  # Offsite Backup
+
+
   # Daily Backup
   systemd.timers."daily-backup" = {
     wantedBy = [ "timers.target" ];
@@ -45,10 +56,14 @@
 
   systemd.services."daily-backup" = {
     enable = true;
-    script = ''
-      ${pkgs.rsync}/bin/rsync --delete -ravP -e '${pkgs.openssh}/bin/ssh -F /sec/service/.ssh/config' --rsync-path="sudo rsync" homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
-      ${pkgs.rsync}/bin/rsync --delete -ravP -e '${pkgs.openssh}/bin/ssh -F /sec/service/.ssh/config' --rsync-path="sudo rsync" homeserver1:/srv/documents/ /srv/backup/daily/homeserver1/srv/documents
-    '';
+    script =
+      let
+        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config' --rsync-path='sudo rsync'";
+      in
+      ''
+        ${rsync_cmd} homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
+        ${rsync_cmd} homeserver1:/srv/documents/ /srv/backup/daily/homeserver1/srv/documents
+      '';
     serviceConfig = {
       Type = "oneshot";
       User = "root";
