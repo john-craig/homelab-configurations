@@ -15,6 +15,7 @@
   networking.hostName = "homeserver1"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   systemd.services.NetworkManager-wait-online.enable = false;
+
   networking.firewall.enable = false;
 
   # Set your time zone.
@@ -30,58 +31,19 @@
     curl
     git
     btrfs-progs
-    docker
     obsidian-link-archiver
-    (python3.withPackages (ps: with ps; [
-      requests
-      urllib3
-      websocket-client
-      (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
-        pname = "docker";
-        version = "6.1.3";
-        src = fetchPypi {
-          inherit pname version;
-          sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
-        };
-      }))
-      (buildPythonPackage rec {
-        pname = "docker-compose";
-        version = "1.29.2";
-        src = fetchPypi {
-          inherit pname version;
-          sha256 = "sha256-TIzZ0h0jdBJ5PRi9MxEASe6a+Nqz/iwhO70HM5WbCbc=";
-        };
-        doCheck = false;
-        propagatedBuildInputs = [
-          (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
-            pname = "docker";
-            version = "6.1.3";
-            src = fetchPypi {
-              inherit pname version;
-              sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
-            };
-          }))
-          pkgs.python3Packages.python-dotenv
-          pkgs.python3Packages.dockerpty
-          pkgs.python3Packages.setuptools
-          pkgs.python3Packages.distro
-          pkgs.python3Packages.pyyaml
-          pkgs.python3Packages.jsonschema
-          pkgs.python3Packages.jsondiff
-          pkgs.python3Packages.docopt
-          pkgs.python3Packages.texttable
-        ];
-      })
-    ]))
   ];
 
-  virtualisation.docker = {
+  services.selfhosted = {
     enable = true;
-    autoPrune.enable = true;
-    daemon.settings = {
-      experimental = true;
-      metrics-addr = "0.0.0.0:9323";
-    };
+    services = [
+      "authelia"
+      "traefik"
+      "gitea"
+      #"nextcloud"
+      "jellyfin"
+      "torrenting"
+    ];
   };
 
   # System Daemon Timers

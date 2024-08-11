@@ -19,6 +19,7 @@
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
             ./hosts/homeserver1/configuration.nix
+            nixpkgs-apocrypha.nixosModules.selfhosting
           ];
         };
 

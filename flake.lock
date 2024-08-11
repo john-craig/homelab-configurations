@@ -7,12 +7,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-o6/z5McvLxDptY+D3vySMkkhBXSJMqgO2gl/r2AyjRk=",
-        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/nixosModules",
+        "narHash": "sha256-jZYr4XeLCnuFDNgAQaXecyeI9oa2b69OVYGHpIYY05Y=",
+        "path": "/nix/store/6am695y9ihx6bbb7l5zxcfn86m1p2x0m-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/nixosModules",
+        "path": "/nix/store/6am695y9ihx6bbb7l5zxcfn86m1p2x0m-source/nixosModules",
         "type": "path"
       }
     },
@@ -24,11 +24,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-3QG8NnuKJwnCkylmeBJHPwXeQLnf8FLN2ZsQBTuze5Y=",
-        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/packages",
+        "path": "/nix/store/6am695y9ihx6bbb7l5zxcfn86m1p2x0m-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/ps6sq7ija2yp8whswnm3f4qmqym57fz9-source/packages",
+        "path": "/nix/store/6am695y9ihx6bbb7l5zxcfn86m1p2x0m-source/packages",
         "type": "path"
       }
     },
@@ -74,11 +74,11 @@
         "apocryphalPackages": "apocryphalPackages"
       },
       "locked": {
-        "lastModified": 1718192327,
-        "narHash": "sha256-luQsdEbN1iNCmLl9khSywd0xxBVmTzCe1M1ktWjkRC4=",
+        "lastModified": 1723374854,
+        "narHash": "sha256-fdN8tUwcRsSGGxxBFN3caTqi26bZBlK1g71tBsJRB5c=",
         "ref": "refs/heads/main",
-        "rev": "2256eb5455e6c5cb6f8859517c6718800160a5ff",
-        "revCount": 10,
+        "rev": "aaf615e2c51168d416c967e5294b53da409cf75a",
+        "revCount": 15,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },
@@ -128,11 +128,11 @@
     },
     "services-library": {
       "locked": {
-        "lastModified": 1718189466,
-        "narHash": "sha256-E/dgACFj99mW4l0zuecu/PtVgpw2RNVX7/IwDo3NJG0=",
+        "lastModified": 1723371292,
+        "narHash": "sha256-c8sveILXhUKz8sKbTT7mloDpI2aX9oueRmcHenANey8=",
         "ref": "refs/heads/main",
-        "rev": "6ebd574855017825462f314add6be8017bceaa7b",
-        "revCount": 6,
+        "rev": "2c07552ae3581134b5f05c750ab600b04c8ceae9",
+        "revCount": 10,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/services-library"
       },
