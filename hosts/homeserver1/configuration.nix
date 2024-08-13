@@ -40,7 +40,8 @@
       "authelia"
       "traefik"
       "gitea"
-      #"nextcloud"
+      "gotify"
+      "nextcloud"
       "jellyfin"
       "torrenting"
     ];
