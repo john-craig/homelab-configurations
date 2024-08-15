@@ -23,12 +23,6 @@
     cryptsetup
     clevis
     python3
-    # Uncomment the below if you need python3 with specific packages 
-    #
-    # (python3.withPackages(ps: with ps; [
-    #   requests
-    #   ...
-    # ]))
     ansible
   ];
 
@@ -43,7 +37,20 @@
   };
 
   # Offsite Backup
-
+  systemd.services."offsite-backup" = {
+    enable = true;
+    script =
+      let
+        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config' --rsync-path='sudo rsync'";
+      in
+      ''
+        tar -czf -O /srv/backup | gpg -e | curl -u username -T - sftp://sftpserver/archive.tar.gz.gpg
+      '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
 
   # Daily Backup
   systemd.timers."daily-backup" = {
