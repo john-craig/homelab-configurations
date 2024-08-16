@@ -22,6 +22,8 @@
     libfido2
     cryptsetup
     yubikey-manager
+    gnupg
+    pinentry
     nano
     curl
     btrfs-progs
@@ -52,7 +54,13 @@
     };
   };
 
-  # Required for Yubikey
+  # Required for GnuPG
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
+  # Required for Yubikey and GnuPG
   services.pcscd.enable = true;
 
   systemd.services."cryptsetup@" = {

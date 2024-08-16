@@ -18,8 +18,12 @@
 
   environment.systemPackages = with pkgs; [
     smartmontools
+    screen
     git
     rsync
+    s3cmd
+    gnupg
+    pinentry
     cryptsetup
     clevis
     python3
@@ -36,15 +40,31 @@
     };
   };
 
+  # Required for GnuPG
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
   # Offsite Backup
+  systemd.timers."offsite-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Unit = "weekly-backup.service";
+    };
+  };
+
   systemd.services."offsite-backup" = {
     enable = true;
     script =
-      let
-        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config' --rsync-path='sudo rsync'";
-      in
       ''
-        tar -czf -O /srv/backup | gpg -e | curl -u username -T - sftp://sftpserver/archive.tar.gz.gpg
+        ${pkgs.gnutar}/bin/tar -czf - /srv/backup/ | \
+        ${pkgs.gnupg}/bin/gpg --encrypt --always-trust --recipient offsite-backup \
+            --homedir /sec/gnupg/pxe_server/service/.gnupg | \
+        ${pkgs.s3cmd}/bin/s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg \
+            --multipart-chunk-size-mb=500 \
+            put - s3://chiliahedron-offsite-backups/backup.tar.gz.gpg
       '';
     serviceConfig = {
       Type = "oneshot";
