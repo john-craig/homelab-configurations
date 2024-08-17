@@ -1,7 +1,7 @@
 { lib, config, pkgs, ... }:
 {
 
-  services.selfhosted = {
+  services.gallipedal = {
     enable = true;
     services = [ "invidious" ];
   };

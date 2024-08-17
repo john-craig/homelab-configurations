@@ -8,18 +8,20 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     nixpkgs-apocrypha.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha";
+
+    gallipedal.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module";
   };
 
-  outputs = { self, nixpkgs, disko, nixpkgs-apocrypha }@inputs: {
+  outputs = { self, nixpkgs, disko, gallipedal, nixpkgs-apocrypha }@inputs: {
 
     nixosConfigurations = {
       homeserver1 =
         nixpkgs.lib.nixosSystem {
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
+            gallipedal.nixosModules.gallipedal
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
             ./hosts/homeserver1/configuration.nix
-            nixpkgs-apocrypha.nixosModules.selfhosting
           ];
         };
 
@@ -27,10 +29,10 @@
         nixpkgs.lib.nixosSystem {
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
+            disko.nixosModules.disko
+            gallipedal.nixosModules.gallipedal
             ./hosts/media_kiosk/configuration.nix
             ./modules
-            nixpkgs-apocrypha.nixosModules.selfhosting
-            disko.nixosModules.disko
           ];
         };
 
@@ -49,7 +51,7 @@
       test-vm = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/test-vm/configuration.nix
-          nixpkgs-apocrypha.nixosModules.selfhosting
+          gallipedal.nixosModules.gallipedal
         ];
       };
     };

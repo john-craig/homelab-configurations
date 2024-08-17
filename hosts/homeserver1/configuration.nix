@@ -34,7 +34,7 @@
     obsidian-link-archiver
   ];
 
-  services.selfhosted = {
+  services.gallipedal = {
     enable = true;
     services = [
       "authelia"
