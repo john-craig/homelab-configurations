@@ -110,7 +110,7 @@
   #   autoPrune.enable = true;
   # };
 
-  services.selfhosted = {
+  services.gallipedal = {
     enable = true;
     services = [
       "rhasspy-satellite"
