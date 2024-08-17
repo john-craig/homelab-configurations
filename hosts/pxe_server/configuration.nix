@@ -57,6 +57,7 @@
 
   systemd.services."offsite-backup" = {
     enable = true;
+    path = [ pkgs.gzip pkgs.gnutar pkgs.gnupg pkgs.s3cmd ];
     script =
       ''
         # Create a /var/run directory, if it doesn't already exist
@@ -77,15 +78,15 @@
         BACKUP_IDX=$((BACKUP_IDX%4))
 
         # Start the backup
-        ${pkgs.gnutar}/bin/tar -czf - /srv/backup/ | \
-        ${pkgs.gnupg}/bin/gpg --encrypt --always-trust --recipient offsite-backup \
-            --homedir /sec/gnupg/pxe_server/service/.gnupg | \
-        ${pkgs.s3cmd}/bin/s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg \
-            --multipart-chunk-size-mb=500 \
-            put - s3://chiliahedron-offsite-backups/backup-$BACKUP_IDX.tar.gz.gpg
+        tar -czf - /srv/backup/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir /sec/gnupg/pxe_server/service/.gnupg | s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg --multipart-chunk-size-mb=1000 put - s3://chiliahedron-offsite-backups/backup-$BACKUP_IDX.tar.gz.gpg
         
         # Update the index only when the backup completed successfully
         echo $BACKUP_IDX > /var/run/offline-backup/backup.idx
+      '';
+    postStop =
+      ''
+        # Remove GNU's lock
+         rm -f /sec/gnupg/pxe_server/service/.gnupg/public-keys.d/pubring.db.lock || true
 
         # Remove our lock
         rm /var/run/offline-backup/backup.pid
