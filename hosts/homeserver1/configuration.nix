@@ -38,12 +38,13 @@
     enable = true;
     services = [
       "authelia"
-      "traefik"
       "gitea"
       "gotify"
+      "monitoring"
       "nextcloud"
       "jellyfin"
       "torrenting"
+      "traefik"
     ];
   };
 
