@@ -37,12 +37,25 @@
   services.gallipedal = {
     enable = true;
     services = [
+      "audiobookshelf"
+      "archivebox"
       "authelia"
+      "code-server"
       "gitea"
       "gotify"
+      "grocy"
+      "homepage"
       "invidious"
-      "monitoring"
       "jellyfin"
+      "monitoring"
+      "obsidian-remote"
+      "onlyoffice"
+      "owntracks"
+      "paperless-ngx"
+      "protonmail-bridge"
+      "syncthing"
+      "registry"
+      "rhasspy-base"
       "torrenting"
       "traefik"
     ];
