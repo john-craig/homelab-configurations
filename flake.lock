@@ -7,11 +7,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-8FVk3S8ix5PU7gTtzFCflgWVxa9OgMec7Ru9GMiZLLk=",
-        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/nixosModules",
+        "path": "/nix/store/nqqskpybwhiswn15wwni89zlcdwsq9rp-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/nixosModules",
+        "path": "/nix/store/nqqskpybwhiswn15wwni89zlcdwsq9rp-source/nixosModules",
         "type": "path"
       }
     },
@@ -23,11 +23,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-WUccAuXj9HbYh2GO67ptt8h3UypiBrJrs2dgFT+vU/8=",
-        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/packages",
+        "path": "/nix/store/nqqskpybwhiswn15wwni89zlcdwsq9rp-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/packages",
+        "path": "/nix/store/nqqskpybwhiswn15wwni89zlcdwsq9rp-source/packages",
         "type": "path"
       }
     },
@@ -107,10 +107,10 @@
         "apocryphalPackages": "apocryphalPackages"
       },
       "locked": {
-        "lastModified": 1724885347,
-        "narHash": "sha256-OagXiwnMprr5UgUocsc7JSuVX/X5jtln4IMYFFGqVBY=",
+        "lastModified": 1724886700,
+        "narHash": "sha256-Fp5fnSfmysQ/Ig1mWMvzw6cgLgTWQUcvoY9KSXceg3g=",
         "ref": "refs/heads/main",
-        "rev": "57be8d5609f907a861b325fbd31569ce3240d41d",
+        "rev": "da59e6117faa438870bd9e6e4ca4e60af274a62d",
         "revCount": 19,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
