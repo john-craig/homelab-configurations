@@ -7,11 +7,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-8FVk3S8ix5PU7gTtzFCflgWVxa9OgMec7Ru9GMiZLLk=",
-        "path": "/nix/store/rjig3mh984a7jrs6x0fr7vpfgrgvybgi-source/nixosModules",
+        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/rjig3mh984a7jrs6x0fr7vpfgrgvybgi-source/nixosModules",
+        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/nixosModules",
         "type": "path"
       }
     },
@@ -22,12 +22,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-3QG8NnuKJwnCkylmeBJHPwXeQLnf8FLN2ZsQBTuze5Y=",
-        "path": "/nix/store/rjig3mh984a7jrs6x0fr7vpfgrgvybgi-source/packages",
+        "narHash": "sha256-WUccAuXj9HbYh2GO67ptt8h3UypiBrJrs2dgFT+vU/8=",
+        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/rjig3mh984a7jrs6x0fr7vpfgrgvybgi-source/packages",
+        "path": "/nix/store/d60hzv4sih94jd1kims4pf8l851w4gd7-source/packages",
         "type": "path"
       }
     },
@@ -107,11 +107,11 @@
         "apocryphalPackages": "apocryphalPackages"
       },
       "locked": {
-        "lastModified": 1723896262,
-        "narHash": "sha256-2n5zR9tI3X9UxEQTKKiUlm1Rz5K0Lxuilyd2fdmjLbY=",
+        "lastModified": 1724885347,
+        "narHash": "sha256-OagXiwnMprr5UgUocsc7JSuVX/X5jtln4IMYFFGqVBY=",
         "ref": "refs/heads/main",
-        "rev": "88a92c22edcdf2380b587595759ccbfec0ec662a",
-        "revCount": 17,
+        "rev": "57be8d5609f907a861b325fbd31569ce3240d41d",
+        "revCount": 19,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },

@@ -13,6 +13,7 @@
 
       ./hostModules/kiosk.nix
       ./hostModules/jukebox.nix
+      ./hostModules/screen-saver.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -32,6 +33,14 @@
 
   # Jukebox Mode
   jukebox.enable = true;
+
+  # Screen Saver
+  screen-saver = {
+    enable = true;
+    urls = [
+      "https://grafana.chiliahedron.wtf/d/ddm6bprtsvv9cd/morning-dashboard?orgId=1&refresh=5m"
+    ];
+  };
 
   virtualisation.containers.registries.search = [ "registry.chiliahedron.wtf" ];
 
@@ -87,10 +96,7 @@
   systemd.services."morning-alarm" = {
     enable = true;
     script = ''
-      set -eu
-      pushd /home/display/smarthome-chrome-controller/
-        source env/bin/activate && python driver.py
-      popd
+      
     '';
     serviceConfig = {
       Type = "oneshot";
