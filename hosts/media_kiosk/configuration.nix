@@ -38,7 +38,8 @@
   screen-saver = {
     enable = true;
     urls = [
-      "https://grafana.chiliahedron.wtf/d/ddm6bprtsvv9cd/morning-dashboard?orgId=1&refresh=5m"
+      "https://chiliahedron.wtf"
+      "https://grafana.chiliahedron.wtf/public-dashboards/84d4b99c333d4f7d94c495a66c1af3c6?orgId=1&refresh=5m"
     ];
   };
 

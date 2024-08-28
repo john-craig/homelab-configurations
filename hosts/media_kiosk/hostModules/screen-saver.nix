@@ -77,7 +77,8 @@
               URL_IDX=$(cat $STATE_FILE)
               URL_IDX=$((URL_IDX+1))
 
-              if [ $URL_IDX -gt $URL_LOOP_LEN ]; then
+              if [ $URL_IDX -ge $URL_LOOP_LEN ]; then
+                echo "URL index wrapped"
                 URL_IDX=0
               fi
             fi
@@ -86,9 +87,9 @@
             ##################################################################
             # Set focus to the next URL and save the index
             ##################################################################
-            NEXT_URL=$\{URL_LOOP_ARR[$URL_IDX]}
+            NEXT_URL=''${URL_LOOP_ARR[$URL_IDX]}
             echo "Next URL: $NEXT_URL"
-            chromectrl focus-tab $NEXT_URL
+            chromectrl focus-tab "''${NEXT_URL}"
             echo $URL_IDX > $STATE_FILE
           else
             echo "Screen saver conditions not met, skipping"
