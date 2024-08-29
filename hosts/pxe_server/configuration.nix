@@ -78,7 +78,7 @@
         BACKUP_IDX=$((BACKUP_IDX%4))
 
         # Start the backup
-        tar -czf - /srv/backup/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir /sec/gnupg/pxe_server/service/.gnupg | s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg --multipart-chunk-size-mb=1000 put - s3://chiliahedron-offsite-backups/backup-$BACKUP_IDX.tar.gz.gpg
+        tar -czf - /srv/backup/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir /sec/gnupg/pxe_server/service/.gnupg | s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg --multipart-chunk-size-mb=500 put - s3://chiliahedron-offsite-backups/backup-$BACKUP_IDX.tar.gz.gpg
         
         # Update the index only when the backup completed successfully
         echo $BACKUP_IDX > /var/run/offline-backup/backup.idx
