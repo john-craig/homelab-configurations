@@ -38,7 +38,8 @@
   screen-saver = {
     enable = true;
     urls = [
-      "https://chiliahedron.wtf"
+      "https://chiliahedron.wtf/"
+      "https://www.tradingview.com/chart/?symbol=BITSTAMP%3ABTCUSD"
       "https://grafana.chiliahedron.wtf/public-dashboards/84d4b99c333d4f7d94c495a66c1af3c6?orgId=1&refresh=5m"
     ];
   };
