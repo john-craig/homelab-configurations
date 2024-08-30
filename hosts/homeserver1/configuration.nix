@@ -60,6 +60,12 @@
       "torrenting"
       "traefik"
     ];
+
+    proxyConf = {
+      internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)`)";
+      network = "chiliahedron-services";
+      tlsResolver = "chiliahedron-resolver";
+    };
   };
 
   # System Daemon Timers
