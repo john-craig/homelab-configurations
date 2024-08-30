@@ -41,6 +41,7 @@
       "archivebox"
       "authelia"
       "code-server"
+      "dev-blog"
       "gitea"
       "gotify"
       "grocy"
