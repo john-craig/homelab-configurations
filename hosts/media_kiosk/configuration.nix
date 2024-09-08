@@ -38,8 +38,8 @@
   screen-saver = {
     enable = true;
     urls = [
-      "https://chiliahedron.wtf/"
-      "https://www.tradingview.com/chart/?symbol=BITSTAMP%3ABTCUSD"
+      "https://owntracks.chiliahedron.wtf/last/index.html"
+      "https://status.chiliahedron.wtf/recent.html"
       "https://grafana.chiliahedron.wtf/public-dashboards/84d4b99c333d4f7d94c495a66c1af3c6?orgId=1&refresh=5m"
     ];
   };
@@ -112,11 +112,6 @@
       commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
-
-  # virtualisation.docker = {
-  #   enable = true;
-  #   autoPrune.enable = true;
-  # };
 
   services.gallipedal = {
     enable = true;

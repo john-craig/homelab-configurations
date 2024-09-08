@@ -32,6 +32,7 @@
     git
     btrfs-progs
     obsidian-link-archiver
+    status-page-generator
   ];
 
   services.gallipedal = {
@@ -55,6 +56,7 @@
       "paperless-ngx"
       "protonmail-bridge"
       "syncthing"
+      "status-page"
       "registry"
       "rhasspy-base"
       "torrenting"
@@ -92,6 +94,26 @@
       User = "service";
     };
   };
+
+  systemd.timers."generate-project-summary" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*:0/10";
+      Unit = "generate-project-summary.service";
+    };
+  };
+
+  systemd.services."generate-project-summary" = {
+    enable = true;
+    script = ''
+      # Regenerate the files
+      ${pkgs.status-page-generator}/bin/status-generator /srv/documents/by_category/vault /srv/container/status-page/recent.html
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
 
   services.tailscale = {
     enable = true;
