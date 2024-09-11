@@ -107,7 +107,7 @@
     enable = true;
     script = ''
       # Regenerate the files
-      ${pkgs.status-page-generator}/bin/status-generator /srv/documents/by_category/vault /srv/container/status-page/recent.html
+      ${pkgs.status-page-generator}/bin/status-generator /srv/documents/by_category/vault /srv/container/status-page
     '';
     serviceConfig = {
       Type = "oneshot";
