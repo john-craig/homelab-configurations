@@ -31,12 +31,19 @@
   ];
 
   networking.hostName = "pxe-server";
+  networking.firewall.enable = false;
+
 
   # Node Exporter
   services.prometheus.exporters = {
     node = {
       enable = true;
       port = 9100;
+    };
+
+    systemd = {
+      enable = true;
+      port = 9558;
     };
   };
 
@@ -51,7 +58,7 @@
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "weekly";
-      Unit = "weekly-backup.service";
+      Unit = "offsite-backup.service";
     };
   };
 
@@ -110,7 +117,7 @@
     enable = true;
     script =
       let
-        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/key_server/service/.ssh/config' --rsync-path='sudo rsync'";
+        rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/pxe_server/service/.ssh/config' --rsync-path='sudo rsync'";
       in
       ''
         ${rsync_cmd} homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
