@@ -118,7 +118,8 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
-    extraUpFlags = [ "--snat-subnet-routes=false" ];
+    authKeyFile = "/root/tailscale/authkey.b64";
+    extraUpFlags = [ "--advertise-routes=192.168.0.0/24" "--snat-subnet-routes=false" ];
   };
 
   services.nfs.server.enable = true;
