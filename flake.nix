@@ -7,12 +7,15 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     nixpkgs-apocrypha.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha";
 
     gallipedal.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module";
   };
 
-  outputs = { self, nixpkgs, disko, gallipedal, nixpkgs-apocrypha }@inputs: {
+  outputs = { self, nixpkgs, disko, home-manager, gallipedal, nixpkgs-apocrypha }@inputs: {
 
     nixosConfigurations = {
       homeserver1 =
@@ -30,6 +33,7 @@
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
             disko.nixosModules.disko
+            home-manager.nixosModules.home-manager
             gallipedal.nixosModules.gallipedal
             ./hosts/media_kiosk/configuration.nix
             ./modules
