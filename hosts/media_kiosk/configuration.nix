@@ -41,9 +41,9 @@
   screen-saver = {
     enable = true;
     urls = [
-      "https://owntracks.chiliahedron.wtf/last/index.html"
       "https://status.chiliahedron.wtf/recent.html"
       "https://grafana.chiliahedron.wtf/public-dashboards/84d4b99c333d4f7d94c495a66c1af3c6?orgId=1&refresh=5m"
+      "https://gotify.chiliahedron.wtf/#/messages/3"
     ];
   };
 
