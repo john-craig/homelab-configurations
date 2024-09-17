@@ -25,6 +25,7 @@
             gallipedal.nixosModules.gallipedal
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
             ./hosts/homeserver1/configuration.nix
+            ./global/defaults/configuration.nix
           ];
         };
 
@@ -36,26 +37,36 @@
             home-manager.nixosModules.home-manager
             gallipedal.nixosModules.gallipedal
             ./hosts/media_kiosk/configuration.nix
-            ./modules
+            ./global/defaults/configuration.nix
           ];
         };
 
       key_server = nixpkgs.lib.nixosSystem {
-        modules = [ ./hosts/key_server/configuration.nix ];
+        modules = [
+          ./hosts/key_server/configuration.nix
+          ./global/defaults/configuration.nix
+        ];
       };
 
       pxe_server = nixpkgs.lib.nixosSystem {
-        modules = [ ./hosts/pxe_server/configuration.nix ];
+        modules = [
+          ./hosts/pxe_server/configuration.nix
+          ./global/defaults/configuration.nix
+        ];
       };
 
       bastion0 = nixpkgs.lib.nixosSystem {
-        modules = [ ./hosts/bastion0/configuration.nix ];
+        modules = [
+          ./hosts/bastion0/configuration.nix
+          ./global/defaults/configuration.nix
+        ];
       };
 
       test-vm = nixpkgs.lib.nixosSystem {
         modules = [
-          ./hosts/test-vm/configuration.nix
           gallipedal.nixosModules.gallipedal
+          ./hosts/test-vm/configuration.nix
+          ./global/defaults/configuration.nix
         ];
       };
     };

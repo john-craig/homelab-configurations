@@ -22,9 +22,6 @@
     allowedTCPPorts = [ 22 80 443 ];
   };
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
   virtualisation.docker = {
     enable = true;
     autoPrune.enable = true;

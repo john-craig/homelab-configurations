@@ -18,9 +18,6 @@
 
   networking.firewall.enable = false;
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
   environment.systemPackages = with pkgs; [
