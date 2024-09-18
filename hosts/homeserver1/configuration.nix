@@ -30,6 +30,7 @@
     btrfs-progs
     obsidian-link-archiver
     status-page-generator
+    self-updater
   ];
 
   services.gallipedal = {
@@ -111,6 +112,19 @@
     };
   };
 
+  services.rss-triggers = {
+    enable = true;
+    triggers = [
+      {
+        name = "test-trigger";
+        feed = "https://gitea.chiliahedron.wtf/chiliahedron/homelab-configurations.rss";
+        age  = "2d";
+        fields = [ "description" ];
+        exec = "${pkgs.coreutils-full}/bin/echo";
+        calender = "1m";
+      }
+    ];
+  };
 
   services.tailscale = {
     enable = true;

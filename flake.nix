@@ -24,6 +24,7 @@
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
             gallipedal.nixosModules.gallipedal
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
+            nixpkgs-apocrypha.nixosModules.rss-triggers
             ./hosts/homeserver1/configuration.nix
             ./global/defaults/configuration.nix
           ];
