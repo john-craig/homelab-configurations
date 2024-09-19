@@ -100,6 +100,9 @@
             rsync_cmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=no -F /sec/openssh/pxe_server/service/.ssh/config' --rsync-path='sudo rsync'";
           in
           ''
+            # Exit if there is an ongoing offline backup
+            [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
             ${rsync_cmd} homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
             ${rsync_cmd} homeserver1:/srv/documents/ /srv/backup/daily/homeserver1/srv/documents
           '';
@@ -110,6 +113,9 @@
       }) // (mkBackupService "weekly-backup" {
         enable = true;
         script = ''
+          # Exit if there is an ongoing offline backup
+          [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
           ${pkgs.rsync}/bin/rsync --delete -ravP /srv/backup/daily/ /srv/backup/weekly
         '';
         serviceConfig = {
@@ -119,6 +125,9 @@
       }) // (mkBackupService "monthly-backup" {
         enable = true;
         script = ''
+          # Exit if there is an ongoing offline backup
+          [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
           ${pkgs.rsync}/bin/rsync --delete -ravP /srv/backup/weekly/ /srv/backup/monthly
         '';
         serviceConfig = {
