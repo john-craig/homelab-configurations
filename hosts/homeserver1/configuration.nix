@@ -7,6 +7,9 @@
 {
   imports =
     [
+      ./hostModules/link-archiver.nix
+      ./hostModules/summary-generator.nix
+
       ./hardware-configuration.nix
     ];
 
@@ -28,9 +31,6 @@
     curl
     git
     btrfs-progs
-    obsidian-link-archiver
-    status-page-generator
-    self-updater
   ];
 
   services.gallipedal = {
@@ -68,64 +68,9 @@
     };
   };
 
-  # System Daemon Timers
-  systemd.timers."archive-obsidian-links" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Unit = "archive-obsidian-links.service";
-    };
-  };
-
-  systemd.services."archive-obsidian-links" = {
-    enable = true;
-    script = ''
-      # Perform the archive
-      ${pkgs.obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/notes
-      ${pkgs.obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/projects
-      
-      # Restart archivebox to kill off erroneous Chrome processes
-      ${pkgs.docker}/bin/docker restart archivebox
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "service";
-    };
-  };
-
-  systemd.timers."generate-project-summary" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "*:0/10";
-      Unit = "generate-project-summary.service";
-    };
-  };
-
-  systemd.services."generate-project-summary" = {
-    enable = true;
-    script = ''
-      # Regenerate the files
-      ${pkgs.status-page-generator}/bin/status-generator /srv/documents/by_category/vault /srv/container/status-page
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-    };
-  };
-
-  services.rss-triggers = {
-    enable = true;
-    triggers = [
-      {
-        name = "test-trigger";
-        feed = "https://gitea.chiliahedron.wtf/chiliahedron/homelab-configurations.rss";
-        age  = "2d";
-        fields = [ "description" ];
-        exec = "${pkgs.coreutils-full}/bin/echo";
-        calender = "1m";
-      }
-    ];
-  };
-
+  link-archiver.enable = true;
+  summary-generator.enable = true;
+  
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
