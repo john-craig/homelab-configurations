@@ -14,7 +14,7 @@
     systemd.timers."archive-obsidian-links" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "daily";
+        OnCalendar = "*-*-* 23:00:00";
         Unit = "archive-obsidian-links.service";
       };
     };

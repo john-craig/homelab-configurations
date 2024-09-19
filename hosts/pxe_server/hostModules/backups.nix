@@ -61,7 +61,7 @@
       systemd.timers."daily-backup" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "daily";
+          OnCalendar = "*-*-* 00:00:00";
           Unit = "daily-backup.service";
         };
       };
@@ -70,7 +70,7 @@
       systemd.timers."weekly-backup" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "Sun *-*-* 00:30:00";
           Unit = "weekly-backup.service";
         };
       };
@@ -79,7 +79,7 @@
       systemd.timers."monthly-backup" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "monthly";
+          OnCalendar = "*-*-15 01:00:00";
           Unit = "monthly-backup.service";
         };
       };
@@ -88,7 +88,7 @@
       systemd.timers."offsite-backup" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "Wed *-*-* 01:30:00";
           Unit = "offsite-backup.service";
         };
       };
@@ -103,7 +103,6 @@
             ${rsync_cmd} homeserver1:/srv/container/ /srv/backup/daily/homeserver1/srv/container
             ${rsync_cmd} homeserver1:/srv/documents/ /srv/backup/daily/homeserver1/srv/documents
           '';
-        onSuccess = [ "daily-backup-success-notifier.service" ];
         serviceConfig = {
           Type = "oneshot";
           User = "root";
