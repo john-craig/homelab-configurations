@@ -71,6 +71,8 @@
   link-archiver.enable = true;
   summary-generator.enable = true;
   
+  services.auto-updater.enable = true;
+
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
