@@ -49,20 +49,18 @@
           echo "Idle Time: $IDLE_TIME"
 
           ####################################################################
-          # Check if audio is playing by grep'ing pw-cli for output streams
-          # This serves as a shorthand for whether a video is being watched
+          # Check if a video is currently being watched
           ####################################################################
           set +e
-          PIPEWIRE_REMOTE=/run/user/1001/pipewire-0 pw-cli ls Node | grep "Stream/Output/Audio"
-          AUDIO_PLAYING=$?
+          VIDEO_PLAYING=$(chromectrl is-video-playing)
           set -e
-          echo "Audio Playing: $AUDIO_PLAYING (0 for yes, 1 for no)"
+          echo "Video Playing: $VIDEO_PLAYING"
 
           ####################################################################
           # If the idle time is greater than the maximum and there are no
-          # audio streams actively playing
+          # videos currently playing
           ####################################################################
-          if [ $IDLE_TIME -gt $MAX_IDLE ] && [ $AUDIO_PLAYING -eq 1 ]; then
+          if [ $IDLE_TIME -gt $MAX_IDLE ] && [ "$VIDEO_PLAYING" = "False" ]; then
             echo "Screen saver conditions met"
             # Exit if we are in full screen
             chromectrl exit-fullscreen
