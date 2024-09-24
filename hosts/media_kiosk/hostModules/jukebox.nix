@@ -11,7 +11,7 @@
       enable = true;
 
       configPackages = [
-        (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-sink.conf" ''
+        (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/50-combined-sink.conf" ''
           context.modules = [
             {
               name = libpipewire-module-combine-stream
@@ -35,7 +35,7 @@
             } 
           ]
         '')
-        (pkgs.writeTextDir "pipewire/pipewire.conf.d/50-combined-source.conf" ''
+        (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/50-combined-source.conf" ''
           context.modules = [
             {
               name = libpipewire-module-combine-stream
@@ -71,7 +71,7 @@
         enable = true;
 
         configPackages = [
-          (pkgs.writeTextDir "wireplumber/bluetooth.lua.d/51-bluez-config.lua" ''
+          (pkgs.writeTextDir "share/wireplumber/bluetooth.lua.d/51-bluez-config.lua" ''
             bluez_monitor.enabled = true
 
             bluez_monitor.properties = {
@@ -102,8 +102,7 @@
                   },
                 },
                 apply_properties = {
-                  ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-                  ["device.profile"] = "a2dp-sink",
+                  ["device.profile"] = "a2dp-source",
                 }
               },
               {
@@ -142,6 +141,18 @@
                   ["target.object"] = "broadcast-sink",
                 }
               },
+              {
+                matches = {
+                  {
+                    -- This matches all cards.
+                    { "device.name", "matches", "bluez_card.*" },
+                  },
+                },
+                apply_properties = {
+                  ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
+                  ["device.profile"] = "a2dp-sink",
+                }
+              },
             }
           '')
         ];
@@ -160,7 +171,7 @@
           FastConnectable = "true";
           Experimental = "true";
           KernelExperimental = "true";
-          MultiProfile = "mutliple";
+          MultiProfile = "multiple";
         };
       };
     };
