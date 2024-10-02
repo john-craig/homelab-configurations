@@ -9,6 +9,7 @@
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
+      systemWide = true;
 
       configPackages = [
         (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/50-combined-sink.conf" ''
@@ -64,8 +65,6 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      jack.enable = true;
 
       wireplumber = {
         enable = true;

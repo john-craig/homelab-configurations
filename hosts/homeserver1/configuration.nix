@@ -44,6 +44,7 @@
       "gitea"
       "gotify"
       "grocy"
+      "home-assistant"
       "homepage"
       "invidious"
       "jellyfin"
