@@ -77,7 +77,15 @@
     enable = true;
     useRoutingFeatures = "both";
     authKeyFile = "/root/tailscale/authkey.b64";
-    extraUpFlags = [ "--advertise-routes=192.168.0.0/24" "--snat-subnet-routes=false" ];
+    extraUpFlags = [ "--snat-subnet-routes=false" ];
+  };
+
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      server = [ "192.168.1.1" ];
+      address = [ "/chiliahedron.wtf/100.69.200.65" ];
+    };
   };
 
   services.nfs.server.enable = true;
