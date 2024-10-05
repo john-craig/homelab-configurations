@@ -17,6 +17,8 @@
   networking.useDHCP = false;
   networking.interfaces.eth0.useDHCP = true;
 
+  systemd.services.NetworkManager-wait-online.enable = false;
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 80 443 ];
@@ -50,7 +52,7 @@
               # if it is hosting multiple sites hosted, it knows which one to serve
               #proxy_set_header Host $server_name;
 
-              proxy_pass 192.168.1.8:443;
+              proxy_pass 100.69.200.65:443;
           }
       }
     '';
@@ -64,7 +66,11 @@
     settings.KbdInteractiveAuthentication = false;
   };
 
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    extraUpFlags = [ "--accept-dns" ];
+    authKeyFile = "/root/tailscale/authkey.b64";
+  };
 
   security.sudo.extraRules = [
     {
@@ -80,48 +86,6 @@
     inetutils
     mtr
     sysstat
-    docker
-    (python3.withPackages (ps: with ps; [
-      requests
-      urllib3
-      websocket-client
-      (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
-        pname = "docker";
-        version = "6.1.3";
-        src = fetchPypi {
-          inherit pname version;
-          sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
-        };
-      }))
-      (buildPythonPackage rec {
-        pname = "docker-compose";
-        version = "1.29.2";
-        src = fetchPypi {
-          inherit pname version;
-          sha256 = "sha256-TIzZ0h0jdBJ5PRi9MxEASe6a+Nqz/iwhO70HM5WbCbc=";
-        };
-        doCheck = false;
-        propagatedBuildInputs = [
-          (pkgs.python3Packages.docker.overrideAttrs (oldAttrs: rec {
-            pname = "docker";
-            version = "6.1.3";
-            src = fetchPypi {
-              inherit pname version;
-              sha256 = "sha256-qm0XgwBFul7wFo1eqjTTe+6xE5SMQTr/4dWZH8EfmiA=";
-            };
-          }))
-          pkgs.python3Packages.python-dotenv
-          pkgs.python3Packages.dockerpty
-          pkgs.python3Packages.setuptools
-          pkgs.python3Packages.distro
-          pkgs.python3Packages.pyyaml
-          pkgs.python3Packages.jsonschema
-          pkgs.python3Packages.jsondiff
-          pkgs.python3Packages.docopt
-          pkgs.python3Packages.texttable
-        ];
-      })
-    ]))
   ];
 
   users = {
