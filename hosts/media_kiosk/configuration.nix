@@ -15,6 +15,7 @@
       ./hostModules/jukebox.nix
       ./hostModules/screen-saver.nix
       ./hostModules/notifier.nix
+      ./hostModules/voice-assistant.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -33,6 +34,8 @@
   jukebox.enable = true;
 
   notifier.enable = true;
+
+  voice-assistant.enable = true;
 
   # Screen Saver
   screen-saver = {

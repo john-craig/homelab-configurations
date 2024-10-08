@@ -9,6 +9,7 @@
     [
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
+      ./hostModules/voice-assistant.nix
 
       ./hardware-configuration.nix
     ];
@@ -71,8 +72,10 @@
 
   link-archiver.enable = true;
   summary-generator.enable = true;
-  
+
   services.auto-updater.enable = true;
+
+  voice-assistant.enable = true;
 
   services.tailscale = {
     enable = true;
