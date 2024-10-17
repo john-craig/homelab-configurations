@@ -34,8 +34,8 @@
       sound.command = "aplay -D pipewire -r 22050 -c 1 -f S16_LE -t raw";
 
       sounds = {
-        awake = null;
-        done = null;
+        awake = "/home/display/media/by_category/audio/sounds/awake.wav";
+        done = "/home/display/media/by_category/audio/sounds/done.wav";
       };
 
       extraArgs = [
