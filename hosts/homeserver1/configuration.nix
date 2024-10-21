@@ -31,7 +31,10 @@
     nano
     curl
     git
+    dig
     btrfs-progs
+
+    dev-journal-builder
   ];
 
   services.gallipedal = {
@@ -64,7 +67,7 @@
     ];
 
     proxyConf = {
-      internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)`)";
+      internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)|(^100\.69\.200\.65)`)";
       network = "chiliahedron-services";
       tlsResolver = "chiliahedron-resolver";
     };
@@ -81,13 +84,18 @@
     enable = true;
     useRoutingFeatures = "both";
     authKeyFile = "/root/tailscale/authkey.b64";
-    extraUpFlags = [ "--snat-subnet-routes=false" ];
+    extraUpFlags = [ "--accept-dns=false" "--snat-subnet-routes=false" ];
   };
 
   services.dnsmasq = {
     enable = true;
+    resolveLocalQueries = false;
     settings = {
       server = [ "192.168.1.1" ];
+      interface = [ "tailscale0" ];
+      except-interface = [ "lo" ];
+      bind-interfaces = true;
+
       address = [ "/chiliahedron.wtf/100.69.200.65" ];
     };
   };
