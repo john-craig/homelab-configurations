@@ -10,6 +10,7 @@
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
       ./hostModules/voice-assistant.nix
+      ./hostModules/personal-site.nix
 
       ./hardware-configuration.nix
     ];
@@ -32,9 +33,8 @@
     curl
     git
     dig
+    screen
     btrfs-progs
-
-    dev-journal-builder
   ];
 
   services.gallipedal = {
@@ -73,6 +73,7 @@
     };
   };
 
+  personal-site.enable = true;
   link-archiver.enable = true;
   summary-generator.enable = true;
 

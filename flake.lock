@@ -6,12 +6,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-jW2pLFnNXaBkbnYtGbRNHT0TNDfhhGh+g4/HtWldvMg=",
-        "path": "/nix/store/1g2mbf1h2ihndl3nmdkl2jkfll8xy5d8-source/nixosModules",
+        "narHash": "sha256-P0HhuAmtG2xaUpJOfwDirE7tqBaQdBzYOCEQzC/fhBs=",
+        "path": "/nix/store/d0hn9ksmxc3bz1798wj53pw4w732n8sx-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/1g2mbf1h2ihndl3nmdkl2jkfll8xy5d8-source/nixosModules",
+        "path": "/nix/store/d0hn9ksmxc3bz1798wj53pw4w732n8sx-source/nixosModules",
         "type": "path"
       }
     },
@@ -22,12 +22,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-c09boT6vePoAqwHV7c8IhnLrK8irJ2n50tX4vRiI7AE=",
-        "path": "/nix/store/1g2mbf1h2ihndl3nmdkl2jkfll8xy5d8-source/packages",
+        "narHash": "sha256-hhYd6RBIScfldlbN2IXhwVQNfitzNCpFOvrn5TpotUY=",
+        "path": "/nix/store/d0hn9ksmxc3bz1798wj53pw4w732n8sx-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/1g2mbf1h2ihndl3nmdkl2jkfll8xy5d8-source/packages",
+        "path": "/nix/store/d0hn9ksmxc3bz1798wj53pw4w732n8sx-source/packages",
         "type": "path"
       }
     },
@@ -57,11 +57,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1725828040,
-        "narHash": "sha256-qDA0V1Ld2yMsMcOI6Ibd5AkrX7wsbQjHJrjfP8y9KEU=",
+        "lastModified": 1729557317,
+        "narHash": "sha256-XCJE7OIfZhZZXTrFYsQtSDBox3KKu9omYOTG5vssHx0=",
         "ref": "refs/heads/main",
-        "rev": "6a62eb5b811092fc6706c123e2aab407a93645e8",
-        "revCount": 16,
+        "rev": "a5c1135eec96e9418264fc514db0fdddca4e8630",
+        "revCount": 17,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },
@@ -72,11 +72,11 @@
     },
     "gallipedal-library": {
       "locked": {
-        "lastModified": 1725821524,
-        "narHash": "sha256-3d4Gi6hraPQMqRmWpx4CG+6VRm4pi50vvFjsaoBCsnU=",
+        "lastModified": 1729557311,
+        "narHash": "sha256-QHCbfoZryG2JGJnDZRJytUyCB/PjWtjTTfzxV/nIU+Q=",
         "ref": "refs/heads/main",
-        "rev": "b9793a5f5e27efa7d2e095692664b1e74ca8eea8",
-        "revCount": 28,
+        "rev": "ba1c07084d608f5efc0c4005ed97bc4a8b4ee32a",
+        "revCount": 31,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-library"
       },
@@ -127,11 +127,11 @@
         "apocryphalPackages": "apocryphalPackages"
       },
       "locked": {
-        "lastModified": 1726887195,
-        "narHash": "sha256-2A/VxWOBzhj2LlFeA13lnmDkc9nod5Fp303ln+0jksA=",
+        "lastModified": 1729368880,
+        "narHash": "sha256-IYW/RVCeO6qKupLR0OUot14TPE84wKM7R1yq2H+fjMc=",
         "ref": "refs/heads/main",
-        "rev": "236335e6036289369822b502741204185ceee4e7",
-        "revCount": 38,
+        "rev": "c7406fcea5e326f14e6d88f56a9adc9930d7d172",
+        "revCount": 42,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },
