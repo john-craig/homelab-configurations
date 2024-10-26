@@ -12,6 +12,11 @@
       systemWide = true;
 
       configPackages = [
+        (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/10-common.conf" ''
+          context.modules = [
+            { name = libpipewire-module-echo-cancel } 
+          ]
+        '')
         (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/50-combined-sink.conf" ''
           context.modules = [
             {
