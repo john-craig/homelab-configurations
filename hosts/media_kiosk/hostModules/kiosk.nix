@@ -8,6 +8,17 @@
       ungoogled-chromium
     ];
 
+    home-manager.users.display.programs.chromium = {
+      enable = true;
+      extensions = [ "cjpalhdlnbpafiamejdnhcphjbkeiagm" ]; # ublock origin
+      commandLineArgs = [
+        "--remote-debugging-port=9222"
+        "--remote-allow-origins=*"
+        "--force-dark-mode"
+        "--restore-last-session"
+      ];
+    };
+
     # Enable the X11 windowing system.
     services = {
       libinput.enable = true;
@@ -57,7 +68,7 @@
       xset s noblank & # Don't blank video device
 
       # Start chromium
-      chromium --remote-debugging-port=9222 --remote-allow-origins=* &
+      chromium &
     '';
 
     # Prevent hibernating
