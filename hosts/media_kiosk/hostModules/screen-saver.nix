@@ -16,7 +16,42 @@
     environment.systemPackages = with pkgs; [
       chrome-controller
       xprintidle
+      xdotool
       gnugrep
+      (pkgs.writeShellScriptBin "screen-restore" ''
+        #!/bin/bash
+        STATE_DIR=/tmp/$USER-:0-screensaver
+
+        STATUS_FILE=$STATE_DIR/status.txt
+        INDEX_FILE=$STATE_DIR/index.txt
+        URL_FILE=$STATE_DIR/saved_url.txt
+        FULLSCREEN_FILE=$STATE_DIR/fullscreen.txt
+
+        if [ ! -d $STATE_DIR ]; then
+          echo "No such directory $STATE_DIR"
+          exit 1
+        fi
+
+        if [ ! -f $URL_FILE ]; then
+          echo "No such file $URL_FILE"
+          exit 1
+        fi
+
+        if [ ! -f $FULLSCREEN_FILE ]; then
+          echo "No such file $FULLSCREEN_FILE"
+          exit 1
+        fi
+
+        SCREEN_URL=$(cat $URL_FILE)
+
+        echo "Restoring URL $SCREEN_URL"
+        chromectrl focus-tab $SCREEN_URL
+
+        if grep -qE 'True' $FULLSCREEN_FILE; then
+          echo "Restoring full screen"
+          DISPLAY=:0 xdotool key f
+        fi
+      '')
     ];
 
     systemd.timers."screen-saver" = {
