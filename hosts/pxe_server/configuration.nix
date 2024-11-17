@@ -1,15 +1,11 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 { config, lib, pkgs, ... }:
-
 {
   imports =
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
+      ./hostModules/disaster-recovery.nix
       ./hostModules/backups.nix
     ];
 
@@ -22,6 +18,7 @@
     smartmontools
     screen
     git
+    dig
     cryptsetup
     clevis
     python3
@@ -44,6 +41,7 @@
   };
 
   backups.enable = true;
+  disaster-recovery.enable = true;
 
   services.pixiecore.enable = true;
 

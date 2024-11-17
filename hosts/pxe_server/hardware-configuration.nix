@@ -36,7 +36,7 @@
     {
       device = "/srv/secure";
       options = [ "bind" "nofail" ];
-      depends = "/srv";
+      depends = [ "/srv" ];
     };
 
   swapDevices = [ ];

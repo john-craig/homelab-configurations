@@ -45,6 +45,7 @@
       "authelia"
       "code-server"
       "dev-blog"
+      "dummy"
       "gitea"
       "gotify"
       "grocy"
