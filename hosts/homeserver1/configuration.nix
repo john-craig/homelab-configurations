@@ -18,8 +18,24 @@
   nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "homeserver1"; # Define your hostname.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
+
+  # Disable NetworkManager's internal DNS resolution
+  networking.networkmanager.dns = "systemd-resolved";
+
+  # Configure DNS servers manually (this example uses Cloudflare and Google DNS)
+  # IPv6 DNS servers can be used here as well.
+  networking.nameservers = [
+    "192.168.1.1"
+  ];
+
+  services.resolved = {
+    enable = true;
+    domains = [
+      "~chiliahedron.wtf"
+    ];
+  };
 
   networking.firewall.enable = false;
 
@@ -98,7 +114,9 @@
       except-interface = [ "lo" ];
       bind-interfaces = true;
 
-      address = [ "/chiliahedron.wtf/100.69.200.65" ];
+      address = [
+        "/chiliahedron.wtf/100.69.200.65"
+      ];
     };
   };
 
