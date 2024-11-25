@@ -53,15 +53,29 @@
     btrfs-progs
   ];
 
+  virtualisation.containers.registries = {
+    # insecure = [ "192.168.1.5:5000" ];
+    search = [ "cache.podman.chiliahedron.wtf" "lscr.io" "docker.io" ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "Z /srv/downloads/lidarr 777"
+    "Z /srv/downloads/tv-sonarr 777"
+    "Z /srv/downloads/radarr 777"
+    "Z /srv/downloads/readarr 777"
+    "Z /srv/media/by_category/audio/music 777"
+    "Z /srv/media/by_category/video/shows 777"
+    "Z /srv/media/by_category/video/movies 777"
+  ];
+
   services.gallipedal = {
     enable = true;
     services = [
       "audiobookshelf"
-      "archivebox"
+      # "archivebox"
       "authelia"
       "code-server"
       "dev-blog"
-      "dummy"
       "gitea"
       "gotify"
       "grocy"
