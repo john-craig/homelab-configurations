@@ -9,7 +9,6 @@
     [
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
-      ./hostModules/voice-assistant.nix
       ./hostModules/personal-site.nix
 
       ./hardware-configuration.nix
@@ -53,12 +52,14 @@
     btrfs-progs
   ];
 
-  virtualisation.containers.registries = {
-    # insecure = [ "192.168.1.5:5000" ];
-    search = [ "cache.podman.chiliahedron.wtf" "lscr.io" "docker.io" ];
-  };
-
   systemd.tmpfiles.rules = [
+    "A /srv/container user::rwx"
+    "A /srv/container group::---"
+    "A /srv/container other::---"
+    "A /srv/documents user::rwx"
+    "A /srv/documents group::---"
+    "A /srv/documents other::---"
+
     "Z /srv/downloads/lidarr 777"
     "Z /srv/downloads/tv-sonarr 777"
     "Z /srv/downloads/radarr 777"
@@ -108,9 +109,21 @@
   link-archiver.enable = true;
   summary-generator.enable = true;
 
-  services.auto-updater.enable = true;
+  automatedBackups = {
+    enable = true;
+    role = "client";
+    backupPaths = [
+      "/srv/container"
+      "/srv/documents"
+    ];
+  };
 
-  voice-assistant.enable = true;
+  disasterRecovery = {
+    enable = true;
+    role = "client";
+  };
+
+  services.auto-updater.enable = true;
 
   services.tailscale = {
     enable = true;

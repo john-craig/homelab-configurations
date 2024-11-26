@@ -5,8 +5,7 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
-      ./hostModules/disaster-recovery.nix
-      ./hostModules/backups.nix
+      ./hostModules/offsiteBackups.nix
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -40,8 +39,23 @@
     };
   };
 
-  backups.enable = true;
-  disaster-recovery.enable = true;
+  offsiteBackups.enable = true;
+  automatedBackups = {
+    enable = true;
+    role = "server";
+
+    backupHosts = {
+      "homeserver1" = [
+        "/srv/container"
+        "/srv/documents"
+      ];
+    };
+  };
+
+  disasterRecovery = {
+    enable = true;
+    role = "server";
+  };
 
   services.pixiecore.enable = true;
 

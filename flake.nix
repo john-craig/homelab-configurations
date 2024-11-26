@@ -21,46 +21,47 @@
       homeserver1 =
         nixpkgs.lib.nixosSystem {
           modules = [
-            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
+            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."x86_64-linux" ]; }
             gallipedal.nixosModules.gallipedal
             nixpkgs-apocrypha.nixosModules.auto-updater
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
             nixpkgs-apocrypha.nixosModules.rss-triggers
             ./hosts/homeserver1/configuration.nix
-            ./global/defaults/configuration.nix
+            ./modules
           ];
         };
 
       media_kiosk =
         nixpkgs.lib.nixosSystem {
           modules = [
-            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays.default ]; }
+            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."x86_64-linux" ]; }
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             gallipedal.nixosModules.gallipedal
             ./hosts/media_kiosk/configuration.nix
-            ./global/defaults/configuration.nix
+            ./modules
           ];
         };
 
       key_server = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/key_server/configuration.nix
-          ./global/defaults/configuration.nix
+          ./modules
         ];
       };
 
       pxe_server = nixpkgs.lib.nixosSystem {
         modules = [
+          { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."aarch64-linux" ]; }
           ./hosts/pxe_server/configuration.nix
-          ./global/defaults/configuration.nix
+          ./modules
         ];
       };
 
       bastion0 = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/bastion0/configuration.nix
-          ./global/defaults/configuration.nix
+          ./modules
         ];
       };
 
@@ -68,7 +69,7 @@
         modules = [
           gallipedal.nixosModules.gallipedal
           ./hosts/test-vm/configuration.nix
-          ./global/defaults/configuration.nix
+          ./modules
         ];
       };
     };
