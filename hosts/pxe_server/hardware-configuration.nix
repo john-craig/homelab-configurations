@@ -29,14 +29,13 @@
     {
       device = "/dev/mapper/crypt0";
       fsType = "btrfs";
-      options = [ "nofail" ];
+      options = [ "subvol=srv" "compress=zstd" ];
     };
-
   fileSystems."/sec" =
     {
-      device = "/srv/secure";
-      options = [ "bind" "nofail" ];
-      depends = [ "/srv" ];
+      device = "/dev/mapper/crypt0";
+      fsType = "btrfs";
+      options = [ "subvol=sec" "compress=zstd" ];
     };
 
   swapDevices = [ ];

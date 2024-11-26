@@ -151,16 +151,10 @@
             # Read the current backup index, creating it if it doesn't exist
             [[ ! -f /var/run/offline-backup/backup.idx ]] && echo "0" > /var/run/offline-backup/backup.idx
 
-            # Increment the backup index, wrapping at 4
-            BACKUP_IDX=$(cat /var/run/offline-backup/backup.idx)
-            BACKUP_IDX=$((BACKUP_IDX+1))
-            BACKUP_IDX=$((BACKUP_IDX%4))
-
             # Start the backup
-            tar -czf - /srv/backup/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir /sec/gnupg/pxe_server/service/.gnupg | s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg --multipart-chunk-size-mb=500 put - s3://chiliahedron-offsite-backups/backup-$BACKUP_IDX.tar.gz.gpg
-          
-            # Update the index only when the backup completed successfully
-            echo $BACKUP_IDX > /var/run/offline-backup/backup.idx
+            tar -czf - /srv/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir /sec/gnupg/pxe_server/service/.gnupg | s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg --multipart-chunk-size-mb=500 put - s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg
+            
+            s3cmd --config=/sec/s3cmd/pxe_server/service/.s3cfg mv s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg s3://chiliahedron-offsite-backups/backup.tar.gz.gpg
           '';
         postStop =
           ''
