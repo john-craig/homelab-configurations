@@ -23,9 +23,8 @@
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."x86_64-linux" ]; }
             gallipedal.nixosModules.gallipedal
-            nixpkgs-apocrypha.nixosModules.auto-updater
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
-            nixpkgs-apocrypha.nixosModules.rss-triggers
+            nixpkgs-apocrypha.nixosModules.selfUpdater
             ./hosts/homeserver1/configuration.nix
             ./modules
           ];

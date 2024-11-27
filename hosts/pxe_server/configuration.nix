@@ -6,6 +6,7 @@
       ./hardware-configuration.nix
 
       ./hostModules/offsiteBackups.nix
+      # ./hostModules/offlineBackups.nix
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -40,6 +41,9 @@
   };
 
   offsiteBackups.enable = true;
+
+  # offlineBackups.enable = true;
+
   automatedBackups = {
     enable = true;
     role = "server";

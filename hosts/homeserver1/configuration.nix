@@ -123,7 +123,7 @@
     role = "client";
   };
 
-  services.auto-updater.enable = true;
+  selfUpdater.enable = true;
 
   services.tailscale = {
     enable = true;
