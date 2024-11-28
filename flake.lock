@@ -2,38 +2,60 @@
   "nodes": {
     "apocryphalNixosModules": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-P0HhuAmtG2xaUpJOfwDirE7tqBaQdBzYOCEQzC/fhBs=",
-        "path": "/nix/store/92gip6ngpljqpgh7zips7dafx00v9gpb-source/nixosModules",
+        "narHash": "sha256-JFuHGxlEKFnorsHUg2a0WHl19n5yYcu23TeddV9rHo8=",
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/92gip6ngpljqpgh7zips7dafx00v9gpb-source/nixosModules",
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/nixosModules",
         "type": "path"
       }
     },
     "apocryphalPackages": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": [
+          "nixpkgs-apocrypha",
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-4UYgHs7oZlsO6mbfNSuMG9A/F/iNIEYqhN7KfmPrxRo=",
-        "path": "/nix/store/92gip6ngpljqpgh7zips7dafx00v9gpb-source/packages",
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/92gip6ngpljqpgh7zips7dafx00v9gpb-source/packages",
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/packages",
+        "type": "path"
+      }
+    },
+    "apocryphalUtilities": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-apocrypha",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-B7fMLvkoNYsMlbrfeqIGW7ojHwNhW5B159OJbsg7D3k=",
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/utilities",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/lznkj1s6qpnp6pm35fr1kkz4hsvv3fdf-source/utilities",
         "type": "path"
       }
     },
     "disko": {
       "inputs": {
         "nixpkgs": [
+          "nixpkgs-apocrypha",
           "nixpkgs"
         ]
       },
@@ -72,14 +94,17 @@
     "gallipedal": {
       "inputs": {
         "gallipedal-library": "gallipedal-library",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs-apocrypha",
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1732582777,
-        "narHash": "sha256-9G2+Rt7mnpJ6su/JFbC2E6D/MKrKwGybzCs5ZF30Mn4=",
+        "lastModified": 1732761181,
+        "narHash": "sha256-AQoR/n6+o65xXVX8amMNuHpQ/CuU8HNXH5PGwMocoD0=",
         "ref": "refs/heads/main",
-        "rev": "e552042464b356e12c430f2b79eb7d72aac1a594",
-        "revCount": 19,
+        "rev": "b974520bbb3ade5a4f0139e76ca5837e71852c71",
+        "revCount": 20,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },
@@ -106,6 +131,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
+          "nixpkgs-apocrypha",
           "nixpkgs"
         ]
       },
@@ -125,11 +151,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1723637854,
-        "narHash": "sha256-med8+5DSWa2UnOqtdICndjDAEjxr5D7zaIiK4pn0Q7c=",
+        "lastModified": 1717196966,
+        "narHash": "sha256-yZKhxVIKd2lsbOqYd5iDoUIwsRZFqE87smE2Vzf6Ck0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c3aa7b8938b17aebd2deecf7be0636000d62a2b9",
+        "rev": "57610d2f8f0937f39dbd72251e9614b1561942d8",
         "type": "github"
       },
       "original": {
@@ -142,14 +168,16 @@
     "nixpkgs-apocrypha": {
       "inputs": {
         "apocryphalNixosModules": "apocryphalNixosModules",
-        "apocryphalPackages": "apocryphalPackages"
+        "apocryphalPackages": "apocryphalPackages",
+        "apocryphalUtilities": "apocryphalUtilities",
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1732663258,
-        "narHash": "sha256-XhA+EthOz2Cme4bUkeO/SsdALMlqGvDCogJLKX2lVgo=",
+        "lastModified": 1732761382,
+        "narHash": "sha256-k2olh6qPeTke4jFVb9fbNrMJNe7ebaESGNT1qrwTIUs=",
         "ref": "refs/heads/main",
-        "rev": "e936246906bd1fb3a666da75d8a37a469a31681c",
-        "revCount": 56,
+        "rev": "db0188042214d53c4c62f1bf44c305a169d9b634",
+        "revCount": 58,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },
@@ -174,44 +202,15 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1717196966,
-        "narHash": "sha256-yZKhxVIKd2lsbOqYd5iDoUIwsRZFqE87smE2Vzf6Ck0=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "57610d2f8f0937f39dbd72251e9614b1561942d8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1716948383,
-        "narHash": "sha256-SzDKxseEcHR5KzPXLwsemyTR/kaM9whxeiJohbL04rs=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "ad57eef4ef0659193044870c731987a6df5cf56b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "disko": "disko",
         "gallipedal": "gallipedal",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": [
+          "nixpkgs-apocrypha",
+          "nixpkgs"
+        ],
         "nixpkgs-apocrypha": "nixpkgs-apocrypha"
       }
     },
