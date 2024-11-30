@@ -89,7 +89,7 @@ in
         (acc: backupPath:
           # Set access list to backup path
           acc ++ [
-            "A+ ${backupPath} -    -    -     -           m::rx"
+            # "A+ ${backupPath} -    -    -     -           m::rx"
             "A+ ${backupPath} -    -    -     -           u:backup:rx"
           ]
         ) [ ]

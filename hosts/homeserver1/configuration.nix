@@ -54,10 +54,13 @@
 
   systemd.tmpfiles.rules = [
     "A /srv/container user::rwx"
-    "A /srv/container group::---"
+    "A /srv/container group::rwx"
+    "A /srv/container mask::rwx"
     "A /srv/container other::---"
+
     "A /srv/documents user::rwx"
-    "A /srv/documents group::---"
+    "A /srv/documents group::rwx"
+    "A /srv/documents mask::rwx"
     "A /srv/documents other::---"
 
     "Z /srv/downloads/lidarr 777"
@@ -83,7 +86,7 @@
       "home-assistant"
       "homepage"
       "invidious"
-      "jellyfin"
+      # "jellyfin"
       "monitoring"
       "obsidian-remote"
       "onlyoffice"
