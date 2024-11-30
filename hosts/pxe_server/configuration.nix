@@ -40,6 +40,8 @@
     };
   };
 
+  selfUpdater.enable = true;
+
   offsiteBackups.enable = true;
 
   # offlineBackups.enable = true;

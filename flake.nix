@@ -38,6 +38,7 @@
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             gallipedal.nixosModules.gallipedal
+            nixpkgs-apocrypha.nixosModules.selfUpdater
             ./hosts/media_kiosk/configuration.nix
             ./modules
           ];
@@ -45,6 +46,7 @@
 
       key_server = nixpkgs.lib.nixosSystem {
         modules = [
+          nixpkgs-apocrypha.nixosModules.selfUpdater
           ./hosts/key_server/configuration.nix
           ./modules
         ];
@@ -53,6 +55,7 @@
       pxe_server = nixpkgs.lib.nixosSystem {
         modules = [
           { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."aarch64-linux" ]; }
+          nixpkgs-apocrypha.nixosModules.selfUpdater
           ./hosts/pxe_server/configuration.nix
           ./modules
         ];
@@ -60,6 +63,7 @@
 
       bastion0 = nixpkgs.lib.nixosSystem {
         modules = [
+          nixpkgs-apocrypha.nixosModules.selfUpdater
           ./hosts/bastion0/configuration.nix
           ./modules
         ];
