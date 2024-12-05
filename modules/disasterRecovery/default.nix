@@ -33,8 +33,11 @@
       (config.disasterRecovery.role == "client" ||
         config.disasterRecovery.role == "both")
       {
+        groups."cacher" = { };
+
         users."cacher" = {
-          isSystemUser = true;
+          group = "cacher";
+          isNormalUser = true;
           initialPassword = null;
 
           openssh.authorizedKeys.keys = [

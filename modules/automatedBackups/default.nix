@@ -74,7 +74,10 @@ in
     # Client configurations
     #############################################
     users = lib.mkIf (config.automatedBackups.role == "client") {
+      groups."backup" = { };
+
       users."backup" = {
+        group = "backup";
         isNormalUser = true;
         initialPassword = null;
 

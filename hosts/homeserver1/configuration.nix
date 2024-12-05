@@ -86,7 +86,7 @@
       "home-assistant"
       "homepage"
       "invidious"
-      # "jellyfin"
+      "jellyfin"
       "monitoring"
       "obsidian-remote"
       "onlyoffice"
