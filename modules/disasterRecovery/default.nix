@@ -16,20 +16,23 @@
     };
   };
 
-  config = lib.mkIf
-    (config.disasterRecovery.enable &&
+  config = (lib.mkIf config.disasterRecovery.enable) {
+    #############################################
+    # Client configurations
+    #############################################
+    virtualisation.containers.registries = lib.mkIf
       (config.disasterRecovery.role == "client" ||
-        config.disasterRecovery.role == "both"))
-    {
-      # Client configuration
-
-      virtualisation.containers.registries = {
+        config.disasterRecovery.role == "both")
+      {
         # insecure = [ "192.168.1.5:5000" ];
         search = [ "cache.podman.chiliahedron.wtf" "lscr.io" "docker.io" ];
       };
 
-      # Create the cacher user
-      users = {
+    # Create the cacher user
+    users = lib.mkIf
+      (config.disasterRecovery.role == "client" ||
+        config.disasterRecovery.role == "both")
+      {
         users."cacher" = {
           isSystemUser = true;
           initialPassword = null;
@@ -40,28 +43,32 @@
         };
       };
 
-      security.sudo.extraRules = [
-        {
-          users = [ "cacher" ];
-          commands = [
-            { command = "${pkgs.podman}/bin/podman image ls*"; options = [ "NOPASSWD" ]; }
-            { command = "${pkgs.podman}/bin/podman push*"; options = [ "NOPASSWD" ]; }
-          ];
-        }
-      ];
+    security.sudo.extraRules = lib.mkIf
+      (config.disasterRecovery.role == "client" ||
+        config.disasterRecovery.role == "both") [
+      {
+        users = [ "cacher" ];
+        commands = [
+          { command = "${pkgs.podman}/bin/podman image ls*"; options = [ "NOPASSWD" ]; }
+          { command = "${pkgs.podman}/bin/podman push*"; options = [ "NOPASSWD" ]; }
+        ];
+      }
+    ];
 
-    } // lib.mkIf
-    (config.disasterRecovery.enable &&
+    #############################################
+    # Server configurations
+    #############################################
+    environment.systemPackages = with pkgs; lib.mkIf
       (config.disasterRecovery.role == "server" ||
-        config.disasterRecovery.role == "both"))
-    {
-      # Server configuration
-      environment.systemPackages = with pkgs; [
-        atlas
-        nix-serve-ng
-      ];
+        config.disasterRecovery.role == "both") [
+      atlas
+      nix-serve-ng
+    ];
 
-      services.dockerRegistry = {
+    services.dockerRegistry = lib.mkIf
+      (config.disasterRecovery.role == "server" ||
+        config.disasterRecovery.role == "both")
+      {
         enable = true;
 
         listenAddress = "0.0.0.0";
@@ -72,5 +79,5 @@
         enableDelete = true;
         enableGarbageCollect = true;
       };
-    };
+  };
 }
