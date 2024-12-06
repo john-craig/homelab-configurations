@@ -38,8 +38,9 @@
 
   networking.firewall.enable = false;
 
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
+  # Enable emulation
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   environment.systemPackages = with pkgs; [
     smartmontools
     lsscsi
