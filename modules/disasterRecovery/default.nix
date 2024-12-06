@@ -52,8 +52,7 @@
       {
         users = [ "cacher" ];
         commands = [
-          { command = "${pkgs.podman}/bin/podman image ls*"; options = [ "NOPASSWD" ]; }
-          { command = "${pkgs.podman}/bin/podman push*"; options = [ "NOPASSWD" ]; }
+          { command = "/run/current-system/sw/bin/podman"; options = [ "NOPASSWD" ]; }
         ];
       }
     ];
@@ -64,7 +63,7 @@
     environment.systemPackages = with pkgs; lib.mkIf
       (config.disasterRecovery.role == "server" ||
         config.disasterRecovery.role == "both") [
-      atlas
+      maturin-dr
       nix-serve-ng
     ];
 

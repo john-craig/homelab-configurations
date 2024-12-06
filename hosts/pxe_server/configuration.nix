@@ -21,7 +21,6 @@
     dig
     cryptsetup
     clevis
-    python3
   ];
 
   networking.hostName = "pxe-server";
