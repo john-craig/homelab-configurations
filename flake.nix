@@ -24,6 +24,7 @@
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."${systemDef.arch}" ]; }
             gallipedal.nixosModules.gallipedal
+            gallipedal.nixosModules.gallipedalV2
             nixpkgs-apocrypha.nixosModules.notifiedServices
             nixpkgs-apocrypha.nixosModules.selfUpdater
             ./hosts/${systemDef.name}/configuration.nix
