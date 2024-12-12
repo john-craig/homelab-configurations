@@ -1,59 +1,13 @@
-{ pkgs, lib, config, ... }:
-let
-  mkNotifierScript = title: message: tokenPath:
-    ''
-      GOTIFY_TOKEN=$(cat ${tokenPath})
-      DISPLAY_DATE=$(date)
-      curl -s -S --data '{"message": "'"${message}"'", "title": "'"${title}"'", "priority":'"1"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=$GOTIFY_TOKEN"
-    '';
-
-  mkBackupService = backupName: backupDef: (
-    {
-      "${backupName}" = (
-        backupDef // {
-          onSuccess = [ "${backupName}-success-notifier.service" ];
-          onFailure = [ "${backupName}-failure-notifier.service" ];
-        }
-      );
-      "${backupName}-success-notifier" = {
-        enable = true;
-        path = [ pkgs.curl ];
-        script = mkNotifierScript "${backupName} Succeeded"
-          "${backupName} succeeded on $DISPLAY_DATE"
-          "/sec/gotify/pxe_server/service/backup-notifier-token.txt";
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-        };
-      };
-      "${backupName}-failure-notifier" = {
-        enable = true;
-        path = [ pkgs.curl ];
-        script = mkNotifierScript "${backupName} Failed"
-          "${backupName} failed on $DISPLAY_DATE"
-          "/sec/gotify/pxe_server/service/backup-notifier-token.txt";
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-        };
-      };
-    });
-in
-{
+{ pkgs, lib, config, ... }: {
   options = {
     automatedBackups = {
       enable = lib.mkEnableOption "configuration for Caching and Disaster Recovery";
 
-      role =
-        let
-          # Define the allowed values as a list
-          allowedValues = [ "client" "server" ];
-        in
-        lib.mkOption {
-          type = lib.types.str;
-          default = "client"; # default value
-          description = "Defines whether the configuration is for the client, server.";
-        };
+      role = lib.mkOption {
+        type = lib.types.enum [ "client" "server" ];
+        default = "client"; # default value
+        description = "Defines whether the configuration is for the client, server.";
+      };
 
       backupPaths = lib.mkOption {
         type = lib.types.listOf lib.types.str; # Define it as a list of strings
@@ -141,8 +95,8 @@ in
       };
     };
 
-    systemd.services = lib.mkIf (config.automatedBackups.role == "server")
-      ((mkBackupService "daily-backup" {
+    notifiedServices.services = lib.mkIf (config.automatedBackups.role == "server") {
+      "daily-backup" = {
         enable = true;
         script =
           let
@@ -172,7 +126,9 @@ in
           Type = "oneshot";
           User = "root";
         };
-      }) // (mkBackupService "weekly-backup" {
+      };
+
+      "weekly-backup" = {
         enable = true;
         script = ''
           # Exit if there is an ongoing offline backup
@@ -184,7 +140,9 @@ in
           Type = "oneshot";
           User = "root";
         };
-      }) // (mkBackupService "monthly-backup" {
+      };
+
+      "monthly-backup" = {
         enable = true;
         script = ''
           # Exit if there is an ongoing offline backup
@@ -196,6 +154,63 @@ in
           Type = "oneshot";
           User = "root";
         };
-      }));
+      };
+    };
+    # systemd.services = lib.mkIf (config.automatedBackups.role == "server")
+    #   ((mkBackupService "daily-backup" {
+    #     enable = true;
+    #     script =
+    #       let
+    #         backupId = "/sec/openssh/pxe_server/backup/.ssh/backup";
+    #         rsyncCmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -i ${backupId} -o StrictHostKeyChecking=no'";
+
+    #         # We do this to allowed us to ignore files for which we do not have read permissions
+    #         rsyncEnd = "$(case \"$?\" in 0|23) true ;; *) $?; esac)";
+
+    #         backupCmds = lib.attrsets.foldlAttrs
+    #           (acc: backupHost: backupPaths:
+    #             acc + lib.strings.concatMapStrings
+    #               (backupPath: ''
+    #                 ${rsyncCmd} --link-dest /srv/backup/weekly/${backupHost}/${backupPath} backup@${backupHost}:${backupPath}/ /srv/backup/daily/${backupHost}/${backupPath} || ${rsyncEnd}
+    #               '')
+    #               backupPaths
+    #           ) ""
+    #           config.automatedBackups.backupHosts;
+    #       in
+    #       ''
+    #         # Exit if there is an ongoing offline backup
+    #         [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
+    #         ${backupCmds}
+    #       '';
+    #     serviceConfig = {
+    #       Type = "oneshot";
+    #       User = "root";
+    #     };
+    #   }) // (mkBackupService "weekly-backup" {
+    #     enable = true;
+    #     script = ''
+    #       # Exit if there is an ongoing offline backup
+    #       [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
+    #       ${pkgs.rsync}/bin/rsync --link-dest /srv/backup/monthly --delete -ravP /srv/backup/daily/ /srv/backup/weekly
+    #     '';
+    #     serviceConfig = {
+    #       Type = "oneshot";
+    #       User = "root";
+    #     };
+    #   }) // (mkBackupService "monthly-backup" {
+    #     enable = true;
+    #     script = ''
+    #       # Exit if there is an ongoing offline backup
+    #       [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+
+    #       ${pkgs.rsync}/bin/rsync --link-dest /srv/backup/monthly --delete -ravP /srv/backup/weekly/ /srv/backup/monthly
+    #     '';
+    #     serviceConfig = {
+    #       Type = "oneshot";
+    #       User = "root";
+    #     };
+    #   }));
   };
 }

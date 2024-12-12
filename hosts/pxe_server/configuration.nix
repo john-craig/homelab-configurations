@@ -41,7 +41,21 @@
 
   selfUpdater.enable = true;
 
-  offsiteBackups.enable = true;
+  notifiedServices = {
+    enable = true;
+
+    method.gotify = {
+      tokenPath = "/sec/gotify/pxe_server/service/backup-notifier-token.txt";
+      url = "https://gotify.chiliahedron.wtf";
+    };
+  };
+
+  offsiteBackups = {
+    enable = true;
+
+    gnupgHomeDir = "/sec/gnupg/pxe_server/service/.gnupg";
+    s3cmdConfigFile = "/sec/s3cmd/pxe_server/service/.s3cfg";
+  };
 
   offlineBackups = {
     enable = true;

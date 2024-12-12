@@ -16,67 +16,62 @@
     gallipedal.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, gallipedal, nixpkgs-apocrypha }@inputs: {
-
-    nixosConfigurations = {
-      homeserver1 =
+  outputs = { self, nixpkgs, disko, home-manager, gallipedal, nixpkgs-apocrypha }@inputs:
+    let
+      mkNixosSystem = systemDef: (
         nixpkgs.lib.nixosSystem {
+          specialArgs = { apocrypha-utils = nixpkgs-apocrypha.utilities; };
           modules = [
-            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."x86_64-linux" ]; }
+            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."${systemDef.arch}" ]; }
             gallipedal.nixosModules.gallipedal
-            nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
+            nixpkgs-apocrypha.nixosModules.notifiedServices
             nixpkgs-apocrypha.nixosModules.selfUpdater
-            ./hosts/homeserver1/configuration.nix
+            ./hosts/${systemDef.name}/configuration.nix
             ./modules
+          ] ++ nixpkgs.lib.lists.optionals
+            (builtins.hasAttr "extraModules" systemDef)
+            systemDef.extraModules;
+        }
+      );
+    in
+    {
+
+      nixosConfigurations = {
+        homeserver1 = mkNixosSystem {
+          name = "homeserver1";
+          arch = "x86_64-linux";
+          extraModules = [
+            nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
           ];
         };
 
-      media_kiosk =
-        nixpkgs.lib.nixosSystem {
-          modules = [
-            { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."x86_64-linux" ]; }
+        media_kiosk = mkNixosSystem {
+          name = "media_kiosk";
+          arch = "x86_64-linux";
+          extraModules = [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
-            gallipedal.nixosModules.gallipedal
-            nixpkgs-apocrypha.nixosModules.selfUpdater
-            ./hosts/media_kiosk/configuration.nix
-            ./modules
           ];
         };
 
-      key_server = nixpkgs.lib.nixosSystem {
-        modules = [
-          nixpkgs-apocrypha.nixosModules.selfUpdater
-          ./hosts/key_server/configuration.nix
-          ./modules
-        ];
+        key_server = mkNixosSystem {
+          name = "key_server";
+          arch = "aarch64-linux";
+          extraModules = [ ];
+        };
+
+        pxe_server = mkNixosSystem {
+          name = "pxe_server";
+          arch = "aarch64-linux";
+          extraModules = [ ];
+        };
+
+        bastion0 = mkNixosSystem {
+          name = "bastion0";
+          arch = "x86_64-linux";
+          extraModules = [ ];
+        };
       };
 
-      pxe_server = nixpkgs.lib.nixosSystem {
-        modules = [
-          { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."aarch64-linux" ]; }
-          nixpkgs-apocrypha.nixosModules.selfUpdater
-          ./hosts/pxe_server/configuration.nix
-          ./modules
-        ];
-      };
-
-      bastion0 = nixpkgs.lib.nixosSystem {
-        modules = [
-          nixpkgs-apocrypha.nixosModules.selfUpdater
-          ./hosts/bastion0/configuration.nix
-          ./modules
-        ];
-      };
-
-      test-vm = nixpkgs.lib.nixosSystem {
-        modules = [
-          gallipedal.nixosModules.gallipedal
-          ./hosts/test-vm/configuration.nix
-          ./modules
-        ];
-      };
     };
-
-  };
 }

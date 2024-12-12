@@ -24,44 +24,6 @@
   };
 
   config =
-    let
-      mkBackupService = backupName: backupDef: (
-        {
-          "${backupName}" = (
-            backupDef // {
-              onSuccess = [ "${backupName}-success-notifier.service" ];
-              onFailure = [ "${backupName}-failure-notifier.service" ];
-            }
-          );
-          "${backupName}-success-notifier" = {
-            enable = true;
-            path = [ pkgs.curl ];
-            script = ''
-              GOTIFY_TOKEN=$(cat /sec/gotify/pxe_server/service/backup-notifier-token.txt)
-              DISPLAY_DATE=$(date)
-              curl -s -S --data '{"message": "'"${backupName} succeeded on $DISPLAY_DATE"'", "title": "'"${backupName} Succeeded"'", "priority":'"1"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=$GOTIFY_TOKEN"
-            '';
-            serviceConfig = {
-              Type = "oneshot";
-              User = "root";
-            };
-          };
-          "${backupName}-failure-notifier" = {
-            enable = true;
-            path = [ pkgs.curl ];
-            script = ''
-              GOTIFY_TOKEN=$(cat /sec/gotify/pxe_server/service/backup-notifier-token.txt)
-              DISPLAY_DATE=$(date)
-              curl -s -S --data '{"message": "'"${backupName} failed on $DISPLAY_DATE"'", "title": "'"${backupName} Failed"'", "priority":'"10"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=$GOTIFY_TOKEN"
-            '';
-            serviceConfig = {
-              Type = "oneshot";
-              User = "root";
-            };
-          };
-        }
-      );
-    in
     lib.mkIf config.offlineBackups.enable {
       environment.systemPackages = [
         pkgs.util-linux
@@ -74,30 +36,32 @@
         "d ${config.offlineBackups.mountPoint}  700 root root"
       ];
 
-      systemd.services = (mkBackupService "offline-backup" {
-        enable = true;
-        script =
-          let
-            rsyncCmd = "${pkgs.rsync}/bin/rsync -ravPH";
-          in
-          ''
-            # Exit if there is an ongoing offline backup
-            [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
+      notifiedServices.services = {
+        "offline-backup" = {
+          enable = true;
+          script =
+            let
+              rsyncCmd = "${pkgs.rsync}/bin/rsync -ravPH";
+            in
+            ''
+              # Exit if there is an ongoing offline backup
+              [[ -f /var/run/offline-backup/backup.pid ]] && exit 0
 
-            ${pkgs.mount}/bin/mount /dev/mapper/cryptX.* ${config.offlineBackups.mountPoint}
-            ${rsyncCmd} ${config.offlineBackups.backupPath}/ ${config.offlineBackups.mountPoint}   
-            ${pkgs.umount}/bin/umount ${config.offlineBackups.mountPoint}
+              ${pkgs.mount}/bin/mount /dev/mapper/cryptX.* ${config.offlineBackups.mountPoint}
+              ${rsyncCmd} ${config.offlineBackups.backupPath}/ ${config.offlineBackups.mountPoint}   
+              ${pkgs.umount}/bin/umount ${config.offlineBackups.mountPoint}
+            '';
+
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+
+          postStop = ''
+            ${pkgs.systemd}/bin/systemctl stop systemd-cryptsetup@cryptX.*.service
           '';
-
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
         };
-
-        postStop = ''
-          ${pkgs.systemd}/bin/systemctl stop systemd-cryptsetup@cryptX.*.service
-        '';
-      });
+      };
 
       services.udev.extraRules = lib.strings.concatMapStrings
         (deviceUUID:

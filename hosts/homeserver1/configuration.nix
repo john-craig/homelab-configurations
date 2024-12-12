@@ -100,6 +100,7 @@
       "rhasspy-base"
       "torrenting"
       "traefik"
+      "vaultwarden"
     ];
 
     proxyConf = {

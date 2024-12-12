@@ -3,16 +3,11 @@
     disasterRecovery = {
       enable = lib.mkEnableOption "configuration for Caching and Disaster Recovery";
 
-      role =
-        let
-          # Define the allowed values as a list
-          allowedValues = [ "client" "server" "both" ];
-        in
-        lib.mkOption {
-          type = lib.types.str;
-          default = "client"; # default value
-          description = "Defines whether the configuration is for the client, server, or both.";
-        };
+      role = lib.mkOption {
+        type = lib.types.enum [ "client" "server" "both" ];
+        default = "client"; # default value
+        description = "Defines whether the configuration is for the client, server, or both.";
+      };
     };
   };
 

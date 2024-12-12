@@ -3,16 +3,11 @@
     voiceAssistant = {
       enable = lib.mkEnableOption "configuration for Voice Assistant";
 
-      role =
-        let
-          # Define the allowed values as a list
-          allowedValues = [ "station" "satellite" ];
-        in
-        lib.mkOption {
-          type = lib.types.str;
-          default = "station"; # default value
-          description = "Defines whether the configuration is for the base station or the satellite.";
-        };
+      role = lib.mkOption {
+        type = lib.types.enum [ "station" "satellite" ];
+        default = "station"; # default value
+        description = "Defines whether the configuration is for the base station or the satellite.";
+      };
     };
   };
 
