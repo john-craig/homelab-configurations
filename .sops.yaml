@@ -1,0 +1,16 @@
+keys:
+  # Admin keys
+  - &admin_bob age10crvkj2cn5z0kjm3kq3valqdr8t4568wgk6k7sk2pxukzdrtuptsdqgusf
+  # Host keys
+  - &server_nosaxa age1rgffpespcyjn0d8jglk7km9kfrfhdyev6camd3rck6pn8y47ze4sug23v3
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_bob
+      - *server_nosaxa
+  - path_regex: secrets/nosaxa/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_bob
+      - *server_nosaxa
