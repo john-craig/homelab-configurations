@@ -11,10 +11,13 @@
       ./hardware-configuration.nix
       ./disk-configuration.nix
 
+      ./hostModules/notifier.nix
+
       ./hostModules/kiosk.nix
       ./hostModules/jukebox.nix
-      ./hostModules/screen-saver.nix
-      ./hostModules/notifier.nix
+
+      ./hostModules/screenSaver.nix
+      ./hostModules/morningAlarm.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -40,13 +43,19 @@
   };
 
   # Screen Saver
-  screen-saver = {
+  screenSaver = {
     enable = true;
     urls = [
       "https://status.chiliahedron.wtf/recent.html"
       "https://grafana.chiliahedron.wtf/public-dashboards/84d4b99c333d4f7d94c495a66c1af3c6?orgId=1&refresh=5m"
-      "https://gotify.chiliahedron.wtf/#/messages/3"
+      "https://gotify.chiliahedron.wtf/#/"
     ];
+  };
+
+  # Morning Alarm
+  morningAlarm = {
+    enable = true;
+    url = "https://www.youtube.com/watch?v=pbTO0w-fWKE";
   };
 
   virtualisation.containers.registries.search = [ "registry.chiliahedron.wtf" ];
