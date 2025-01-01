@@ -1,0 +1,35 @@
+keys:
+  # Admin keys
+  - &admin_standard age10f3mclyxqf7ry5vje5ec7s7d8f8fz5xcr5un3npgqfsc4candg8svy08d2
+
+  # Host keys
+  - &host_key_server age1wreff77n46dt9zuve232g85a6cdkhvexhjelna9wd2nvnnu8v4nsx6unln
+  - &host_pxe_server age1lxv55fx0njr53wsrgdzdtuq42aar8e0e4r8dal56nqklcxr5m54ssgppsl
+  - &host_homeserver1 age162twaalu4sss2schj9hg9g3v8k88u006v9u6q7ler65hqn3mzpwqunj3he
+  - &host_media_kiosk age1nha5sy75zskztksngfanl5gq5kzk3wkajzug8uclfkdm829gr9vssw6n93
+  - &host_bastion0 age1k3wjphycaqum543d3uuwsetg2fjggs7c4umhe8xxscgv7f20spfskz30p9
+  - &host_workstation age1zrwx7ed2jhk234jqlgpsvdyxnu7fs4dt9c4dt4spadx95xdqtv3sn2l2yz
+  - &host_laptop age179zfxu8c280u0d638ca4mnykwrprmc9f5jx2z005trd49a4d9vcs6r4ac3
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_standard
+      - *host_pxe_server
+      - *host_homeserver1
+      - *host_bastion0
+  - path_regex: homeserver1/hostSecrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_standard
+      - *host_homeserver1
+  - path_regex: pxe_server/hostSecrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_standard
+      - *host_pxe_server
+  - path_regex: bastion0/hostSecrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_standard
+      - *host_bastion0

@@ -14,9 +14,12 @@
 
     gallipedal.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module";
     gallipedal.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, gallipedal, nixpkgs-apocrypha }@inputs:
+  outputs = { self, nixpkgs, disko, home-manager, gallipedal, sops-nix, nixpkgs-apocrypha }@inputs:
     let
       mkNixosSystem = systemDef: (
         nixpkgs.lib.nixosSystem {
@@ -24,10 +27,13 @@
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."${systemDef.arch}" ]; }
             gallipedal.nixosModules.gallipedal
+            home-manager.nixosModules.home-manager
             nixpkgs-apocrypha.nixosModules.notifiedServices
             nixpkgs-apocrypha.nixosModules.selfUpdater
+            sops-nix.nixosModules.sops
             ./hosts/${systemDef.name}/configuration.nix
             ./modules
+            ./secrets
           ] ++ nixpkgs.lib.lists.optionals
             (builtins.hasAttr "extraModules" systemDef)
             systemDef.extraModules;
@@ -50,7 +56,6 @@
           arch = "x86_64-linux";
           extraModules = [
             disko.nixosModules.disko
-            home-manager.nixosModules.home-manager
           ];
         };
 
