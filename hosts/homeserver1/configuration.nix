@@ -7,12 +7,14 @@
 {
   imports =
     [
+      ./hardware-configuration.nix
+
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
       ./hostModules/personal-site.nix
       ./hostModules/selfhosting.nix
 
-      ./hardware-configuration.nix
+      ./hostSecrets
     ];
 
   nixpkgs.config.allowUnfree = true;
@@ -135,7 +137,7 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
-    authKeyFile = "/root/tailscale/authkey.b64";
+    authKeyFile = "/run/secrets/tailscale/root/authkey";
     extraUpFlags = [ "--accept-dns=false" "--snat-subnet-routes=false" ];
   };
 
@@ -197,7 +199,8 @@
     hooks = {
       doshutdown = ''
         # Fire a message to Gotify
-        curl -s -S --data '{"message": "'"Home Server on Back-Up Power"'", "title": "'"Home Server Backup Notifier"'", "priority":'"10"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=AXFQr-2KNOgy-Vv"
+        API_KEY=$(cat /run/secrets/gotify/notifier/api_key)
+        curl -s -S --data '{"message": "'"Home Server on Back-Up Power"'", "title": "'"Home Server Backup Notifier"'", "priority":'"10"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=$API_KEY"
       '';
     };
   };

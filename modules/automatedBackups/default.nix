@@ -31,6 +31,7 @@
       groups."backup" = { };
 
       users."backup" = {
+        name = "backup";
         group = "backup";
         isNormalUser = true;
         initialPassword = null;
@@ -100,7 +101,7 @@
         enable = true;
         script =
           let
-            backupId = "/sec/openssh/pxe_server/backup/.ssh/backup";
+            backupId = "/run/secrets/openssh/backup/id_backup";
             rsyncCmd = "${pkgs.rsync}/bin/rsync -ravP -e '${pkgs.openssh}/bin/ssh -i ${backupId} -o StrictHostKeyChecking=no'";
 
             # We do this to allowed us to ignore files for which we do not have read permissions

@@ -8,6 +8,8 @@
   imports =
     [
       ./hardware-configuration.nix
+
+      ./hostSecrets
     ];
 
   networking.hostName = "bastion0"; # Define your hostname.
@@ -69,7 +71,7 @@
   services.tailscale = {
     enable = true;
     extraUpFlags = [ "--accept-dns" ];
-    authKeyFile = "/root/tailscale/authkey.b64";
+    authKeyFile = "/run/secrets/tailscale/root/authkey";
   };
 
   security.sudo.extraRules = [

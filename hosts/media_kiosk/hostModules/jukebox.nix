@@ -73,93 +73,94 @@
 
       wireplumber = {
         enable = true;
-
-        configPackages = [
-          (pkgs.writeTextDir "share/wireplumber/bluetooth.lua.d/51-bluez-config.lua" ''
-            bluez_monitor.enabled = true
-
-            bluez_monitor.properties = {
-              ["bluez5.enable-sbc-xq"] = true,
-              ["bluez5.enable-msbc"] = true,
-              ["bluez5.enable-hw-volume"] = true,
-              ["bluez5.codecs"] = "[sbc sbc_xq]",
-            }
-
-            bluez_monitor.rules = {
+        extraConfig = {
+          "5-bluez" = {
+            # "monitor.bluez.properties" = {
+            #   bluez5.enable-sbc-xq = true;
+            #   bluez5.enable-msbc = true;
+            #   bluez5.enable-hw-volume = true;
+            #   bluez5.codecs = [ "sbc" "sbc_xq" ];
+            # };
+            "monitor.bluez.rules" = [
               {
-                matches = {
+                matches = [
                   {
-                    -- This matches all cards.
-                    { "device.name", "matches", "bluez_card.*" },
-                  },
-                },
-                apply_properties = {
-                  ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-                  ["device.profile"] = "a2dp-sink",
-                }
-              },
-              {
-                matches = {
-                  {
-                    -- Anker PowerConf
-                    { "device.name", "matches", "bluez_card.2C_FD_B3_1C_1C_10" },
-                  },
-                },
-                apply_properties = {
-                  ["device.profile"] = "a2dp-source",
-                }
-              },
-              {
-                matches = {
-                  {
-                    -- Cavalier Air (CAV5)
-                    { "device.name", "matches", "bluez_card.28_37_13_08_6E_30" },
-                  },
-                },
-                apply_properties = {
-                  ["device.profile"] = "headset-head-unit",
-                  ["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
-                }
-              },
-              {
-                matches = {
-                  {
-                    -- Pixel 4a 5G
-                    { "device.name", "matches", "bluez_card.58_24_29_71_24_CF" },
-                  },
-                },
-                apply_properties = {
-                  ["api.bluez5.codec"] = "sbc_xq",
-                  ["device.profile"] = "a2dp-source",
-                  ["bluez5.codecs"] = "[ sbc_xq ]",
-                }
-              },
-              {
-                matches = {
-                  {
-                    -- Pixel 4a 5G
-                    { "node.name", "matches", "bluez_input.58_24_29_71_24_CF.2" },
-                  },
-                },
-                apply_properties = {
-                  ["target.object"] = "broadcast-sink",
-                }
-              },
-              {
-                matches = {
-                  {
-                    -- This matches all cards.
-                    { "device.name", "matches", "bluez_card.*" },
-                  },
-                },
-                apply_properties = {
-                  ["bluez5.auto-connect"]  = "[ a2dp_sink a2dp_source hfp_hf hsp_hs ]",
-                  ["device.profile"] = "a2dp-sink",
-                }
-              },
-            }
-          '')
-        ];
+                    "device.name" = "bluez_card.2C_FD_B3_1C_1C_10";
+                  }
+                ];
+                actions = {
+                  update-props = {
+                    "bluez5.auto-connect" = [ "a2dp_source" ];
+                    "device.profile" = "a2dp-source";
+                  };
+                };
+              }
+              # {
+              #   matches = [
+              #     {
+              #       # Anker PowerConf
+              #       device.name = "bluez_card.2C_FD_B3_1C_1C_10";
+              #     }
+              #   ];
+              #   actions = {
+              #     update-props = {
+              #       bluez5.auto-connect  = [ "a2dp-source" ];
+              #       device.profile = "a2dp-source";
+              #     };
+              #   };
+              # }
+              # {
+              #   matches = [
+              #     {
+              #       # Cavalier Air (CAV5)
+              #       device.name = "bluez_card.28_37_13_08_6E_30";
+              #     }
+              #   ];
+              #   actions.update-props = {
+              #     device.profile = "headset-head-unit";
+              #     bluez5.headset-roles = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+              #   };
+              # }
+              # {
+              #   matches = [
+              #     {
+              #       # Pixel 4a 5G
+              #       device.name = "bluez_card.58_24_29_71_24_CF";
+              #     }
+              #   ];
+              #   actions.update-props = {
+              #     api.bluez5.codec = "sbc_xq";
+              #     device.profile = "a2dp-source";
+              #     bluez5.codecs = [ "sbc_xq" ];
+              #   };
+              # }
+              # {
+              #   matches = [
+              #     {
+              #       # Pixel 4a 5G
+              #       node.name = "bluez_input.58_24_29_71_24_CF.2";
+              #     }
+              #   ];
+              #   actions.update-props = {
+              #     target.object = "broadcast-sink";
+              #   };
+              # }
+              # {
+              #   matches = [
+              #     {
+              #       # This matches all cards.
+              #       device.name = "bluez_card.*";
+              #     }
+              #   ];
+              #   actions.update-props = {
+              #     bluez5.auto-connect  = [ "a2dp_sink" "a2dp_source" "hfp_hf" "hsp_hs" ];
+              #     device.profile = "a2dp-sink";
+              #     bluez5.profile = "a2dp-sink";
+              #   };
+              # }
+            ];
+          };
+        };
       };
     };
 

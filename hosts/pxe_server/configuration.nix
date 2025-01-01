@@ -7,6 +7,8 @@
 
       ./hostModules/offsiteBackups.nix
       ./hostModules/offlineBackups.nix
+
+      ./hostSecrets
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -45,7 +47,7 @@
     enable = true;
 
     method.gotify = {
-      tokenPath = "/sec/gotify/pxe_server/service/backup-notifier-token.txt";
+      tokenPath = "/run/secrets/gotify/notifier/api_key";
       url = "https://gotify.chiliahedron.wtf";
     };
   };
@@ -104,12 +106,26 @@
     ];
   };
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.display = {
+    home.stateVersion = "21.11";
+
+    programs.gpg.publicKeys = [
+      {
+
+        trust = 4;
+      }
+    ];
+  };
+
   security.sudo.extraRules = [
     {
       users = [ "service" ];
       commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
+
   #
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
   # and migrated your data accordingly.

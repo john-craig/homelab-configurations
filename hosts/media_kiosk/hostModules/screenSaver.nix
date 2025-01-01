@@ -1,6 +1,6 @@
 { pkgs, lib, config, ... }: {
   options = {
-    screen-saver = {
+    screenSaver = {
       enable = lib.mkEnableOption "configuration for Screen Saver Mode";
 
       urls = lib.mkOption {
@@ -12,7 +12,7 @@
     };
   };
 
-  config = lib.mkIf config.screen-saver.enable {
+  config = lib.mkIf config.screenSaver.enable {
     environment.systemPackages = with pkgs; [
       chrome-controller
       xprintidle
@@ -54,21 +54,29 @@
       '')
     ];
 
-    systemd.timers."screen-saver" = {
+    systemd.timers."screenSaver" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "*-*-* *:*:00";
-        Unit = "screen-saver.service";
+        Unit = "screenSaver.service";
       };
     };
 
-    systemd.services."screen-saver" = {
+    systemd.timers."screenSaver-reset" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "* *-*-* 00:00:00";
+        Unit = "screenSaver-reset.service";
+      };
+    };
+
+    systemd.services."screenSaver" = {
       enable = true;
       path = [ pkgs.xprintidle pkgs.chrome-controller pkgs.pipewire pkgs.gnugrep ];
       script =
         let
-          urlsStr = lib.strings.concatMapStringsSep " " (x: "\"${x}\"") config.screen-saver.urls;
-          urlsLen = builtins.toString (builtins.length config.screen-saver.urls);
+          urlsStr = lib.strings.concatMapStringsSep " " (x: "\"${x}\"") config.screenSaver.urls;
+          urlsLen = builtins.toString (builtins.length config.screenSaver.urls);
         in
         ''
           URL_LOOP_ARR=(${urlsStr})
@@ -151,6 +159,23 @@
             echo "Stopped" > $STATUS_FILE
           fi
         '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "display";
+      };
+    };
+
+    systemd.services."screenSaver-reset" = {
+      enable = true;
+      path = [ pkgs.chrome-controller ];
+      script = lib.strings.concatMapStrings
+        (url:
+          ''
+            chromectrl close-tab "${url}"
+            chromectrl open-tab "${url}"
+            sleep 1
+          '')
+        config.screenSaver.urls;
       serviceConfig = {
         Type = "oneshot";
         User = "display";
