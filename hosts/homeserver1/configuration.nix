@@ -9,6 +9,7 @@
     [
       ./hardware-configuration.nix
 
+      ./hostModules/containerProxies.nix
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
       ./hostModules/personal-site.nix
@@ -75,6 +76,10 @@
     "Z /srv/media/by_category/video/movies 777"
   ];
 
+  containerProxies = {
+    enable = true;
+  };
+
   services.gallipedal = {
     enable = true;
     services = [
@@ -101,7 +106,7 @@
       "registry"
       "rhasspy-base"
       "torrenting"
-      "traefik"
+      # "traefik"
       "vaultwarden"
     ];
 

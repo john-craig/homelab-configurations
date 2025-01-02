@@ -6,4 +6,10 @@
 
     sopsFile = ./tailscale.yaml;
   };
+
+  sops.secrets."traefik/root/cloudflare_dns_token" = {
+    mode = "0400";
+
+    sopsFile = ./traefik.yaml;
+  };
 }
