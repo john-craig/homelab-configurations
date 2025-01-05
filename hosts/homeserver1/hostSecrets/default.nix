@@ -1,6 +1,25 @@
 { pkgs, lib, config, ... }: {
 
-  # This is the actual specification of the secrets.
+  sops.secrets."gallipedal/secrets/archivebox/ADMIN_PASSWORD" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."gallipedal/secrets/archivebox/SEARCH_BACKEND_PASSWORD" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."gallipedal/secrets/gotify/GOTIFY_DEFAULTUSER_PASS" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."gallipedal/secrets/invidious/POSTGRES_PASSWORD" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."gallipedal/secrets/torrenting/RSLSYNC_SECRET" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
   sops.secrets."tailscale/root/authkey" = {
     mode = "0440";
 

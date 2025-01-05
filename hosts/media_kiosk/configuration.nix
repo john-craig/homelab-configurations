@@ -127,13 +127,13 @@
     }
   ];
 
-  services.gallipedal = {
-    enable = true;
-    services = [
-      "rhasspy-satellite"
-      "timeflip-tracker"
-    ];
-  };
+  # services.gallipedal = {
+  #   enable = true;
+  #   services = [
+  #     "rhasspy-satellite"
+  #     "timeflip-tracker"
+  #   ];
+  # };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

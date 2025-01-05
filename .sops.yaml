@@ -15,9 +15,11 @@ creation_rules:
     key_groups:
     - age:
       - *admin_standard
+      - *host_key_server
       - *host_pxe_server
       - *host_homeserver1
       - *host_bastion0
+      - *host_media_kiosk
   - path_regex: homeserver1/hostSecrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - age:

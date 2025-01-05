@@ -13,6 +13,7 @@
       ./hostModules/link-archiver.nix
       ./hostModules/summary-generator.nix
       ./hostModules/personal-site.nix
+      ./hostModules/selfhosting.nix
 
       ./hostSecrets
     ];
@@ -80,42 +81,43 @@
     enable = true;
   };
 
-  services.gallipedal = {
-    enable = true;
-    services = [
-      "audiobookshelf"
-      # "archivebox"
-      "authelia"
-      "code-server"
-      "dev-blog"
-      "gitea"
-      "gotify"
-      "grocy"
-      "home-assistant"
-      "homepage"
-      "invidious"
-      "jellyfin"
-      "monitoring"
-      "obsidian-remote"
-      "onlyoffice"
-      "owntracks"
-      "paperless-ngx"
-      "protonmail-bridge"
-      "syncthing"
-      "status-page"
-      "registry"
-      "rhasspy-base"
-      "torrenting"
-      # "traefik"
-      "vaultwarden"
-    ];
+  # services.gallipedal = {
+  #   enable = true;
+  #   services = [
+  #     # "archivebox"
+  #     # "authelia"
+  #     # "code-server"
+  #     # "dev-blog"
+  #     # "gitea"
+  #     # "gotify"
+  #     # "grocy"
+  #     # "home-assistant"
+  #     # "homepage"
+  #     # "invidious"
+  #     # "jellyfin"
+  #     # "monitoring"
+  #     # "obsidian-remote"
+  #     # "onlyoffice"
+  #     # "owntracks"
+  #     # "paperless-ngx"
+  #     # "protonmail-bridge"
+  #     # "syncthing"
+  #     # "status-page"
+  #     # "registry"
+  #     # "rhasspy-base"
+  #     # "torrenting"
+  #     # "traefik"
+  #     # "vaultwarden"
+  #   ];
 
-    proxyConf = {
-      internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)|(^100\.69\.200\.65)`)";
-      network = "chiliahedron-services";
-      tlsResolver = "chiliahedron-resolver";
-    };
-  };
+  #   proxyConf = {
+  #     internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)|(^100\.69\.200\.65)`)";
+  #     network = "chiliahedron-services";
+  #     tlsResolver = "chiliahedron-resolver";
+  #   };
+  # };
+
+  selfhosting.enable = true;
 
   personal-site.enable = true;
   link-archiver.enable = true;
