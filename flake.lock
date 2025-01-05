@@ -99,11 +99,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1736035543,
-        "narHash": "sha256-tC3+pla+sBwtgFIS/uOb06hIdUn/BGMQoFMJ7YLxdp8=",
+        "lastModified": 1736112376,
+        "narHash": "sha256-yuNMRlFWLLYxrxFm7rEJtO4igQplrMY7tXx03zMgPfs=",
         "ref": "refs/heads/main",
-        "rev": "afb1f2ff0cf1dd3ad10439d5853e6e8727c3e164",
-        "revCount": 30,
+        "rev": "1a371e96ef77c21cf1fee0fc68f97a599dfb6369",
+        "revCount": 32,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },

@@ -25,7 +25,7 @@
         };
 
         "archivebox" = {
-          enable = false;
+          enable = true;
           containers = {
             "archivebox" = {
               environment = {
@@ -37,6 +37,8 @@
                 SAVE_ARCHIVE_DOT_ORG = "False";
                 SEARCH_BACKEND_ENGINE = "sonic";
                 SEARCH_BACKEND_HOST_NAME = "sonic";
+                PUID = "1000";
+                PGID = "1000";
               };
 
               secrets = {
@@ -161,7 +163,7 @@
           };
         };
 
-        "grocy"= {
+        "grocy" = {
           enable = true;
           containers."grocy" = {
             environment = {
