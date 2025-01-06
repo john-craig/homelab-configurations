@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, user-environments, ... }:
 
 {
   imports =
@@ -55,7 +55,7 @@
   # Morning Alarm
   morningAlarm = {
     enable = true;
-    urls =  [
+    urls = [
       "https://www.youtube.com/watch?v=hNrt704O0tU"
       "https://www.youtube.com/watch?v=pbTO0w-fWKE"
       "https://www.youtube.com/watch?v=rGHwRodMyFY"
@@ -104,6 +104,11 @@
       ];
     };
   };
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users."display" = user-environments.nixosModules."display@generic";
+  home-manager.users."service" = user-environments.nixosModules."service@generic";
 
   security.sudo.extraRules = [
     {

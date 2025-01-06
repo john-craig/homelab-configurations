@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, nix, ... }:
+{ config, lib, pkgs, nix, user-environments, ... }:
 
 {
   imports =
@@ -233,6 +233,10 @@
       commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
     }
   ];
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users."service" = user-environments.nixosModules."service@generic";
 
   # Do not change
   system.stateVersion = "24.05";

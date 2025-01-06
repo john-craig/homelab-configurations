@@ -2,28 +2,33 @@
   description = "Home Lab Configuration Flake";
 
   inputs = {
-    nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
-
     nixpkgs-apocrypha.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha";
-
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
-
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
 
     gallipedal.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module";
     gallipedal.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
+
+    user-environments.url = "git+https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations";
+    user-environments.inputs.nixpkgs-apocrypha.follows = "nixpkgs-apocrypha";
+
+    nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
+    home-manager.follows = "user-environments/home-manager";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, gallipedal, sops-nix, nixpkgs-apocrypha }@inputs:
+  outputs = { self, nixpkgs, disko, home-manager, gallipedal, user-environments, sops-nix, nixpkgs-apocrypha }@inputs:
     let
       mkNixosSystem = systemDef: (
         nixpkgs.lib.nixosSystem {
-          specialArgs = { apocrypha-utils = nixpkgs-apocrypha.utilities; };
+          specialArgs = {
+            hostname = systemDef.name;
+            apocrypha-utils = nixpkgs-apocrypha.utilities;
+            user-environments = user-environments;
+          };
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."${systemDef.arch}" ]; }
             gallipedal.nixosModules.gallipedal

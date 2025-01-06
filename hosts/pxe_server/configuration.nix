@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, user-environments, ... }:
 {
   imports =
     [
@@ -108,16 +108,8 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.display = {
-    home.stateVersion = "21.11";
+  home-manager.users."service" = user-environments.nixosModules."service@generic";
 
-    programs.gpg.publicKeys = [
-      {
-
-        trust = 4;
-      }
-    ];
-  };
 
   security.sudo.extraRules = [
     {

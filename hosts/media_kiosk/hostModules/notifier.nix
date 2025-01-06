@@ -9,10 +9,7 @@
       libnotify
     ];
 
-    home-manager.useGlobalPkgs = true;
-    home-manager.useUserPackages = true;
     home-manager.users.display = {
-      home.stateVersion = "21.11";
       home.file.".config/gotify-desktop/config.toml".text = ''
         [gotify]
         url = "wss://gotify.chiliahedron.wtf"

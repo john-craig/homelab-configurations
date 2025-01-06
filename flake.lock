@@ -115,16 +115,16 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-apocrypha",
+          "user-environments",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1736013363,
-        "narHash": "sha256-P4lsS2Y5GzBfC8OfXtD/xWEucX6oHGTjOzjEjEJbXfc=",
+        "lastModified": 1736066484,
+        "narHash": "sha256-uTstP36WaFrw+TEHb8nLF14hFPzQBOhmIxzioHCDaL8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "0d7908bd09165db6699908b7e3970f137327cbf0",
+        "rev": "5ad12b6ea06b84e48f6b677957c74f32d47bdee0",
         "type": "github"
       },
       "original": {
@@ -186,17 +186,37 @@
         "type": "github"
       }
     },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1735915915,
+        "narHash": "sha256-Q4HuFAvoKAIiTRZTUxJ0ZXeTC7lLfC9/dggGHNXNlCw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "a27871180d30ebee8aa6b11bf7fef8a52f024733",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
         "gallipedal": "gallipedal",
-        "home-manager": "home-manager",
+        "home-manager": [
+          "user-environments",
+          "home-manager"
+        ],
         "nixpkgs": [
           "nixpkgs-apocrypha",
           "nixpkgs"
         ],
         "nixpkgs-apocrypha": "nixpkgs-apocrypha",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "user-environments": "user-environments"
       }
     },
     "sops-nix": {
@@ -233,6 +253,28 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "user-environments": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs_3",
+        "nixpkgs-apocrypha": [
+          "nixpkgs-apocrypha"
+        ]
+      },
+      "locked": {
+        "lastModified": 1736169873,
+        "narHash": "sha256-dxja6L9Au8SJ3Io49zIMHrvGXJqFOxRoHh9MPwgznt4=",
+        "ref": "refs/heads/main",
+        "rev": "d6803c8f2a4cf8080bde756c9d87a3e9d9450ea2",
+        "revCount": 37,
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
       }
     }
   },
