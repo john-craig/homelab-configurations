@@ -18,6 +18,8 @@
 
       ./hostModules/screenSaver.nix
       ./hostModules/morningAlarm.nix
+
+      ./hostSecrets
     ];
 
   # Use the systemd-boot EFI boot loader.

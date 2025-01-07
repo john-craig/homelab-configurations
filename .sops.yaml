@@ -30,6 +30,11 @@ creation_rules:
     - age:
       - *admin_standard
       - *host_pxe_server
+  - path_regex: media_kiosk/hostSecrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_standard
+      - *host_media_kiosk
   - path_regex: bastion0/hostSecrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - age:

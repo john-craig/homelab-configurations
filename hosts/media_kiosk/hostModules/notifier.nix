@@ -13,7 +13,7 @@
       home.file.".config/gotify-desktop/config.toml".text = ''
         [gotify]
         url = "wss://gotify.chiliahedron.wtf"
-        token = "CRz-lyqEKaMR8Rl"
+        token = { "command" = "${pkgs.coreutils}/bin/cat /run/secrets/gotify/display/client_token" }
         
         [notification]
         min_priority = 1
