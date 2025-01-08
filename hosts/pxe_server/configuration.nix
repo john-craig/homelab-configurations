@@ -97,25 +97,10 @@
     settings.KbdInteractiveAuthentication = false;
   };
 
-  users.users."service" = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
+  userProfiles.service.enable = true;
 
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
-    ];
-  };
-
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.users."service" = user-environments.nixosModules."service@generic";
-
-
-  security.sudo.extraRules = [
-    {
-      users = [ "service" ];
-      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
-    }
+  users.users."service".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
   ];
 
   #

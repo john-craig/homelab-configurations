@@ -90,20 +90,11 @@
     sysstat
   ];
 
-  users = {
-    mutableUsers = true;
+  userProfiles.service.enable = true;
 
-    users."service" = {
-      isNormalUser = true;
-      home = "/home/service";
-      initialPassword = null;
-      extraGroups = [ "wheel" "docker" ];
-
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+HFVBKYWOgTJ7R0v+Hj+yKnUPp0TepoKEBIPlL1jIe"
-      ];
-    };
-  };
+  users.users."service".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+HFVBKYWOgTJ7R0v+Hj+yKnUPp0TepoKEBIPlL1jIe"
+  ];
 
   system.stateVersion = "23.11";
 }

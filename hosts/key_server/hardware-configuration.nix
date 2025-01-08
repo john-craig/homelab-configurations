@@ -36,7 +36,7 @@
   fileSystems."/var/lib/private/tang" = {
     device = "/sec/tang";
     options = [ "bind" "nofail" ];
-    depends = "/sec";
+    depends = [ "/sec" ];
   };
 
   swapDevices = [ ];

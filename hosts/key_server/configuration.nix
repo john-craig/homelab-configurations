@@ -147,20 +147,10 @@
     settings.KbdInteractiveAuthentication = false;
   };
 
-  users.users."service" = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
+  userProfiles.service.enable = true;
 
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
-    ];
-  };
-
-  security.sudo.extraRules = [
-    {
-      users = [ "service" ];
-      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
-    }
+  users.users."service".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
   ];
 
   #

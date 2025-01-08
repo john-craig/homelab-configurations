@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, nix, user-environments, ... }:
+{ config, lib, pkgs, nix, ... }:
 
 {
   imports =
@@ -210,16 +210,18 @@
     };
   };
 
+  userProfiles.service.enable = true;
+
   users = {
     mutableUsers = true;
 
     groups."selfhosting".name = "selfhosting";
 
     users."service" = {
-      isNormalUser = true;
-      home = "/home/service";
-      initialPassword = null;
-      extraGroups = [ "wheel" ];
+      # isNormalUser = true;
+      # home = "/home/service";
+      # initialPassword = null;
+      # extraGroups = [ "wheel" ];
 
       openssh.authorizedKeys.keys = [
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC5QNL0MP8yr7OD5rt4PpnL4Go++4rdmLFhhA5ypdpLbwfXqVEKOBnjxSn4Ux0BtHk8cIK5TT9wcigx9gLKaVX2aDSROITz5DMy2EuR09/kBp8xbaAeZQgyDB0C8YHPclPBN/25krDJNocWbJTnmBSwswXYJWGMUQZxfPMUyql3jy2fcxKUg39ATz9Qe9CmJpiBVGgTva0QpNWteTHOn7zwoHDhlIYCUygR/+X9LJCv7TvDPWaeYe9Z4+q58FMt9njTFAY9mXpa2qataIjk1KwoJWs2a8/vW2kYzbdOXH8KVxZuEpqgr4HCF+qdnFbuLtUfCFRKmCr3EI/+qPtUulUggusPm4d9tkfXlLytmydX7u4wJeOwYzsbtMLOPIOmGI8Q+jQUpc9zgbd34nat8LdD+vIayjpv8fU5lziaVVvkVP6EBF4UGGo/K0cdK8GGPoODJfUrNSr5m0Rh9IFHCp5QCvYxhOn4RXtIenx+0D9Am06Ab2G8S53l8yZwuMy7NBM="
@@ -227,16 +229,16 @@
     };
   };
 
-  security.sudo.extraRules = [
-    {
-      users = [ "service" ];
-      commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
-    }
-  ];
+  # security.sudo.extraRules = [
+  #   {
+  #     users = [ "service" ];
+  #     commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
+  #   }
+  # ];
 
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.users."service" = user-environments.nixosModules."service@generic";
+  # home-manager.useGlobalPkgs = true;
+  # home-manager.useUserPackages = true;
+  # home-manager.users."service" = user-environments.nixosModules."service@generic";
 
   # Do not change
   system.stateVersion = "24.05";

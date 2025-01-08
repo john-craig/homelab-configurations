@@ -6,6 +6,7 @@
       ./automatedBackups
       ./disasterRecovery
       ./voiceAssistant
+      ./userProfiles
     ];
 
   # Set your time zone.

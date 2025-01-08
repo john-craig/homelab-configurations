@@ -27,7 +27,7 @@
           specialArgs = {
             hostname = systemDef.name;
             apocrypha-utils = nixpkgs-apocrypha.utilities;
-            user-environments = user-environments;
+            user-envs = user-environments;
           };
           modules = [
             { nixpkgs.overlays = [ nixpkgs-apocrypha.overlays."${systemDef.arch}" ]; }
