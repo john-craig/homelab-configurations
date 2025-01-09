@@ -23,7 +23,10 @@
 
   config = lib.mkMerge [
     ((lib.mkIf config.userProfiles.service.enable) {
-      programs.zsh.enable = true;
+      environment.systemPackages = with pkgs; [
+        zsh
+      ];
+
       users = {
         mutableUsers = true;
 
@@ -32,6 +35,7 @@
           isNormalUser = true;
           initialPassword = null;
           extraGroups = [ "wheel" "pipewire" ];
+          ignoreShellProgramCheck = true;
         };
       };
 
@@ -47,7 +51,10 @@
       home-manager.users."service" = user-envs.nixosModules."service@generic";
     })
     ((lib.mkIf config.userProfiles.display.enable) {
-      programs.zsh.enable = true;
+      environment.systemPackages = with pkgs; [
+        zsh
+      ];
+
       users = {
         mutableUsers = true;
 
@@ -56,6 +63,7 @@
           isNormalUser = true;
           initialPassword = null;
           extraGroups = [ "wheel" "pipewire" ];
+          ignoreShellProgramCheck = true;
         };
       };
 
