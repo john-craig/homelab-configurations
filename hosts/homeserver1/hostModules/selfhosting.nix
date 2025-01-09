@@ -305,6 +305,40 @@
           };
         };
 
+        "nocodb" = {
+          enable = true;
+          containers = {
+            "nocodb" = {
+              secrets = {
+                NC_DB = "/run/secrets/gallipedal/secrets/nocodb/NC_DB";
+              };
+
+              volumes = {
+                "/usr/app/data".hostPath = "/srv/container/nocodb/app";
+              };
+
+              ports = {
+                "8080".hostPort = "9979";
+              };
+            };
+
+            "root_db" = {
+              environment = {
+                POSTGRES_DB = "root_db";
+                POSTGRES_USER = "postgres";
+              };
+
+              secrets = {
+                POSTGRES_PASSWORD = "/run/secrets/gallipedal/secrets/nocodb/POSTGRES_PASSWORD";
+              };
+
+              volumes = {
+                "/var/lib/postgresql/data".hostPath = "/srv/container/nocodb/data";
+              };
+            };
+          };
+        };
+
         "obsidian-remote" = {
           enable = true;
           containers."obsidian-remote" = {

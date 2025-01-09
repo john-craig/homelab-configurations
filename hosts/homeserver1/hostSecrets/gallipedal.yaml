@@ -7,6 +7,9 @@ gallipedal:
             GOTIFY_DEFAULTUSER_PASS: ENC[AES256_GCM,data:ou83AqtS,iv:HLrsNyvwQPalC6CL1f2ymyzLfSi9Sr2tm6XhzQsZKfA=,tag:X6+MOntlBWggxI6OZinutQ==,type:str]
         invidious:
             POSTGRES_PASSWORD: ENC[AES256_GCM,data:ljgoEec=,iv:ZtnImheYf5c69AQI08asLSeezBqMS1qx5exPS9C5wBI=,tag:+1swcVq4St4SzogdtvVrMA==,type:str]
+        nocodb:
+            NC_DB: ENC[AES256_GCM,data:iLkGZC2hktwSW0QKSgGqbcD7pkGOlVUF8L3zeA0400zBGzHsaTbNvh/HheJ/342kl7xX8LURcY6Rju9GrDH1ypY=,iv:KYVjCjAfbatt6V76YZm7k2so9Q+qLFw1h7Amktzy7OU=,tag:1LKR1xN9rjpzqSfy2F2qSA==,type:str]
+            POSTGRES_PASSWORD: ENC[AES256_GCM,data:7MIjq7BksznzP5XJAoFYVVfO8EZne8bH,iv:T0A6t4L85a6OkKaW7I2E8F1f7SmgTHcIrnnoCeKShxs=,tag:KqFs1yzgwVBPI9XheTWElg==,type:str]
         torrenting:
             RSLSYNC_SECRET: ENC[AES256_GCM,data:nwYRFrtvtuztHClbwh18dfB+5u7H6zlzN5XS7Vm9kuha,iv:WrU7o5E+nGUq1tzw2D1PRB6f+TK+xGQVC1HCHvVGMF0=,tag:139hBRIspkcvGLcgAp/7vg==,type:str]
 sops:
@@ -33,8 +36,8 @@ sops:
             YUtyNkYyZVNnVXB5OW84eHRxMjdJUlUKkwt8eQsqnQtvEQIKhjf071Utw8u123V+
             rGUtRKeu49b+f4tMWv6Gc54D7VUTZujd+96/qzyrI4+G5IXUks0MEw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-01-04T22:01:36Z"
-    mac: ENC[AES256_GCM,data:NdNtRSGyJwmauiirG5QplxrCcxec78X4z2mfIBlMQxG+cxyuRgDjgLkOJ8ZOzQiy4nwemm4nGvVMQvQbpQ/hdF/IkTB2CH9jbjMX4aUwkSwyTxZMvwWOo/YS6QGP/GK7dx19+VYo6k/cH1hOHmAHvJba3SM5iUQwFUTqAUg6IvM=,iv:JA7M/Tdo58LbujRiDpZVo2Eaj+VyiSbJAb2KJu3qo4c=,tag:sNhp20Xw292IPSFSWHCEFw==,type:str]
+    lastmodified: "2025-01-09T22:03:16Z"
+    mac: ENC[AES256_GCM,data:XiWDG3E0xU7Ash3Eemvy9tEi8ADMLb8kGSa14Jf8Pzxw3UCeyFt5dWQxr4M52rT7xqRdXY3TW2Vdkd7KujYj/O47MpztY+qzq7UJJN34uy2hKn4bHO6QSlIRaiWJoZBxoIYxyzPG3P6Evj5q8G7K1ltPF2IbDVctxFrnSoC/8VY=,iv:32DTlxhlKxznVU82OSFdZIrnJhqUkEYDUVn18P9KLT4=,tag:1EpQ/dUMqdw718PPj5KdmA==,type:str]
     pgp: []
     unencrypted_suffix: _unencrypted
     version: 3.9.1

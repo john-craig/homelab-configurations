@@ -16,6 +16,14 @@
     sopsFile = ./gallipedal.yaml;
   };
 
+  sops.secrets."gallipedal/secrets/nocodb/NC_DB" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."gallipedal/secrets/nocodb/POSTGRES_PASSWORD" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
   sops.secrets."gallipedal/secrets/torrenting/RSLSYNC_SECRET" = {
     sopsFile = ./gallipedal.yaml;
   };
