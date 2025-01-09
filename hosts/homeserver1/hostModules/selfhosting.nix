@@ -111,13 +111,16 @@
           };
         };
 
-        "dev-blog".containers."dev-blog" = {
-          volumes = {
-            "/app/ext/pages/blog".hostPath = "/srv/container/gatsby-dev-blog/blog";
-          };
+        "dev-blog" = {
+          enable = true;
+          containers."dev-blog" = {
+            volumes = {
+              "/app/ext/pages/blog".hostPath = "/srv/container/gatsby-dev-blog/blog";
+            };
 
-          ports = {
-            "9000".hostPort = "6787";
+            ports = {
+              "9000".hostPort = "6787";
+            };
           };
         };
 
