@@ -17,7 +17,7 @@
       chrome-controller
     ];
 
-    systemd.timers."morningAlarm-start" = {
+    systemd.timers."morningAlarm-weekday-start" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 06:00:00";
@@ -25,10 +25,26 @@
       };
     };
 
-    systemd.timers."morningAlarm-stop" = {
+    systemd.timers."morningAlarm-weekday-stop" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 06:30:00";
+        Unit = "morningAlarm-stop.service";
+      };
+    };
+
+    systemd.timers."morningAlarm-weekend-start" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "Sat,Sun *-*-* 08:00:00";
+        Unit = "morningAlarm-start.service";
+      };
+    };
+
+    systemd.timers."morningAlarm-weekend-stop" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "Sat,Sun *-*-* 09:00:00";
         Unit = "morningAlarm-stop.service";
       };
     };

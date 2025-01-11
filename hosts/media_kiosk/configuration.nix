@@ -61,6 +61,10 @@
       "https://www.youtube.com/watch?v=hNrt704O0tU"
       "https://www.youtube.com/watch?v=pbTO0w-fWKE"
       "https://www.youtube.com/watch?v=rGHwRodMyFY"
+      "https://www.youtube.com/watch?v=WyihFDfE9Q4"
+      "https://www.youtube.com/watch?v=dJTUe_WDgro"
+      "https://www.youtube.com/watch?v=hWN1k5AOEXU"
+      "https://www.youtube.com/watch?v=vUgEFp04TlA"
     ];
   };
 
