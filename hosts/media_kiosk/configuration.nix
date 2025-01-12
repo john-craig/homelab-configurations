@@ -35,7 +35,43 @@
   kiosk.enable = true;
 
   # Jukebox Mode
-  jukebox.enable = true;
+  jukebox = {
+    enable = true;
+
+    devices = [
+      {
+        # Kitchen Speaker
+        "address" = "35:F1:7E:40:E2:65";
+        "controller" = "8C:88:4B:45:CC:11";
+        "role" = "source";
+      }
+      {
+        # Bathroom Speaker
+        "address" = "3B:C4:CF:3E:EA:0A";
+        "controller" = "8C:88:4B:45:CC:11";
+        "role" = "source";
+      }
+      {
+        # Anker PowerConf
+        "address" = "2C:FD:B3:1C:1C:10";
+        "controller" = "8C:88:4B:45:CC:11";
+        "role" = "sink";
+      }
+      {
+        # Cavalier Air (CAV5)
+        "address" = "28:37:13:08:6E:30";
+        "controller" = "8C:88:4B:45:CC:11";
+        "role" = "both";
+      }
+      {
+        # Pixel 4a 5G
+        "address" = "58:24:29:71:24:CF";
+        "controller" = "8C:88:4B:45:CC:11";
+        "role" = "source";
+        "broadcast" = true;
+      }
+    ];
+  };
 
   notifier.enable = true;
 
