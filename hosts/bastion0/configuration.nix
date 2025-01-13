@@ -60,14 +60,6 @@
     '';
   };
 
-  services.openssh = {
-    enable = true;
-    allowSFTP = true;
-
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
-  };
-
   services.tailscale = {
     enable = true;
     extraUpFlags = [ "--accept-dns" ];
@@ -82,19 +74,17 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    nano
-    curl
-    git
-    inetutils
     mtr
     sysstat
   ];
 
-  userProfiles.service.enable = true;
+  userProfiles.service = {
+    enable = true;
 
-  users.users."service".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+HFVBKYWOgTJ7R0v+Hj+yKnUPp0TepoKEBIPlL1jIe"
-  ];
+    authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE+HFVBKYWOgTJ7R0v+Hj+yKnUPp0TepoKEBIPlL1jIe"
+    ];
+  };
 
   system.stateVersion = "23.11";
 }
