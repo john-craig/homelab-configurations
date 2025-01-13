@@ -43,19 +43,19 @@
         # Kitchen Speaker
         "address" = "35:F1:7E:40:E2:65";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "source";
+        "role" = "sink";
       }
       {
         # Bathroom Speaker
         "address" = "3B:C4:CF:3E:EA:0A";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "source";
+        "role" = "sink";
       }
       {
         # Anker PowerConf
         "address" = "2C:FD:B3:1C:1C:10";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "sink";
+        "role" = "both";
       }
       {
         # Cavalier Air (CAV5)

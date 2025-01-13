@@ -61,7 +61,7 @@
                 combine.mode = sink
                 node.name = "broadcast-sink"
                 node.description = "broadcast-sink"
-                -- combine.latency-compensate = true   # if true, match latencies by adding delays
+                combine.latency-compensate = true   # if true, match latencies by adding delays
                 combine.props = {
                   audio.position = [ MONO ]
                 }
@@ -129,29 +129,29 @@
                         {
                           matches = [
                             {
-                              device.name = "bluez_card.${deviceAddr}";
+                              "device.name" = "bluez_card.${deviceAddr}";
                             }
                           ];
 
-                          actions.update-props = lib.attrsets.optionalAttrs (device.role == "source")
-                            {
+                          actions.update-props = 
+                            lib.attrsets.optionalAttrs (device.role == "source") {
                               "bluez5.auto-connect" = [ "a2dp_source" ];
                               "device.profile" = "a2dp-source";
-                            } // lib.attrsets.optionalAttrs (device.role == "both") {
-                            device.profile = "headset-head-unit";
-                            bluez5.headset-roles = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-                          }; # No need to handle the `sink` case, as it is the default
+                            } // 
+                            lib.attrsets.optionalAttrs (device.role == "both") {
+                              "device.profile" = "headset-head-unit";
+                              "bluez5.headset-roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+                            }; # No need to handle the `sink` case, as it is the default
                         }
                       ] ++ lib.lists.optionals (device.broadcast) [
                         {
                           matches = [
                             {
-                              # Pixel 4a 5G
-                              node.name = "bluez_input.${deviceAddr}.2";
+                              "node.name" = "bluez_input.${deviceAddr}.2";
                             }
                           ];
                           actions.update-props = {
-                            target.object = "broadcast-sink";
+                            "target.object" = "broadcast-sink";
                           };
                         }
                       ]
@@ -160,12 +160,12 @@
                 matches = [
                   {
                     # This matches all cards.
-                    device.name = "bluez_card.*";
+                    "device.name" = "bluez_card.*";
                   }
                 ];
                 actions.update-props = {
-                  bluez5.auto-connect = [ "a2dp_sink" "a2dp_source" "hfp_hf" "hsp_hs" ];
-                  device.profile = "a2dp-sink";
+                  "bluez5.auto-connect" = [ "a2dp_sink" "a2dp_source" "hfp_hf" "hsp_hs" ];
+                  "device.profile" = "a2dp-sink";
                 };
               }]
                 config.jukebox.devices;
