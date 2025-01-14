@@ -10,7 +10,7 @@
   };
 
   sops.secrets."openssh/backup/id_backup" = {
-    mode = "0400";
+    mode = "0600";
     # owner = config.users.users.backup.name;
     # group = config.users.users.backup.group;
 
