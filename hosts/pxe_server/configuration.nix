@@ -52,7 +52,7 @@
     enable = true;
 
     gnupgHomeDir = "/sec/gnupg/pxe_server/service/.gnupg";
-    s3cmdConfigFile = "/sec/s3cmd/pxe_server/service/.s3cfg";
+    s3cmdConfigFile = "/run/secrets/s3cmd/backup/s3cfg";
   };
 
   offlineBackups = {
