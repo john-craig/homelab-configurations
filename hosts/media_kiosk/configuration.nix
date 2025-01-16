@@ -41,23 +41,29 @@
     enable = true;
 
     devices = [
+      # {
+      #   # Kitchen Speaker (A8)
+      #   "address" = "35:F1:7E:40:E2:65";
+      #   "controller" = "8C:88:4B:45:CC:11";
+      #   "role" = "sink";
+      # }
+      # {
+      #   # Bathroom Speaker (A8)
+      # "address" = "3B:C4:CF:3E:EA:0A";
+      # "controller" = "8C:88:4B:45:CC:11";
+      # "role" = "sink";
+      # }
       {
-        # Kitchen Speaker
-        "address" = "35:F1:7E:40:E2:65";
+        # Bathroom Speaker (A15)
+        "address" = "FC:58:FA:88:89:AC";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "source";
-      }
-      {
-        # Bathroom Speaker
-        "address" = "3B:C4:CF:3E:EA:0A";
-        "controller" = "8C:88:4B:45:CC:11";
-        "role" = "source";
+        "role" = "sink";
       }
       {
         # Anker PowerConf
         "address" = "2C:FD:B3:1C:1C:10";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "sink";
+        "role" = "source"; # For now only a source
       }
       {
         # Cavalier Air (CAV5)

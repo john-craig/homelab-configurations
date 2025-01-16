@@ -61,7 +61,7 @@
                 combine.mode = sink
                 node.name = "broadcast-sink"
                 node.description = "broadcast-sink"
-                -- combine.latency-compensate = true   # if true, match latencies by adding delays
+                combine.latency-compensate = true   # if true, match latencies by adding delays
                 combine.props = {
                   audio.position = [ MONO ]
                 }
@@ -129,111 +129,40 @@
                         {
                           matches = [
                             {
-                              device.name = "bluez_card.${deviceAddr}";
+                              "device.name" = "bluez_card.${deviceAddr}";
                             }
                           ];
 
-                          actions.update-props = lib.attrsets.optionalAttrs (device.role == "source")
-                            {
-                              "bluez5.auto-connect" = [ "a2dp_source" ];
-                              "device.profile" = "a2dp-source";
-                            } // lib.attrsets.optionalAttrs (device.role == "both") {
-                            device.profile = "headset-head-unit";
-                            bluez5.headset-roles = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-                          }; # No need to handle the `sink` case, as it is the default
+                          actions.update-props =
+                            lib.attrsets.optionalAttrs (device.role == "source")
+                              {
+                                "bluez5.auto-connect" = [ "a2dp_source" ];
+                              } //
+                            lib.attrsets.optionalAttrs (device.role == "sink")
+                              {
+                                "bluez5.auto-connect" = [ "a2dp_sink" ];
+                                "device.profile" = "a2dp-sink";
+                              } //
+                            lib.attrsets.optionalAttrs (device.role == "both") {
+                              "device.profile" = "headset-head-unit";
+                              "bluez5.headset-roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+                            };
                         }
                       ] ++ lib.lists.optionals (device.broadcast) [
                         {
                           matches = [
                             {
-                              # Pixel 4a 5G
-                              node.name = "bluez_input.${deviceAddr}.2";
+                              "node.name" = "bluez_input.${deviceAddr}.2";
                             }
                           ];
                           actions.update-props = {
-                            target.object = "broadcast-sink";
+                            "target.object" = "broadcast-sink";
                           };
                         }
                       ]
                     )
-                ) [{
-                matches = [
-                  {
-                    # This matches all cards.
-                    device.name = "bluez_card.*";
-                  }
-                ];
-                actions.update-props = {
-                  bluez5.auto-connect = [ "a2dp_sink" "a2dp_source" "hfp_hf" "hsp_hs" ];
-                  device.profile = "a2dp-sink";
-                };
-              }]
+                ) [ ]
                 config.jukebox.devices;
-
-            # [
-            #   {
-            #     matches = [
-            #       {
-            #         # Anker PowerConf
-            #         "device.name" = "bluez_card.2C_FD_B3_1C_1C_10";
-            #       }
-            #     ];
-            #     actions = {
-            #       update-props = {
-            #         "bluez5.auto-connect" = [ "a2dp_source" ];
-            #         "device.profile" = "a2dp-source";
-            #       };
-            #     };
-            #   }
-            #   # {
-            #   #   matches = [
-            #   #     {
-            #   #       # Cavalier Air (CAV5)
-            #   #       device.name = "bluez_card.28_37_13_08_6E_30";
-            #   #     }
-            #   #   ];
-            #   #   actions.update-props = {
-            #       # device.profile = "headset-head-unit";
-            #       # bluez5.headset-roles = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-            #   #   };
-            #   # }
-            #   {
-            #     matches = [
-            #       {
-            #         # Pixel 4a 5G
-            #         device.name = "bluez_card.58_24_29_71_24_CF";
-            #       }
-            #     ];
-            #     actions.update-props = {
-            #       api.bluez5.codec = "sbc_xq";
-            #       device.profile = "a2dp-source";
-            #       bluez5.codecs = [ "sbc_xq" ];
-            #     };
-            #   }
-            #   {
-            #     matches = [
-            #       {
-            #         # Pixel 4a 5G
-            #         node.name = "bluez_input.58_24_29_71_24_CF.2";
-            #       }
-            #     ];
-            #     actions.update-props = {
-            #       target.object = "broadcast-sink";
-            #     };
-            #   }
-            #   {
-            #     matches = [
-            #       {
-            #         # This matches all cards.
-            #         device.name = "bluez_card.*";
-            #       }
-            #     ];
-            #     actions.update-props = {
-            #       bluez5.auto-connect  = [ "a2dp_sink" "a2dp_source" "hfp_hf" "hsp_hs" ];
-            #       device.profile = "a2dp-sink";
-            #     };
-            #   }
-            # ];
           };
         };
       };
@@ -262,39 +191,60 @@
     ];
 
     # Set up automatic reconnection
-    systemd.services."bluetooth-connect" = {
+    systemd.services."bluetooth-reconnect" = {
       enable = true;
       path = [ pkgs.bluez ];
       script =
         let
-          bluetoothDevices = [
-            {
-              # Kitchen Speaker
-              "controller" = "8C:88:4B:45:CC:11";
-              "address" = "35:F1:7E:40:E2:65";
-            }
-            {
-              # Bathroom Speaker
-              "controller" = "8C:88:4B:45:CC:11";
-              "address" = "3B:C4:CF:3E:EA:0A";
-            }
-          ];
-
           reconnectCmds = lib.lists.foldl
             (acc: device:
               acc + ''
+                # Begin the connection for ${device.address}
                 echo -e "select ${device.controller}\nconnect ${device.address}" | bluetoothctl
+
+                # Define the maximum number of attempts
+                MAX_ATTEMPTS=6
+
+                # Initialize the attempt counter
+                attempt=0
+
+                # Loop up to MAX_ATTEMPTS
+                while [ $attempt -lt $MAX_ATTEMPTS ]; do
+                  # Increment the attempt counter
+                  attempt=$((attempt + 1))
+                  
+                  # Check if the device has finished connecting
+                  if echo -e "select ${device.controller}\ndevices Connected" | bluetoothctl | grep ${device.address}; then
+                    # If the pattern is found, continue
+                    echo "Device ${device.address} connected, continuing..."
+                    break
+                  else
+                    # If not found, wait 5 seconds and try again
+                    echo "Device ${device.address} not yet connected. Attempt $attempt of $MAX_ATTEMPTS. Retrying in 5 seconds..."
+                    sleep 5
+                  fi
+                done
+
+                # If the loop ends and the pattern wasn't found after MAX_ATTEMPTS
+                if [ $attempt -eq $MAX_ATTEMPTS ]; then
+                  echo "WARNING: Devices ${device.address} not found after $MAX_ATTEMPTS attempts. Continuing..."
+                fi
               ''
             ) ""
-            bluetoothDevices;
+            config.jukebox.devices;
         in
         ''
+          #!/bin/bash
           ${reconnectCmds}
         '';
       serviceConfig = {
+        User = "service";
         Type = "oneshot";
-        User = "root";
       };
+
+      after = [ "bluetooth.service" ]; # Run after the Bluetooth service starts
+      bindsTo = [ "bluetooth.service" ]; # Ensure Bluetooth is started before this service
+      wantedBy = [ "bluetooth.service" ]; # Ensure Bluetooth is started before this service
     };
 
     environment.systemPackages = with pkgs; [

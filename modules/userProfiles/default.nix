@@ -20,6 +20,11 @@
         type = lib.types.submodule {
           options = {
             enable = lib.mkEnableOption "Display User configurations";
+
+            authorizedKeys = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
+              description = "Authorized keys to be used by this user profile";
+            };
           };
         };
       };
