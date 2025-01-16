@@ -58,9 +58,13 @@
             # Read the current backup index, creating it if it doesn't exist
             [[ ! -f /var/run/offsite-backup/backup.idx ]] && echo "0" > /var/run/offsite-backup/backup.idx
 
+            # Remove the previous in-progress backup if it exists
+            s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} rm s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg || true
+
             # Start the backup
             tar -czf - /srv/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir ${config.offsiteBackups.gnupgHomeDir} | s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} --multipart-chunk-size-mb=500 put - s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg
             
+            # Rename the in-progress backup
             s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} mv s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg s3://chiliahedron-offsite-backups/backup.tar.gz.gpg
           '';
         postStop =

@@ -18,10 +18,6 @@
 
   environment.systemPackages = with pkgs; [
     smartmontools
-    screen
-    git
-    dig
-    cryptsetup
     clevis
   ];
 
@@ -90,25 +86,14 @@
 
   services.pixiecore.enable = true;
 
-  services.openssh = {
+  userProfiles.service = {
     enable = true;
-
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
+    authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
+    ];
   };
 
-  userProfiles.service.enable = true;
-
-  users.users."service".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJQUkUdQE4u15DCHRcsy5RxydqXuVbOb24KxmU7N0Mkv"
-  ];
-
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.05";
 
 }
 

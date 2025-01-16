@@ -17,17 +17,12 @@
   boot.loader.generic-extlinux-compatible.enable = true;
 
   environment.systemPackages = with pkgs; [
-    git
     openssl
     libfido2
-    cryptsetup
     yubikey-manager
     gnupg
     pinentry
-    nano
-    curl
-    btrfs-progs
-    python3
+
     # Uncomment the below if you need python3 with specific packages 
     #
     # (python3.withPackages(ps: with ps; [
@@ -140,25 +135,14 @@
     };
   };
 
-  services.openssh = {
+  userProfiles.service = {
     enable = true;
-
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
+    authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
+    ];
   };
 
-  userProfiles.service.enable = true;
-
-  users.users."service".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
-  ];
-
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.05";
 
 }
 
