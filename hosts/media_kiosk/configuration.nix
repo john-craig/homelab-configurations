@@ -69,7 +69,7 @@
         # Cavalier Air (CAV5)
         "address" = "28:37:13:08:6E:30";
         "controller" = "8C:88:4B:45:CC:11";
-        "role" = "both";
+        "role" = "sink";
       }
       {
         # Pixel 4a 5G

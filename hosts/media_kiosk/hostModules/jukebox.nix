@@ -111,12 +111,12 @@
         enable = true;
         extraConfig = {
           "5-bluez" = {
-            # "monitor.bluez.properties" = {
-            #   bluez5.enable-sbc-xq = true;
-            #   bluez5.enable-msbc = true;
-            #   bluez5.enable-hw-volume = true;
-            #   bluez5.codecs = [ "sbc" "sbc_xq" ];
-            # };
+            "monitor.bluez.properties" = {
+              bluez5.enable-sbc-xq = true;
+              bluez5.enable-msbc = true;
+              bluez5.enable-hw-volume = true;
+              bluez5.codecs = [ "sbc" "sbc_xq" ];
+            };
             "monitor.bluez.rules" =
               lib.lists.foldl
                 (
@@ -129,25 +129,41 @@
                         {
                           matches = [
                             {
-                              "device.name" = "bluez_card.${deviceAddr}";
+                              "node.name" = "bluez_output.${deviceAddr}.1";
                             }
                           ];
 
                           actions.update-props =
-                            lib.attrsets.optionalAttrs (device.role == "source")
-                              {
-                                "bluez5.auto-connect" = [ "a2dp_source" ];
-                              } //
                             lib.attrsets.optionalAttrs (device.role == "sink")
                               {
-                                "bluez5.auto-connect" = [ "a2dp_sink" ];
-                                "device.profile" = "a2dp-sink";
+                                "api.bluez5.profile" = "a2dp-sink";
                               } //
                             lib.attrsets.optionalAttrs (device.role == "both") {
-                              "device.profile" = "headset-head-unit";
-                              "bluez5.headset-roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+                              "api.bluez5.profile" = "headset-head-unit";
                             };
                         }
+                        # {
+                        #   matches = [
+                        #     {
+                        #       "device.name" = "bluez_card.${deviceAddr}";
+                        #     }
+                        #   ];
+
+                        #   actions.update-props =
+                        #     lib.attrsets.optionalAttrs (device.role == "source")
+                        #       {
+                        #         "bluez5.auto-connect" = [ "a2dp_source" ];
+                        #       } //
+                        #     lib.attrsets.optionalAttrs (device.role == "sink")
+                        #       {
+                        #         "bluez5.auto-connect" = [ "a2dp_sink" ];
+                        #         "device.profile" = "a2dp-sink";
+                        #       } //
+                        #     lib.attrsets.optionalAttrs (device.role == "both") {
+                        #       "device.profile" = "headset-head-unit";
+                        #       "bluez5.headset-roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+                        #     };
+                        # }
                       ] ++ lib.lists.optionals (device.broadcast) [
                         {
                           matches = [
