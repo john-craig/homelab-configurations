@@ -142,6 +142,9 @@
     ];
   };
 
+  # For later:
+  # - bcdc30d8-a44e-4f50-8fdb-199b39723f38
+
   system.stateVersion = "24.05";
 
 }
