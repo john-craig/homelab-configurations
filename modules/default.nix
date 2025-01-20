@@ -26,6 +26,7 @@
     nano
     gnupg
     cryptsetup
+    htop
   ];
 
   # Default SSH daemon configuration

@@ -127,6 +127,7 @@
         "gitea" = {
           enable = true;
           containers."gitea" = {
+            containerUser = "1000:1000";
             environment = {
               USER_GID = "1000";
               USER_UID = "1000";
@@ -213,7 +214,7 @@
         };
 
         "invidious" = {
-          enable = true;
+          enable = false;
           containers = {
             "invidious" = {
               volumes = {
@@ -421,8 +422,10 @@
           enable = true;
           containers = {
             "offlineimap" = {
+              # UID/GID = 911:911
               environment = {
-                CRON_SCHEDULE = "\"0 * * * *\"";
+                CRON_SCHEDULE = "* * * * *";
+                # CRON_SCHEDULE = "0 * * * *";
               };
 
               volumes = {
