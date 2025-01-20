@@ -336,6 +336,10 @@
               volumes = {
                 "/var/lib/postgresql/data".hostPath = "/srv/container/nocodb/data";
               };
+
+              ports = {
+                "5432".hostPort = "9799";
+              };
             };
           };
         };
