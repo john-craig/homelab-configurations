@@ -7,11 +7,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ABmH6aTNnW8gAc/SBGY7fw8nx36a67nQdLsGHefb4RY=",
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/nixosModules",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/nixosModules",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/nixosModules",
         "type": "path"
       }
     },
@@ -25,12 +25,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-93yNSXGyKA7fJzNP1SLfdH45uNNAAZvrxyzHVOzhaog=",
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/packages",
+        "narHash": "sha256-jnXYvOhSL5f709eDECdSryXwignAxNFf9kENTKrwIxM=",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/packages",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/packages",
         "type": "path"
       }
     },
@@ -44,11 +44,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-BAAYy+0lIECwcsZbN2zNP1hfAD8elXlmI6nfXqfkhQ0=",
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/utilities",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/utilities",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/l6ld8amjbiy1d7hkp6hxbv2nq3w117kb-source/utilities",
+        "path": "/nix/store/94xyxpfnr5maj252plmijb97q1s3d5sz-source/utilities",
         "type": "path"
       }
     },
@@ -60,11 +60,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735468753,
-        "narHash": "sha256-2dt1nOe9zf9pDkf5Kn7FUFyPRo581s0n90jxYXJ94l0=",
+        "lastModified": 1737038063,
+        "narHash": "sha256-rMEuiK69MDhjz1JgbaeQ9mBDXMJ2/P8vmOYRbFndXsk=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "84a5b93637cc16cbfcc61b6e1684d626df61eb21",
+        "rev": "bf0abfde48f469c256f2b0f481c6281ff04a5db2",
         "type": "github"
       },
       "original": {
@@ -99,11 +99,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1736465313,
-        "narHash": "sha256-+S7fnq4rr9g2Cnld+m+3HX0Mu0qXy+mbJXrmNham1kY=",
+        "lastModified": 1737386285,
+        "narHash": "sha256-iNu6WXHEb05Eu4ijy89BUzso6nHptYTiuEiQZFwChag=",
         "ref": "refs/heads/main",
-        "rev": "b2b71e2ef0392d9f2c5522d7845d9ab3de3fc9c2",
-        "revCount": 33,
+        "rev": "0e1ccaffd21e87b344d6841ab9ed15795ef0f676",
+        "revCount": 34,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },
@@ -120,11 +120,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1736066484,
-        "narHash": "sha256-uTstP36WaFrw+TEHb8nLF14hFPzQBOhmIxzioHCDaL8=",
+        "lastModified": 1737299337,
+        "narHash": "sha256-0NBrY2A7buujKmeCbieopOMSbLxTu8TFcTLqAbTnQDw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "5ad12b6ea06b84e48f6b677957c74f32d47bdee0",
+        "rev": "f8ef4541bb8a54a8b52f19b52912119e689529b3",
         "type": "github"
       },
       "original": {
@@ -157,11 +157,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1734014204,
-        "narHash": "sha256-yO+7ABF1JhsZ24K+8ZeBei9Uxk/XNqyWLqxpfyGGY5I=",
+        "lastModified": 1737386345,
+        "narHash": "sha256-9o/nxKKirjL7hp8IVWU8edixX7srOrEdMp5n0MsQRcA=",
         "ref": "refs/heads/main",
-        "rev": "aa6afc56da9eea0ec84a793e29952d278152f295",
-        "revCount": 71,
+        "rev": "d1d933891145b5f227eb4e24a65efb3647940fa7",
+        "revCount": 74,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       },
@@ -188,11 +188,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1735915915,
-        "narHash": "sha256-Q4HuFAvoKAIiTRZTUxJ0ZXeTC7lLfC9/dggGHNXNlCw=",
+        "lastModified": 1737264083,
+        "narHash": "sha256-6QqSrHPN+ZD+7HuadVLuFNUaM8XnmZF3EO7QViM1b80=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a27871180d30ebee8aa6b11bf7fef8a52f024733",
+        "rev": "aa6ae0afa6adeb5c202a168e51eda1d3da571117",
         "type": "github"
       },
       "original": {
@@ -227,11 +227,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735844895,
-        "narHash": "sha256-CIRlqX9tBK2awJkmVu2cKuap/0QziDXStQZ/u/+e8Z4=",
+        "lastModified": 1737107480,
+        "narHash": "sha256-GXUE9+FgxoZU8v0p6ilBJ8NH7k8nKmZjp/7dmMrCv3o=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "24d89184adf76d7ccc99e659dc5f3838efb5ee32",
+        "rev": "4c4fb93f18b9072c6fa1986221f9a3d7bf1fe4b6",
         "type": "github"
       },
       "original": {
@@ -264,11 +264,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1736302918,
-        "narHash": "sha256-2vBz2h3H808mRCLL5YPx7AWreiqE8+xb9bMGlOhsEsc=",
+        "lastModified": 1737386378,
+        "narHash": "sha256-o6JhwCJrzbJNHWxXjeSozDWiBma95STcftpDhUtMLVg=",
         "ref": "refs/heads/main",
-        "rev": "dbd0e21f5c0409aaf163f946e8cf60046d2402e1",
-        "revCount": 40,
+        "rev": "556a9265517e25f85d2c7ca71fe367ba85824bf6",
+        "revCount": 49,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
       },
