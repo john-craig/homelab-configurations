@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }: {
   options = {
-    link-archiver = {
+    linkArchiver = {
       enable = lib.mkEnableOption "configuration for Link Archiver";
     };
   };
 
-  config = lib.mkIf config.link-archiver.enable {
+  config = lib.mkIf config.linkArchiver.enable {
     environment.systemPackages = with pkgs; [
       obsidian-link-archiver
     ];

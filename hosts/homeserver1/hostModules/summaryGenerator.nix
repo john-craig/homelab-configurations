@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }: {
   options = {
-    summary-generator = {
+    summaryGenerator = {
       enable = lib.mkEnableOption "configuration for Summary Generator";
     };
   };
 
-  config = lib.mkIf config.summary-generator.enable {
+  config = lib.mkIf config.summaryGenerator.enable {
     environment.systemPackages = with pkgs; [
       status-page-generator
     ];

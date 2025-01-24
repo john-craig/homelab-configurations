@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }: {
   options = {
-    personal-site = {
+    personalSite = {
       enable = lib.mkEnableOption "configuration for Person Website";
     };
   };
 
-  config = lib.mkIf config.personal-site.enable {
+  config = lib.mkIf config.personalSite.enable {
     environment.systemPackages = with pkgs; [
       dev-journal-builder
     ];

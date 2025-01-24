@@ -10,10 +10,15 @@
       ./hardware-configuration.nix
 
       ./hostModules/containerProxies.nix
-      ./hostModules/link-archiver.nix
-      ./hostModules/summary-generator.nix
-      ./hostModules/personal-site.nix
+      ./hostModules/linkArchiver.nix
+      ./hostModules/summaryGenerator.nix
+      ./hostModules/personalSite.nix
       ./hostModules/selfhosting.nix
+      ./hostModules/apcupsd.nix
+
+      ./hostModules/networking/tailscale.nix
+      ./hostModules/networking/dns.nix
+      ./hostModules/networking/nfs.nix
 
       ./hostSecrets
     ];
@@ -23,22 +28,6 @@
   networking.hostName = "homeserver1"; # Define your hostname.
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
-
-  # Disable NetworkManager's internal DNS resolution
-  networking.networkmanager.dns = "systemd-resolved";
-
-  # Configure DNS servers manually (this example uses Cloudflare and Google DNS)
-  # IPv6 DNS servers can be used here as well.
-  networking.nameservers = [
-    "192.168.1.1"
-  ];
-
-  services.resolved = {
-    enable = true;
-    domains = [
-      "~chiliahedron.wtf"
-    ];
-  };
 
   networking.firewall.enable = false;
 
@@ -77,9 +66,9 @@
 
   selfhosting.enable = true;
 
-  personal-site.enable = true;
-  link-archiver.enable = true;
-  summary-generator.enable = true;
+  personalSite.enable = true;
+  linkArchiver.enable = true;
+  summaryGenerator.enable = true;
 
   automatedBackups = {
     enable = true;
@@ -97,66 +86,15 @@
 
   selfUpdater.enable = true;
 
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-    authKeyFile = "/run/secrets/tailscale/root/authkey";
-    extraUpFlags = [ "--accept-dns=false" "--snat-subnet-routes=false" ];
-  };
-
-  services.dnsmasq = {
-    enable = true;
-    resolveLocalQueries = false;
-    settings = {
-      server = [ "192.168.1.1" ];
-      interface = [ "tailscale0" ];
-      except-interface = [ "lo" ];
-      bind-interfaces = true;
-
-      address = [
-        "/chiliahedron.wtf/100.69.200.65"
-      ];
-    };
-  };
-
-  services.nfs.server.enable = true;
-  services.nfs.server.exports = ''
-    /export         192.168.1.0/24(rw,fsid=0,no_subtree_check)
-    /export/media   192.168.1.0/24(rw,nohide,insecure,no_subtree_check)
-  '';
-
   services.prometheus.exporters = {
     node = {
       enable = true;
       port = 9100;
     };
 
-    apcupsd = {
-      enable = true;
-      port = 9162;
-      apcupsdAddress = "0.0.0.0:3551";
-    };
-
     smartctl-ssacli = {
       port = 9633;
       enable = true;
-    };
-  };
-
-  services.apcupsd = {
-    enable = true;
-    configText = ''
-      UPSTYPE usb
-      UPSCABLE usb
-      NISIP 0.0.0.0
-      NISPORT 3551
-    '';
-    hooks = {
-      doshutdown = ''
-        # Fire a message to Gotify
-        API_KEY=$(cat /run/secrets/gotify/notifier/api_key)
-        curl -s -S --data '{"message": "'"Home Server on Back-Up Power"'", "title": "'"Home Server Backup Notifier"'", "priority":'"10"', "extras": {"client::display": {"contentType": "text/markdown"}}}' -H 'Content-Type: application/json' "https://gotify.chiliahedron.wtf/message?token=$API_KEY"
-      '';
     };
   };
 
