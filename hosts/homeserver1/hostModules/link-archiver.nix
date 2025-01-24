@@ -27,7 +27,7 @@
         ${pkgs.obsidian-link-archiver}/bin/obsidian-link-archiver /srv/documents/by_category/vault/projects
         
         # Restart archivebox to kill off erroneous Chrome processes
-        ${pkgs.docker}/bin/docker restart archivebox
+        ${pkgs.podman}/bin/podman restart archivebox-archivebox
       '';
       serviceConfig = {
         Type = "oneshot";
