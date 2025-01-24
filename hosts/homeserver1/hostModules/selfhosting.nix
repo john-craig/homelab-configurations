@@ -344,6 +344,28 @@
           };
         };
 
+        "n8n" = {
+          enable = true;
+          containers."n8n" = {
+            environment = {
+              "N8N_HOST" = "n8n.chiliahedron.wtf";
+              "N8N_PORT" = "5678";
+              "N8N_PROTOCOL" = "https";
+              "NODE_ENV" = "production";
+              "WEBHOOK_URL" = "https://n8n.chiliahedron.wtf/";
+              "GENERIC_TIMEZONE" = "America/New_York";
+            };
+
+            ports = {
+              "5678".hostPort = "9715";
+            };
+
+            volumes = {
+              "/home/node/.n8n".hostPath = "/srv/container/n8n/data";
+            };
+          };
+        };
+
         "obsidian-remote" = {
           enable = true;
           containers."obsidian-remote" = {
