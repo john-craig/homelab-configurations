@@ -106,9 +106,13 @@
       "https://www.youtube.com/watch?v=pbTO0w-fWKE"
       "https://www.youtube.com/watch?v=rGHwRodMyFY"
       "https://www.youtube.com/watch?v=WyihFDfE9Q4"
-      "https://www.youtube.com/watch?v=dJTUe_WDgro"
-      "https://www.youtube.com/watch?v=hWN1k5AOEXU"
-      "https://www.youtube.com/watch?v=vUgEFp04TlA"
+      "https://www.youtube.com/watch?v=6VRSCHmkz7I"
+      "https://www.youtube.com/watch?v=kvMxUish5yU"
+      "https://www.youtube.com/watch?v=MGUMdxa_Yi8"
+      "https://www.youtube.com/watch?v=1picLdoFEWY"
+      "https://www.youtube.com/watch?v=llVpzBjYWc0"
+      "https://www.youtube.com/watch?v=Js5yHVbtFTQ"
+      "https://www.youtube.com/watch?v=yaoAv4-FcEI"
     ];
   };
 
