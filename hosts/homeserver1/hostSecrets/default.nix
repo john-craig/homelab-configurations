@@ -12,6 +12,10 @@
     sopsFile = ./gallipedal.yaml;
   };
 
+  sops.secrets."gallipedal/secrets/hakatime/HAKA_DB_PASS" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
   sops.secrets."gallipedal/secrets/invidious/POSTGRES_PASSWORD" = {
     sopsFile = ./gallipedal.yaml;
   };
@@ -26,6 +30,13 @@
 
   sops.secrets."gallipedal/secrets/torrenting/RSLSYNC_SECRET" = {
     sopsFile = ./gallipedal.yaml;
+  };
+
+  sops.secrets."nocodb/service/api_token" = {
+    mode = "0400";
+    owner = "service";
+
+    sopsFile = ./nocodb.yaml;
   };
 
   sops.secrets."tailscale/root/authkey" = {

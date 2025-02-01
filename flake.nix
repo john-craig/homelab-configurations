@@ -53,6 +53,7 @@
           arch = "x86_64-linux";
           extraModules = [
             nixpkgs-apocrypha.nixosModules.smartctl-ssacli-exporter
+            nixpkgs-apocrypha.nixosModules.writingTracker
           ];
         };
 

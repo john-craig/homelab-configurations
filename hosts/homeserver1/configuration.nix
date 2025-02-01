@@ -86,6 +86,12 @@
 
   selfUpdater.enable = true;
 
+  writingTracker = {
+    enable = true;
+    tokenPath = "/run/secrets/nocodb/service/api_token";
+    documentPath = "/srv/documents/by_category/writing";
+  };
+
   services.prometheus.exporters = {
     node = {
       enable = true;

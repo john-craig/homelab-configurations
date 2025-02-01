@@ -186,6 +186,52 @@
           };
         };
 
+        "hakatime" = {
+          enable = true;
+          containers = {
+            "hakatime" = {
+              environment = {
+                "HAKA_DB_HOST" = "haka_db";
+                "HAKA_DB_PORT" = "5432";
+                "HAKA_DB_NAME" = "haka";
+                "HAKA_DB_USER" = "haka";
+
+                "HAKA_BADGE_URL" = "https://hakatime.chiliahedron.wtf";
+                "HAKA_PORT" = "8080";
+                "HAKA_SHIELD_IO_URL" = "https://img.shields.io";
+                "HAKA_ENABLE_REGISTRATION" = "true";
+
+                "HAKA_SESSION_EXPIRY" = "24";
+                "HAKA_LOG_LEVEL" = "info";
+                "HAKA_ENV" = "dev";
+              };
+
+              secrets = {
+                "HAKA_DB_PASS" = "/run/secrets/gallipedal/secrets/hakatime/HAKA_DB_PASS";
+              };
+
+              ports = {
+                "8080".hostPort = "6653";
+              };
+            };
+
+            "haka_db" = {
+              environment = {
+                "POSTGRES_DB" = "haka";
+                "POSTGRES_USER" = "haka";
+              };
+
+              secrets = {
+                "POSTGRES_PASSWORD" = "/run/secrets/gallipedal/secrets/hakatime/HAKA_DB_PASS";
+              };
+
+              volumes = {
+                "/var/lib/postgresql/data".hostPath = "/srv/container/hakatime/data";
+              };
+            };
+          };
+        };
+
         "home-assistant" = {
           enable = true;
           containers."hass" = {

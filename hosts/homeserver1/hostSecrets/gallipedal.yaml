@@ -5,6 +5,8 @@ gallipedal:
             SEARCH_BACKEND_PASSWORD: ENC[AES256_GCM,data:OMWKw1xny/Xm+G9/soAsNbnz,iv:i4rDsV8qS1A3tvbh869L/5qpW1Po/OhN3X8Ni7a+yq0=,tag:VcPWOTc8CkJ3TPdMgqAikQ==,type:str]
         gotify:
             GOTIFY_DEFAULTUSER_PASS: ENC[AES256_GCM,data:ou83AqtS,iv:HLrsNyvwQPalC6CL1f2ymyzLfSi9Sr2tm6XhzQsZKfA=,tag:X6+MOntlBWggxI6OZinutQ==,type:str]
+        hakatime:
+            HAKA_DB_PASS: ENC[AES256_GCM,data:Xh83hkCK7pySopHgqm2ZOXInyV0=,iv:N0v5Lii7lkS6rBSH/6S+dHQhkO2OY36kO3+dSvwC8Rs=,tag:jJrFyoRrFokMwNCOODJ3gA==,type:str]
         invidious:
             POSTGRES_PASSWORD: ENC[AES256_GCM,data:ljgoEec=,iv:ZtnImheYf5c69AQI08asLSeezBqMS1qx5exPS9C5wBI=,tag:+1swcVq4St4SzogdtvVrMA==,type:str]
         nocodb:
@@ -36,8 +38,8 @@ sops:
             YUtyNkYyZVNnVXB5OW84eHRxMjdJUlUKkwt8eQsqnQtvEQIKhjf071Utw8u123V+
             rGUtRKeu49b+f4tMWv6Gc54D7VUTZujd+96/qzyrI4+G5IXUks0MEw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-01-09T22:03:16Z"
-    mac: ENC[AES256_GCM,data:XiWDG3E0xU7Ash3Eemvy9tEi8ADMLb8kGSa14Jf8Pzxw3UCeyFt5dWQxr4M52rT7xqRdXY3TW2Vdkd7KujYj/O47MpztY+qzq7UJJN34uy2hKn4bHO6QSlIRaiWJoZBxoIYxyzPG3P6Evj5q8G7K1ltPF2IbDVctxFrnSoC/8VY=,iv:32DTlxhlKxznVU82OSFdZIrnJhqUkEYDUVn18P9KLT4=,tag:1EpQ/dUMqdw718PPj5KdmA==,type:str]
+    lastmodified: "2025-02-01T18:03:22Z"
+    mac: ENC[AES256_GCM,data:IuIU7sbz0aGLk1VWBWvFaDYFxDIlgWAh6QJrhYKqaCv6ervoIs58CeaOdRDhBc0ZNVNzsPkjyA8N4Utrg3aiY6Wpp16dw5syzc1zwVOmHpcxHR4Fz1ZmJgjsT1ZVIT9xi2eYeHDmQV+O15QZTgjok9idLpxI4bKhLSbSFqEKR+o=,iv:R56QZOuhQHJH8i+e6aqIuszgwNTHr4/uVDg/b+0N/5w=,tag:gbI/T7tTNnfikKj1ETehsg==,type:str]
     pgp: []
     unencrypted_suffix: _unencrypted
     version: 3.9.1
