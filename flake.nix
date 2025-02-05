@@ -62,6 +62,7 @@
           arch = "x86_64-linux";
           extraModules = [
             disko.nixosModules.disko
+            nixpkgs-apocrypha.nixosModules.timeTracker
           ];
         };
 

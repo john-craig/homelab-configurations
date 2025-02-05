@@ -32,13 +32,6 @@
     sopsFile = ./gallipedal.yaml;
   };
 
-  sops.secrets."nocodb/service/api_token" = {
-    mode = "0400";
-    owner = "service";
-
-    sopsFile = ./nocodb.yaml;
-  };
-
   sops.secrets."tailscale/root/authkey" = {
     mode = "0440";
 

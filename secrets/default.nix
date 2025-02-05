@@ -10,4 +10,11 @@
   sops.secrets."gotify/notifier/api_key" = {
     sopsFile = ./gotify.yaml;
   };
+
+  sops.secrets."nocodb/service/api_token" = {
+    mode = "0400";
+    owner = "service";
+
+    sopsFile = ./nocodb.yaml;
+  };
 }

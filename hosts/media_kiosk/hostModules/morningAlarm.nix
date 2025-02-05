@@ -20,7 +20,9 @@
     systemd.timers."morningAlarm-weekday-start" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 06:00:00";
+        # Thirty second offset to prevent it from conflicting
+        # with the screen safer
+        OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 06:00:30";
         Unit = "morningAlarm-start.service";
       };
     };
@@ -28,7 +30,7 @@
     systemd.timers."morningAlarm-weekday-stop" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 06:30:00";
+        OnCalendar = "Mon,Tue,Wed,Thu,Fri *-*-* 07:00:00";
         Unit = "morningAlarm-stop.service";
       };
     };
@@ -36,7 +38,7 @@
     systemd.timers."morningAlarm-weekend-start" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Sat,Sun *-*-* 08:00:00";
+        OnCalendar = "Sat,Sun *-*-* 08:00:30";
         Unit = "morningAlarm-start.service";
       };
     };

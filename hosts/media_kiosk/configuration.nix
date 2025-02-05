@@ -31,7 +31,9 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
-  environment.systemPackages = with pkgs; [ ];
+  environment.systemPackages = with pkgs; [
+    timeflip-tracker
+   ];
 
   # Kiosk Mode
   kiosk.enable = true;
@@ -82,6 +84,8 @@
   };
 
   notifier.enable = true;
+
+  timeTracker.enable = true;
 
   voiceAssistant = {
     enable = true;
