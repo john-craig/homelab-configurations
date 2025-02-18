@@ -51,8 +51,18 @@
   offsiteBackups = {
     enable = true;
 
-    gnupgHomeDir = "/sec/gnupg/pxe_server/service/.gnupg";
+    s3Bucket = "s3://chiliahedron-offsite-backups";
     s3cmdConfigFile = "/run/secrets/s3cmd/backup/s3cfg";
+
+    gnupgRecipient = "offsite-backup";
+    gnupgHomeDir = "/sec/gnupg/pxe_server/service/.gnupg";
+
+    backupProfiles = [
+      {
+        prefix = "automated-backups";
+        path = "/srv/backup";
+      }
+    ];
   };
 
   offlineBackups = {

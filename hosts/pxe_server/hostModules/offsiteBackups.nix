@@ -3,14 +3,40 @@
     offsiteBackups = {
       enable = lib.mkEnableOption "Offsite backup services";
 
-      gnupgHomeDir = lib.mkOption {
-        description = "Path to GnuPG home directory";
+      s3Bucket = lib.mkOption {
+        description = "Name of the s3 bucket to upload to";
         type = lib.types.str;
       };
 
       s3cmdConfigFile = lib.mkOption {
         description = "Path to s3cmd configuration file";
         type = lib.types.str;
+      };
+
+      gnupgRecipient = lib.mkOption {
+        description = "Recipient for encryption";
+        type = lib.types.str;
+      };
+
+      gnupgHomeDir = lib.mkOption {
+        description = "Path to GnuPG home directory";
+        type = lib.types.str;
+      };
+
+      backupProfiles = lib.mkOption {
+        type = lib.types.listOf (lib.types.submodule {
+          options = {
+            prefix = lib.mkOption {
+              type = lib.types.str;
+              description = "Prefix to use for backup files";
+            };
+
+            path = lib.mkOption {
+              type = lib.types.str;
+              description = "Path to backup";
+            };
+          };
+        });
       };
     };
   };
@@ -23,7 +49,43 @@
       gnutar
       curl
       pinentry
-    ];
+    ] ++ builtins.map (
+      backupProfile: (
+        pkgs.writeShellScriptBin "offsite-backup-restore-${backupProfile.prefix}" ''
+          #!/bin/bash
+          BUCKET_NAME="${config.offsiteBackups.s3Bucket}"
+          UPLOAD_STEM="${backupProfile.prefix}"
+          RESTORE_PATH=$1
+          WORK_DIR="''${1:-/tmp}"
+
+          # Determine the latest upload
+          LATEST_UPLOAD=$(s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+            ls ${config.offsiteBackups.s3Bucket} | \
+            grep success | awk '{ print $4 }' | \
+            cut -d '.' -f 2 | sort | tail -n 1)
+          
+          pushd $WORK_DIR
+            # Obtain each of the partial archives
+            s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+              --multipart-chunk-size-mb=500 \
+              get "${config.offsiteBackups.s3Bucket}/$UPLOAD_STEM.$LATEST_UPLOAD.part*" .
+          
+            for part in ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz.gpg; do 
+              # Decrypt each partial archive one at a time
+              gpg --decrypt --always-trust --recipient ${config.offsiteBackups.gnupgRecipient} \
+                --homedir ${config.offsiteBackups.gnupgHomeDir} $part > ''${part%.gpg}; 
+              rm $part
+            done
+
+            # Concatenate and extract partial archives
+            cat ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz | tar -xzf - -C $RESTORE_PATH
+
+            # Remove partial archives
+            rm ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz
+          popd
+        ''
+      )
+    ) config.offsiteBackups.backupProfiles;
 
     # Required for GnuPG
     programs.gnupg.agent = {
@@ -43,30 +105,49 @@
     notifiedServices.services = {
       "offsite-backup" = {
         enable = true;
-        path = [ pkgs.gzip pkgs.gnutar pkgs.gnupg pkgs.s3cmd ];
-        script =
-          ''
-            # Create a /var/run directory, if it doesn't already exist
-            [[ ! -d /var/run/offsite-backup/ ]] && mkdir /var/run/offsite-backup/
+        path = [ pkgs.gzip pkgs.gawk pkgs.gnutar pkgs.gnupg pkgs.s3cmd ];
+        script = lib.strings.concatMapStrings 
+          (backupProfile: 
+            ''
+              BUCKET_NAME="${config.offsiteBackups.s3Bucket}"
+              UPLOAD_STEM="${backupProfile.prefix}"
+              UPLOAD_BASE="$UPLOAD_STEM.$(date +%Y-%m-%dT%H-%M-%S)"
+              BACKUP_PATH="${backupProfile.path}"
 
-            # Exit if there is still an ongoing backup
-            [[ -f /var/run/offsite-backup/backup.pid ]] && exit 0
+              # Create a /var/run directory, if it doesn't already exist
+              [[ ! -d /var/run/offsite-backup/ ]] && mkdir /var/run/offsite-backup/
 
-            # Set our lock
-            echo $$ > /var/run/offsite-backup/backup.pid
+              # Exit if there is still an ongoing backup
+              [[ -f /var/run/offsite-backup/backup.pid ]] && exit 0
 
-            # Read the current backup index, creating it if it doesn't exist
-            [[ ! -f /var/run/offsite-backup/backup.idx ]] && echo "0" > /var/run/offsite-backup/backup.idx
+              # Set our lock
+              echo $$ > /var/run/offsite-backup/backup.pid
 
-            # Remove the previous in-progress backup if it exists
-            s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} rm s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg || true
+              # Perform upload
+              tar -czf - "$BACKUP_PATH" | 
+              split --suffix-length=3 --numeric-suffixes \
+                --bytes=5000M - "$UPLOAD_BASE.part" --filter=' \
+                  gpg --encrypt --always-trust --recipient ${config.offsiteBackups.gnupgRecipient} \
+                    --homedir ${config.offsiteBackups.gnupgHomeDir} | \
+                  s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+                    --multipart-chunk-size-mb=500 \
+                    --verbose --debug \
+                    --max-retries=25 \
+                    put - "${config.offsiteBackups.s3Bucket}/$FILE.tar.gz.gpg"'
 
-            # Start the backup
-            tar -czf - /srv/backup/ | gpg --encrypt --always-trust --recipient offsite-backup --homedir ${config.offsiteBackups.gnupgHomeDir} | s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} --multipart-chunk-size-mb=500 put - s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg
-            
-            # Rename the in-progress backup
-            s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} mv s3://chiliahedron-offsite-backups/in-progress.tar.gz.gpg s3://chiliahedron-offsite-backups/backup.tar.gz.gpg
-          '';
+              date | s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+                put - "${config.offsiteBackups.s3Bucket}/$UPLOAD_BASE.success"
+
+              # Remove parts  
+              s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+                ls $BUCKET_NAME | \
+              grep "$BUCKET_NAME/$UPLOAD_STEM" | grep -v $UPLOAD_BASE | \
+              awk '{ print $4 }' | \
+              while read FILE; do \
+                s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} rm $FILE; \
+              done
+            ''
+          ) config.offsiteBackups.backupProfiles;
         postStop =
           ''
             # Remove GNU's lock
