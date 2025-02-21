@@ -24,6 +24,8 @@
   networking.hostName = "pxe-server";
   networking.firewall.enable = false;
 
+  garbageCollect.enable = true;
+
   # Node Exporter
   services.prometheus.exporters = {
     node = {

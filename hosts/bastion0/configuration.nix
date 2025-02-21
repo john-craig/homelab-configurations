@@ -26,6 +26,8 @@
     allowedTCPPorts = [ 22 80 443 ];
   };
 
+  garbageCollect.enable = true;
+
   virtualisation.docker = {
     enable = true;
     autoPrune.enable = true;

@@ -31,6 +31,8 @@
     # ]))
   ];
 
+  garbageCollect.enable = true;
+
   networking.hostName = "key-server";
 
   networking.firewall = {

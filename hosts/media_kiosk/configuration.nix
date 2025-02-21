@@ -33,7 +33,9 @@
 
   environment.systemPackages = with pkgs; [
     timeflip-tracker
-   ];
+  ];
+
+  garbageCollect.enable = true;
 
   # Kiosk Mode
   kiosk.enable = true;

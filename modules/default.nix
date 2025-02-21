@@ -5,6 +5,7 @@
     [
       ./automatedBackups
       ./disasterRecovery
+      ./garbageCollector
       ./voiceAssistant
       ./userProfiles
     ];

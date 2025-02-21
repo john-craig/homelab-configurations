@@ -60,6 +60,8 @@
     "Z /srv/media/by_category/video/movies 777"
   ];
 
+  garbageCollect.enable = true;
+
   containerProxies = {
     enable = true;
   };
