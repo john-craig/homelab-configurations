@@ -26,6 +26,16 @@
 
   garbageCollect.enable = true;
 
+  resourceCache = {
+    enable = true;
+
+    role = "server";
+    resources = {
+      pacman.enable = true;
+      nix.enable = true;
+    };
+  };
+
   # Node Exporter
   services.prometheus.exporters = {
     node = {
@@ -54,7 +64,7 @@
     enable = true;
 
     s3Bucket = "s3://chiliahedron-offsite-backups";
-    s3cmdConfigFile = "/run/secrets/s3cmd/backup/s3cfg";
+    s3cmdConfigFile = config.sops.secrets."s3cmd/backup/s3cfg".path;
 
     gnupgRecipient = "offsite-backup";
     gnupgHomeDir = "/sec/gnupg/pxe_server/service/.gnupg";
