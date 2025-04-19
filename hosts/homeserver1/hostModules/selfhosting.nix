@@ -736,7 +736,7 @@
       };
 
       proxyConf = {
-        internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^100\.127\.79\.104)|(^100\.112\.189\.60)|(^100\.69\.200\.65)`)";
+        internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^10\.100\.0\.16)`)";
         network = "chiliahedron-services";
         tlsResolver = "chiliahedron-resolver";
       };

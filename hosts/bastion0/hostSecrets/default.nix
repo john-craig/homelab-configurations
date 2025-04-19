@@ -6,4 +6,10 @@
 
     sopsFile = ./tailscale.yaml;
   };
+
+  sops.secrets."wireguard/root/private-key.b64" = {
+    mode = "600";
+
+    sopsFile = ./wireguard.yaml;
+  };
 }

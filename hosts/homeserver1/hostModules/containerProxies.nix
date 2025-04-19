@@ -10,7 +10,7 @@
       enable = true;
 
       environmentFiles = [
-        "/run/secrets/traefik/root/cloudflare_dns_token"
+        config.sops.secrets."traefik/root/cloudflare_dns_token".path
       ];
 
       staticConfigOptions = {

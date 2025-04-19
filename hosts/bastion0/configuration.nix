@@ -9,6 +9,9 @@
     [
       ./hardware-configuration.nix
 
+      ./hostModules/wireguard.nix
+      # ./hostModules/headscale.nix
+
       ./hostSecrets
     ];
 
@@ -23,7 +26,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 80 443 ];
+    allowedTCPPorts = [ 22 80 443 51820 ];
   };
 
   garbageCollect.enable = true;
@@ -33,40 +36,69 @@
     autoPrune.enable = true;
   };
 
+  # Enable ACME with DNS challenge support
+  # security.acme = {
+  #   acceptTerms = true;
+  #   defaults.email = "admin@chiliahedron.wtf";
+  #   certs."headscale.chiliahedron.wtf" = {
+  #     dnsProvider = "cloudflare";
+  #     dnsResolver = "1.1.1.1:53";
+  #     dnsPropagationCheck = true;
+  #     webroot = null;
+  #     environmentFile = config.sops.secrets."acme/root/cloudflare_dns_token".path;
+  #     extraLegoFlags = [ "--dns.propagation-wait" "300s" ];
+  #     reloadServices = [ "nginx" ];
+  #   };
+  # };
+
   services.nginx = {
     enable = true;
-    config = ''
-      events {
-          worker_connections  4096;  ## Default: 1024
-      }
 
-      http {
-          server {
-              listen 80;
-              server_name _;
-              return 301 https://$server_name$request_uri;
-          }
-      }
+    # Custom global tuning
+    recommendedOptimisation = true;
+    recommendedGzipSettings = true;
+    recommendedProxySettings = true;
 
-      stream {
-          server {
-              listen 443;
-              #server_name _;
-              # We need to pass the request to server so that
-              # if it is hosting multiple sites hosted, it knows which one to serve
-              #proxy_set_header Host $server_name;
+    # # Override worker_connections
+    # appendHttpConfig = ''
+    #   events {
+    #     worker_connections 4096;
+    #   }
+    # '';
 
-              proxy_pass 100.69.200.65:443;
-          }
+    # Main virtual host for headscale
+    # virtualHosts."headscale.chiliahedron.wtf" = {
+    #   # forceSSL = true;
+    #   enableACME = true;
+    #   locations."/" = {
+    #     proxyPass = "http://127.0.0.1:8083";
+    #     proxyWebsockets = true;
+    #   };
+    # };
+
+    # Redirect everything else to HTTPS
+    virtualHosts."_" = {
+      listen = [{ addr = "0.0.0.0"; port = 80; }];
+      default = true;
+      locations."/" = {
+        return = "301 https://$server_name$request_uri";
+      };
+    };
+
+    # Add stream block for TCP proxying
+    streamConfig = ''
+      server {
+        listen 443;
+        proxy_pass 10.100.0.2:443;
       }
     '';
   };
 
-  services.tailscale = {
-    enable = true;
-    extraUpFlags = [ "--accept-dns" ];
-    authKeyFile = "/run/secrets/tailscale/root/authkey";
-  };
+  # services.tailscale = {
+  #   enable = true;
+  #   extraUpFlags = [ "--accept-dns" ];
+  #   authKeyFile = "/run/secrets/tailscale/root/authkey";
+  # };
 
   security.sudo.extraRules = [
     {
@@ -78,6 +110,7 @@
   environment.systemPackages = with pkgs; [
     mtr
     sysstat
+    lego
   ];
 
   userProfiles.service = {

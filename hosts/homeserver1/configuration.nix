@@ -16,9 +16,10 @@
       ./hostModules/selfhosting.nix
       ./hostModules/apcupsd.nix
 
-      ./hostModules/networking/tailscale.nix
+      # ./hostModules/networking/tailscale.nix
       ./hostModules/networking/dns.nix
       ./hostModules/networking/nfs.nix
+      ./hostModules/networking/wireguard.nix
 
       ./hostSecrets
     ];

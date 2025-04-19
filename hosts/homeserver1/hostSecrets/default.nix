@@ -38,8 +38,15 @@
     sopsFile = ./tailscale.yaml;
   };
 
+  sops.secrets."wireguard/root/private-key.b64" = {
+    mode = "600";
+
+    sopsFile = ./wireguard.yaml;
+  };
+
   sops.secrets."traefik/root/cloudflare_dns_token" = {
     mode = "0400";
+    owner = "root";
 
     sopsFile = ./traefik.yaml;
   };

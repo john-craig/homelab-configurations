@@ -1,0 +1,33 @@
+{ config, pkgs, ... }:
+
+let
+  wgPort = 51820;
+  wgInterface = "wg0";
+  wgIp = "10.100.0.1/24";
+  
+  homeserver1Pubkey = "FOGqroNciRPSDqptv/VVNz+ESr4UvmB8djEhK87mgGc="; # Replace with Server B's public key
+  pixel4aPubkey = "sK4dhOJbASYTpOkxB3I3Vzx1bmUPKvvremXr+t6f6CU=";
+in {
+  networking.firewall.allowedUDPPorts = [ wgPort ];
+
+  networking.wireguard.interfaces.${wgInterface} = {
+    ips = [ wgIp ];
+    listenPort = wgPort;
+    privateKeyFile = config.sops.secrets."wireguard/root/private-key.b64".path;
+
+    peers = [
+      {
+        publicKey = homeserver1Pubkey;
+        allowedIPs = [ "10.100.0.2/32" ];
+      }
+      {
+        publicKey = pixel4aPubkey;
+        allowedIPs = [ "10.100.0.16/32" ];
+      }
+    ];
+  };
+
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.forwarding" = true;
+  };
+}

@@ -21,12 +21,12 @@
       resolveLocalQueries = false;
       settings = {
         server = [ "192.168.1.1" ];
-        interface = [ "tailscale0" ];
+        interface = [ "wg0" ];
         except-interface = [ "lo" ];
         bind-interfaces = true;
 
         address = [
-          "/chiliahedron.wtf/100.69.200.65"
+          "/chiliahedron.wtf/10.100.0.2"
         ];
       };
     };
