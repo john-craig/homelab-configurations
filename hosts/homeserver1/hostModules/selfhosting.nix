@@ -691,6 +691,34 @@
               };
             };
 
+            "lidarr" = {
+              environment = {
+                PGID = "1000";
+                PUID = "1000";
+                TZ = "America/New_York";
+              };
+
+              volumes = {
+                "/config".hostPath = "/srv/container/lidarr/config";
+                "/music".hostPath = "/srv/media/by_category/audio/music";
+                "/downloads/lidarr".hostPath = "/srv/downloads/lidarr";
+              };
+
+              ports = {
+                "8686".hostPort = "8686";
+              };
+            };
+
+            "yt-dlp-webui" = {
+              volumes = {
+                "/downloads".hostPath = "/srv/media/by_category/audio/music/Uncategorized`";
+              };
+
+              ports = {
+                "3033".hostPort = "8688";
+              };
+            };
+
             "resilio" = {
               environment = {
                 RSLSYNC_TRASH_TIME = "1";

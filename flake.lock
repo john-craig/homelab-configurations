@@ -5,15 +5,16 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-WIU4wj5/2Rgp1xt5qReoq2jE9XC0PjuE9nwQsR3ObdI=",
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/nixosModules",
+        "path": "./nixosModules",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/nixosModules",
+        "path": "./nixosModules",
         "type": "path"
-      }
+      },
+      "parent": [
+        "nixpkgs-apocrypha"
+      ]
     },
     "apocryphalPackages": {
       "inputs": {
@@ -24,15 +25,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-dg7+ONE2EfJQ5hgcEIDgqfn5/X9vQ7I872nuDHNwAaA=",
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/packages",
+        "path": "./packages",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/packages",
+        "path": "./packages",
         "type": "path"
-      }
+      },
+      "parent": [
+        "nixpkgs-apocrypha"
+      ]
     },
     "apocryphalUtilities": {
       "inputs": {
@@ -42,15 +44,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-BAAYy+0lIECwcsZbN2zNP1hfAD8elXlmI6nfXqfkhQ0=",
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/utilities",
+        "path": "./utilities",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/jgjwji8z1glhw1jf6si7ndb6jik54ha9-source/utilities",
+        "path": "./utilities",
         "type": "path"
-      }
+      },
+      "parent": [
+        "nixpkgs-apocrypha"
+      ]
     },
     "disko": {
       "inputs": {
@@ -99,11 +102,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1738434412,
-        "narHash": "sha256-MObI/xP4ICSjM0/yxwG0qSwg6a41QG+7daarJTS/1+g=",
+        "lastModified": 1745177117,
+        "narHash": "sha256-DKSmozwEaX54VbqD/r3kRu1zY+BX/yBMfVc6nDwmlKc=",
         "ref": "refs/heads/main",
-        "rev": "fdfd6d313eea232804224928c29c75f07a4813b9",
-        "revCount": 38,
+        "rev": "14cb38b93f12e184fccb2720ce2457d832faddd3",
+        "revCount": 40,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },
