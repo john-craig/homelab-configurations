@@ -13,6 +13,7 @@ gallipedal:
             NC_DB: ENC[AES256_GCM,data:iLkGZC2hktwSW0QKSgGqbcD7pkGOlVUF8L3zeA0400zBGzHsaTbNvh/HheJ/342kl7xX8LURcY6Rju9GrDH1ypY=,iv:KYVjCjAfbatt6V76YZm7k2so9Q+qLFw1h7Amktzy7OU=,tag:1LKR1xN9rjpzqSfy2F2qSA==,type:str]
             POSTGRES_PASSWORD: ENC[AES256_GCM,data:7MIjq7BksznzP5XJAoFYVVfO8EZne8bH,iv:T0A6t4L85a6OkKaW7I2E8F1f7SmgTHcIrnnoCeKShxs=,tag:KqFs1yzgwVBPI9XheTWElg==,type:str]
         torrenting:
+            LIDARR_API_KEY: ENC[AES256_GCM,data:bCD9GzPKZDXyP8gkugZDYLvetcKv3zk3cZBIdlvOA1w=,iv:axtzo/wKgtGmGI34VxCoHFjs1/wqrJZDoxXE5x9ns8c=,tag:hQ7Nhqe8UGsyf1vGjCk2Ng==,type:str]
             RSLSYNC_SECRET: ENC[AES256_GCM,data:nwYRFrtvtuztHClbwh18dfB+5u7H6zlzN5XS7Vm9kuha,iv:WrU7o5E+nGUq1tzw2D1PRB6f+TK+xGQVC1HCHvVGMF0=,tag:139hBRIspkcvGLcgAp/7vg==,type:str]
 sops:
     kms: []
@@ -38,8 +39,8 @@ sops:
             YUtyNkYyZVNnVXB5OW84eHRxMjdJUlUKkwt8eQsqnQtvEQIKhjf071Utw8u123V+
             rGUtRKeu49b+f4tMWv6Gc54D7VUTZujd+96/qzyrI4+G5IXUks0MEw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-02-01T18:03:22Z"
-    mac: ENC[AES256_GCM,data:IuIU7sbz0aGLk1VWBWvFaDYFxDIlgWAh6QJrhYKqaCv6ervoIs58CeaOdRDhBc0ZNVNzsPkjyA8N4Utrg3aiY6Wpp16dw5syzc1zwVOmHpcxHR4Fz1ZmJgjsT1ZVIT9xi2eYeHDmQV+O15QZTgjok9idLpxI4bKhLSbSFqEKR+o=,iv:R56QZOuhQHJH8i+e6aqIuszgwNTHr4/uVDg/b+0N/5w=,tag:gbI/T7tTNnfikKj1ETehsg==,type:str]
+    lastmodified: "2025-04-24T21:02:52Z"
+    mac: ENC[AES256_GCM,data:E7P2vuvI28qO1t1cicEjzjVEU68F9z8ICanPzttg+0val5FzlKYC714cP9rSERV0dObauXuvScsy8Ro75wGQTLV45TZHdgo6dpawsFEjSaGdeL0ITtukb9oFREKZ2eYSPCLMTpsxdsUseukDViJ6hs0LFnDxyqo6Y6pv8m5k0cU=,iv:tg9iquTKkwlGTZB51PiEIABQLAm/okdfKccaByOG5hQ=,tag:f4V2toHDqCuruu9BIrQhFA==,type:str]
     pgp: []
     unencrypted_suffix: _unencrypted
     version: 3.9.1

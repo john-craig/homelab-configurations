@@ -6,11 +6,21 @@
   };
 
   config = lib.mkIf config.containerProxies.enable {
+    systemd.tmpfiles.rules = let
+      podmanDir = "/var/run/podman";
+    in [
+      "A ${podmanDir} - - - - user::rwx"
+      "A ${podmanDir} - - - - group::r-x"
+      "A ${podmanDir} - - - - mask::rwx"
+      "A+ ${podmanDir} - - - - user:traefik:rwx"
+      "A+ ${podmanDir} - - - - group:traefik:rwx"
+    ];
+
     services.traefik = {
       enable = true;
 
       environmentFiles = [
-        config.sops.secrets."traefik/root/cloudflare_dns_token".path
+        config.sops.secrets."traefik/traefik/cloudflare_dns_token".path
       ];
 
       staticConfigOptions = {

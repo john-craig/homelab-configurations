@@ -32,6 +32,10 @@
     sopsFile = ./gallipedal.yaml;
   };
 
+  sops.secrets."gallipedal/secrets/torrenting/LIDARR_API_KEY" = {
+    sopsFile = ./gallipedal.yaml;
+  };
+
   sops.secrets."tailscale/root/authkey" = {
     mode = "0440";
 
@@ -44,9 +48,9 @@
     sopsFile = ./wireguard.yaml;
   };
 
-  sops.secrets."traefik/root/cloudflare_dns_token" = {
+  sops.secrets."traefik/traefik/cloudflare_dns_token" = {
     mode = "0400";
-    owner = "root";
+    owner = "traefik";
 
     sopsFile = ./traefik.yaml;
   };

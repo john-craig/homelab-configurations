@@ -39,6 +39,7 @@
     smartmontools
     lsscsi
     lshw
+    yt-dlp
   ];
 
   systemd.tmpfiles.rules = [

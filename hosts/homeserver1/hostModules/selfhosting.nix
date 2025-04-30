@@ -709,9 +709,30 @@
               };
             };
 
+            "lidatube" = {
+              environment = {
+                "lidarr_address" = "http://0.0.0.0:8686";
+                "attempt_lidarr_import" = "True";
+              };
+
+              secrets = {
+                "lidarr_api_key" = "/run/secrets/gallipedal/secrets/torrenting/LIDARR_API_KEY";
+              };
+
+              volumes = {
+                "/lidatube/config".hostPath = "/srv/container/lidatube/config";
+                "/lidatube/downloads".hostPath = "/srv/media/by_category/audio/music";
+                # "/etc/localtime".hostPath = "/etc/localtime";
+              };
+
+              ports = {
+                "5000".hostPort = "8687";
+              };
+            };
+
             "yt-dlp-webui" = {
               volumes = {
-                "/downloads".hostPath = "/srv/media/by_category/audio/music/Uncategorized`";
+                "/downloads".hostPath = "/srv/media/by_category/audio/music/Uncategorized";
               };
 
               ports = {

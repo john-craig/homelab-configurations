@@ -1,6 +1,6 @@
 traefik:
-    root:
-        cloudflare_dns_token: ENC[AES256_GCM,data:JwqfQFxlLTJUUXy0IwfC+D7mZxcFhgQobg61utZinHwWkLvxCV7Xswb4eZlTRFu5UqXYBQLiwlweTsU+lc8M+3w=,iv:y2RRTCuT+e4aZUNimfCQ9VyOpvKzmiNrKZkyzugwGxU=,tag:Nu70hhqoazTLhRD8lQqucg==,type:str]
+    traefik:
+        cloudflare_dns_token: ENC[AES256_GCM,data:WqZxVo0tqLwB4yBPlapGgocXg7U4k4V1RwlgcjQwl6VmnaBTdgFUreuY+Z3LnrmoemLD+tIB87crt9v4n638n5Y=,iv:miuHuspH4h8fhLHqSRtsCzm1f/8CdJReWIH/L3IfZ2o=,tag:LbrvKsZfU26HyYoHR629Mg==,type:str]
 sops:
     kms: []
     gcp_kms: []
@@ -25,8 +25,8 @@ sops:
             WTNwTFFrTlJQUXRhUUxBQ3lQeWVqcmsKAe5WmNT8hR6w8AQHm/dFc9ztRbJb84oo
             Ur5nqACU/3Bf57TQ4BhspE50x6H/N+JwkrdlfRGVkIxLRQDf2gFnQA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-04-19T14:54:58Z"
-    mac: ENC[AES256_GCM,data:L71imOkOHQwNUcdRWPdiGqZ/z/8sm20UlXq1oVlCjlhTxZFf3Gz0YohmP5594Vl5WH1zGezdOXTbKhAg8QbRmRndPxV58mB750tTjIF49S40SpC3Pwh5YAU4APDWUa8KNuJXiRhOkSKvdMKv4uj91VrLKdH/nrpX3Zu9VMkRgF8=,iv:NU2T/dWPB7cvUwpk7/+yt8f90TwuWKwo3m3s10SezrM=,tag:HH++zlNHFPWDDw566Lv7MQ==,type:str]
+    lastmodified: "2025-04-21T13:34:21Z"
+    mac: ENC[AES256_GCM,data:7oVFXg1O+XADaQYUzbcqUMkSnkPRsweIwdgTcQ9OwO7zwnIIM0asydnnyaB2RGHvcqvUJFze/3KiO/ewdOhPw+jGYYllP3IiIXoDEdFXUQABsfFsUY6KpfyqCxKhdii+XGTMOM3aGLqFcX2i1CSapE00lrJGv7zG6uZwJP4v50A=,iv:iyovoohdf9ZxyWQhNs5jUcReDIe+We6uY2QpcWl/1iQ=,tag:qPVLc2omP+tevL8z/Pz2kg==,type:str]
     pgp: []
     unencrypted_suffix: _unencrypted
     version: 3.9.1
