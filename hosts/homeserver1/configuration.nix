@@ -74,6 +74,17 @@
   linkArchiver.enable = true;
   summaryGenerator.enable = true;
 
+
+  resourceCache = {
+    enable = true;
+
+    role = "client";
+    credentials.privateKey = config.sops.secrets."openssh/root/cacher".path;
+    resources = {
+      nix.enable = true;
+    };
+  };
+
   automatedBackups = {
     enable = true;
     role = "client";

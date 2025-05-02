@@ -30,6 +30,7 @@
     enable = true;
 
     role = "server";
+    credentials.publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGYteO0QiyhHrDeoxJ0O2lq83VGvZnIHxkHpxCyb34mR";
     resources = {
       pacman.enable = true;
       nix.enable = true;

@@ -9,6 +9,21 @@
         description = "Defines whether the configuration is for the client, server, or both.";
       };
 
+      credentials = lib.mkOption {
+        default = { };
+        type = lib.types.submodule {
+          options = {
+            publicKey = lib.mkOption {
+              type = lib.types.str;
+            };
+
+            privateKey = lib.mkOption {
+              type = lib.types.str;
+            };
+          };
+        };
+      };
+
       resources = lib.mkOption {
         default = { };
         type = lib.types.submodule {
@@ -209,12 +224,18 @@
           isNormalUser = true;
           initialPassword = null;
 
-          openssh.authorizedKeys.keys = [
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGYteO0QiyhHrDeoxJ0O2lq83VGvZnIHxkHpxCyb34mR"
-          ];
+          openssh.authorizedKeys.keys = [ config.resourceCache.credentials.publicKey ];
         };
       };
 
+    })
+    ##################################################
+    # Client Configuration: Common
+    ##################################################
+    (lib.mkIf (config.resourceCache.enable && 
+      (config.resourceCache.role == "client" ||
+       config.resourceCache.role == "both")) {
+        # Anything?
     })
     ##################################################
     # Server Configuration: Nix Resource
@@ -273,6 +294,30 @@
         "L+ /var/lib/dustman/nix/actions/list - - - - ${nix-list-cache}/bin/nix-list-cache"
         "L+ /var/lib/dustman/nix/actions/clean - - - - ${nix-clean-cache}/bin/nix-clean-cache"
         "L+ /var/lib/dustman/nix/actions/update - - - - ${nix-update-cache}/bin/nix-update-cache"
+      ];
+    })
+    ##################################################
+    # Client Configuration: Nix Resource
+    ##################################################
+    (let
+      cacheServer = "192.168.1.5";
+      cacheDir = "/srv/cache/nix";
+      cacherIdentityFile = config.resourceCache.credentials.privateKey;
+      nix-push-cache = (pkgs.writeShellScriptBin "nix-push-cache" ''
+        # ${pkgs.nix}/bin/nix path-info --recursive /run/current-system
+        NIX_SSHOPTS="-i ${cacherIdentityFile}" \
+          ${pkgs.nix}/bin/nix copy --substitute-on-destination \
+          --to ssh-ng://${cacheServer}?remote-store=${cacheDir} \
+          /run/current-system
+      '');
+    in lib.mkIf (config.resourceCache.enable &&
+       (config.resourceCache.role == "client" ||
+        config.resourceCache.role == "both") &&
+        config.resourceCache.resources.nix.enable) {
+      nix.settings.experimental-features = [ "nix-command" ];
+      
+      environment.systemPackages = [
+        nix-push-cache
       ];
     })
     ##################################################

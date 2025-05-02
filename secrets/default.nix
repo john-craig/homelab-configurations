@@ -17,4 +17,11 @@
 
     sopsFile = ./nocodb.yaml;
   };
+
+  sops.secrets."openssh/root/cacher" = {
+    mode = "0400";
+    owner = "root";
+
+    sopsFile = ./openssh.yaml;
+  };
 }
