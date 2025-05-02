@@ -97,7 +97,7 @@
     systemd.timers."offsite-backup" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Wed *-*-* 01:30:00";
+        OnCalendar = "Wed *-*-24 01:30:00";
         Unit = "offsite-backup.service";
       };
     };
@@ -131,7 +131,6 @@
                     --homedir ${config.offsiteBackups.gnupgHomeDir} | \
                   s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
                     --multipart-chunk-size-mb=500 \
-                    --verbose --debug \
                     --max-retries=25 \
                     put - "${config.offsiteBackups.s3Bucket}/$FILE.tar.gz.gpg"'
 
