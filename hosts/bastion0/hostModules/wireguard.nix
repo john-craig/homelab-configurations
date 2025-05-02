@@ -4,10 +4,11 @@ let
   wgPort = 51820;
   wgInterface = "wg0";
   wgIp = "10.100.0.1/24";
-  
-  homeserver1Pubkey = "FOGqroNciRPSDqptv/VVNz+ESr4UvmB8djEhK87mgGc="; # Replace with Server B's public key
+
+  homeserver1Pubkey = "FOGqroNciRPSDqptv/VVNz+ESr4UvmB8djEhK87mgGc=";
   pixel4aPubkey = "sK4dhOJbASYTpOkxB3I3Vzx1bmUPKvvremXr+t6f6CU=";
-in {
+in
+{
   networking.firewall.allowedUDPPorts = [ wgPort ];
 
   networking.wireguard.interfaces.${wgInterface} = {
