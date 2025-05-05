@@ -69,7 +69,7 @@
 
           set -euo pipefail
 
-          GENERATIONS=3
+          GENERATIONS=1
           BASE_DIR="/var/lib/dustman"
           TIMESTAMP=$(date +%s)
 
@@ -243,10 +243,10 @@
     (let 
         cacheDir = "/srv/cache/nix";
         nix-list-cache = (pkgs.writeShellScriptBin "nix-list-cache" ''
-          ls ${cacheDir}
+          ${pkgs.findutils}/bin/find ${cacheDir}/store -maxdepth 1 -mindepth 1 -printf "/nix/store/%f\n"
         '');
         nix-clean-cache = (pkgs.writeShellScriptBin "nix-clean-cache" ''
-          
+          NIX_STORE_DIR=${cacheDir} nix-store --delete /nix/store/
         '');
 
         nix-update-cache = (pkgs.writeShellScriptBin "nix-update-cache" ''
@@ -256,36 +256,28 @@
        (config.resourceCache.role == "server" ||
         config.resourceCache.role == "both") &&
         config.resourceCache.resources.nix.enable) {
-      environment.systemPackages = [
-        
-      ];
 
-      # Create a user and group for running the cache
-      users.users.nix-serve = {
-        isSystemUser = true;
-        group = "nix-serve";
-      };
-
-      users.groups.nix-serve = {};
-
-      services.nix-serve = {
-        enable = true;
-        bindAddress = "0.0.0.0";  
-        port = 5001;        
-        package = pkgs.nix-serve-ng;
-      };
-      # Hack to override the location of the storage directory
-      systemd.services.nix-serve.environment = {
-        NIX_STORE_DIR = cacheDir;
-      };
+      environment.etc."nix-cache/nix.conf".text = ''
+        store = /srv/cache/nix/store
+        sandbox = false
+        trusted-users = root, cacher
+      '';
 
       systemd.tmpfiles.rules = [
-        "d ${cacheDir} 0755 nix-serve nix-serve -"
-        "a ${cacheDir} - - - - user::rwx"
-        "a ${cacheDir} - - - - group::r-x"
-        "a ${cacheDir} - - - - mask::rwx"
-        "a+ ${cacheDir} - - - - user:cacher:rwx"
-        "a+ ${cacheDir} - - - - group:cacher:rwx"
+        "d ${cacheDir} 0755 root root - -"
+        # "d ${cacheDir}/store 0755 root root - -"
+        # "d ${cacheDir}/var/nix 0755 root root - -"
+        # "d ${cacheDir}/var/nix/daemon-socket 0755 root root - -"
+
+        "A ${cacheDir} - - - - user::rwx"
+        "A ${cacheDir} - - - - group::r-x"
+        "A ${cacheDir} - - - - mask::rwx"
+        
+        # Store path
+        "A+ ${cacheDir} - - - - user:cacher:rwx"
+        "A+ ${cacheDir} - - - - group:cacher:r-x"
+        "A+ ${cacheDir} - - - - user:ncps:rwx"
+        "A+ ${cacheDir} - - - - group:ncps:r-x"
 
         "d /var/lib/dustman/nix 0755 cacher cacher - -"
         "d /var/lib/dustman/nix/hosts 0755 cacher cacher - -"
@@ -295,6 +287,36 @@
         "L+ /var/lib/dustman/nix/actions/clean - - - - ${nix-clean-cache}/bin/nix-clean-cache"
         "L+ /var/lib/dustman/nix/actions/update - - - - ${nix-update-cache}/bin/nix-update-cache"
       ];
+
+      services.ncps = {
+        enable = true;
+
+        logLevel = "debug";
+
+        server.addr = "0.0.0.0:5001";
+
+        upstream = {
+          caches = [ "https://cache.nixos.org" ];
+        };
+
+        cache = {
+          hostName = "pxe_server";
+          dataPath = "/srv/cache/nix";
+        };
+      };
+
+      # services.harmonia = {
+      #   enable = true;
+      #   settings = {
+      #     bind = "0.0.0.0:5001";
+      #     real_nix_store = "/srv/cache/nix/store";
+      #     virtual_nix_store = "/nix/store";
+      #   };
+      # };
+      # systemd.services.harmonia.environment = {
+      #   RUST_LOG = "debug";
+      #   # NIX_STORE_DIR = "/srv/cache/nix/store";
+      # };
     })
     ##################################################
     # Client Configuration: Nix Resource
@@ -304,17 +326,36 @@
       cacheDir = "/srv/cache/nix";
       cacherIdentityFile = config.resourceCache.credentials.privateKey;
       nix-push-cache = (pkgs.writeShellScriptBin "nix-push-cache" ''
-        # ${pkgs.nix}/bin/nix path-info --recursive /run/current-system
+        LOCAL_CACHE_LIST=/tmp/nix-$(date +%s)-cache-list
+        REMOTE_CACHE_DIR=/var/lib/dustman/nix/hosts/$(hostname)
+
         NIX_SSHOPTS="-i ${cacherIdentityFile}" \
           ${pkgs.nix}/bin/nix copy --substitute-on-destination \
-          --to ssh-ng://${cacheServer}?remote-store=${cacheDir} \
+          --no-check-sigs \
+          --to ssh-ng://cacher@${cacheServer}?remote-store=${cacheDir} \
           /run/current-system
+        
+        ${pkgs.nix}/bin/nix path-info --recursive /run/current-system > $LOCAL_CACHE_LIST
+        ${pkgs.openssh}/bin/ssh -i ${cacherIdentityFile} \
+          cacher@${cacheServer} \
+          "mkdir -p $REMOTE_CACHE_DIR"
+        ${pkgs.openssh}/bin/scp -i ${cacherIdentityFile} \
+          $LOCAL_CACHE_LIST \
+          cacher@${cacheServer}:$REMOTE_CACHE_DIR/curr
+        
+        rm $LOCAL_CACHE_LIST
       '');
     in lib.mkIf (config.resourceCache.enable &&
        (config.resourceCache.role == "client" ||
         config.resourceCache.role == "both") &&
         config.resourceCache.resources.nix.enable) {
-      nix.settings.experimental-features = [ "nix-command" ];
+      nix.settings = {
+        substituters = lib.mkBefore [
+          "http://192.168.1.5:5001?priority=10"
+        ];
+
+        experimental-features = [ "nix-command" ];
+      };
       
       environment.systemPackages = [
         nix-push-cache

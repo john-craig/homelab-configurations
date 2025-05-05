@@ -19,7 +19,7 @@
   };
 
   sops.secrets."openssh/root/cacher" = {
-    mode = "0400";
+    mode = "0600";
     owner = "root";
 
     sopsFile = ./openssh.yaml;
