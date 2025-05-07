@@ -39,21 +39,6 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
-      "locked": {
-        "lastModified": 1659877975,
-        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "gallipedal": {
       "inputs": {
         "nixpkgs": [
@@ -96,28 +81,6 @@
         "type": "github"
       }
     },
-    "nixGL": {
-      "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": [
-          "user-environments",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1713543440,
-        "narHash": "sha256-lnzZQYG0+EXl/6NkGpyIz+FEOc/DSEG57AP1VsdeNrM=",
-        "owner": "nix-community",
-        "repo": "nixGL",
-        "rev": "310f8e49a149e4c9ea52f1adf70cdc768ec53f8a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixGL",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1740367490,
@@ -153,6 +116,38 @@
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/nixpkgs-apocrypha"
       }
     },
+    "nixpkgsStable": {
+      "locked": {
+        "lastModified": 1746422338,
+        "narHash": "sha256-NTtKOTLQv6dPfRe00OGSywg37A1FYqldS6xiNmqBUYc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "5b35d248e9206c1f3baf8de6a7683fee126364aa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgsUnstable": {
+      "locked": {
+        "lastModified": 1746328495,
+        "narHash": "sha256-uKCfuDs7ZM3QpCE/jnfubTg459CnKnJG/LwqEVEdEiw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "979daf34c8cacebcd917d540070b52a3c2b9b16e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1738297584,
@@ -169,6 +164,26 @@
         "type": "github"
       }
     },
+    "rockchip": {
+      "inputs": {
+        "nixpkgsStable": "nixpkgsStable",
+        "nixpkgsUnstable": "nixpkgsUnstable",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1746468906,
+        "narHash": "sha256-u0A9Omx2CSGWEMRFvXIPsRx68dHPd5goCBaa9tF2PZI=",
+        "owner": "nabam",
+        "repo": "nixos-rockchip",
+        "rev": "8e34ba259ccc6159f4b2c41a680ae4a903331986",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nabam",
+        "repo": "nixos-rockchip",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
@@ -182,6 +197,7 @@
           "nixpkgs"
         ],
         "nixpkgs-apocrypha": "nixpkgs-apocrypha",
+        "rockchip": "rockchip",
         "sops-nix": "sops-nix",
         "user-environments": "user-environments"
       }
@@ -222,6 +238,21 @@
         "type": "github"
       }
     },
+    "systems_2": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "user-environments": {
       "inputs": {
         "home-manager": "home-manager",
@@ -242,6 +273,24 @@
       "original": {
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "systems": "systems_2"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },

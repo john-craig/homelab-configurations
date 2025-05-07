@@ -18,9 +18,12 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
+
+    rockchip.url = "github:nabam/nixos-rockchip";
+    rockchip.inputs.nixpkgs.follows = "nixpkgs-apocrypha/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, gallipedal, user-environments, sops-nix, nixpkgs-apocrypha }@inputs:
+  outputs = { self, nixpkgs, disko, home-manager, gallipedal, user-environments, sops-nix, nixpkgs-apocrypha, rockchip }@inputs:
     let
       mkNixosSystem = systemDef: (
         nixpkgs.lib.nixosSystem {
@@ -82,6 +85,25 @@
           name = "bastion0";
           arch = "x86_64-linux";
           extraModules = [ ];
+        };
+
+        pinetab = mkNixosSystem {
+          name = "pinetab";
+          arch = "aarch64-linux";
+          extraModules = [
+            rockchip.nixosModules.sdImageRockchip
+            rockchip.nixosModules.dtOverlayPCIeFix
+            rockchip.nixosModules.noZFS
+            {
+              hardware.firmware = [ rockchip.packages."aarch64-linux".bes2600 ]; # wifi driver
+
+              # Use cross-compilation for uBoot and Kernel.
+              rockchip.uBoot =
+                rockchip.packages.x86_64-linux.uBootPineTab2;
+              boot.kernelPackages =
+                rockchip.legacyPackages."aarch64-linux".kernel_linux_6_12_pinetab;
+            }
+          ];
         };
       };
 
