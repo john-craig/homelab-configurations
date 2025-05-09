@@ -7,6 +7,7 @@ let
 
   homeserver1Pubkey = "FOGqroNciRPSDqptv/VVNz+ESr4UvmB8djEhK87mgGc=";
   pixel4aPubkey = "sK4dhOJbASYTpOkxB3I3Vzx1bmUPKvvremXr+t6f6CU=";
+  laptopPubkey = "iLXcO6WzweMsIRzI54/diOHJXGlsDXpubXjIDif4Z2U=";
 in
 {
   networking.firewall.allowedUDPPorts = [ wgPort ];
@@ -24,6 +25,10 @@ in
       {
         publicKey = pixel4aPubkey;
         allowedIPs = [ "10.100.0.16/32" ];
+      }
+      {
+        publicKey = laptopPubkey;
+        allowedIPs = [ "10.100.0.33/32" ];
       }
     ];
   };
