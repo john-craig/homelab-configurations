@@ -6,15 +6,17 @@
   };
 
   config = lib.mkIf config.containerProxies.enable {
-    systemd.tmpfiles.rules = let
-      podmanDir = "/var/run/podman";
-    in [
-      "A ${podmanDir} - - - - user::rwx"
-      "A ${podmanDir} - - - - group::r-x"
-      "A ${podmanDir} - - - - mask::rwx"
-      "A+ ${podmanDir} - - - - user:traefik:rwx"
-      "A+ ${podmanDir} - - - - group:traefik:rwx"
-    ];
+    systemd.tmpfiles.rules =
+      let
+        podmanDir = "/var/run/podman";
+      in
+      [
+        "A ${podmanDir} - - - - user::rwx"
+        "A ${podmanDir} - - - - group::r-x"
+        "A ${podmanDir} - - - - mask::rwx"
+        "A+ ${podmanDir} - - - - user:traefik:rwx"
+        "A+ ${podmanDir} - - - - group:traefik:rwx"
+      ];
 
     services.traefik = {
       enable = true;
@@ -25,8 +27,8 @@
 
       staticConfigOptions = {
         core.defaultRuleSyntax = "v2";
-        
-        api = { 
+
+        api = {
           insecure = true;
           dashboard = true;
         };
@@ -81,6 +83,6 @@
           };
         };
       };
-    };   
+    };
   };
 }

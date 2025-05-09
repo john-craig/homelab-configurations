@@ -12,7 +12,7 @@
         timerConfig = {
           OnCalendar = "Fri *-*-* 00:00:00";
           Unit = "collect-garbage.service";
-        };   
+        };
       };
     };
 
@@ -28,6 +28,6 @@
           User = "root";
         };
       };
-    };    
+    };
   };
 }

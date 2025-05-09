@@ -49,43 +49,45 @@
       gnutar
       curl
       pinentry
-    ] ++ builtins.map (
-      backupProfile: (
-        pkgs.writeShellScriptBin "offsite-backup-restore-${backupProfile.prefix}" ''
-          #!/bin/bash
-          BUCKET_NAME="${config.offsiteBackups.s3Bucket}"
-          UPLOAD_STEM="${backupProfile.prefix}"
-          RESTORE_PATH=$1
-          WORK_DIR="''${1:-/tmp}"
+    ] ++ builtins.map
+      (
+        backupProfile: (
+          pkgs.writeShellScriptBin "offsite-backup-restore-${backupProfile.prefix}" ''
+            #!/bin/bash
+            BUCKET_NAME="${config.offsiteBackups.s3Bucket}"
+            UPLOAD_STEM="${backupProfile.prefix}"
+            RESTORE_PATH=$1
+            WORK_DIR="''${1:-/tmp}"
 
-          # Determine the latest upload
-          LATEST_UPLOAD=$(s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
-            ls ${config.offsiteBackups.s3Bucket} | \
-            grep success | awk '{ print $4 }' | \
-            cut -d '.' -f 2 | sort | tail -n 1)
+            # Determine the latest upload
+            LATEST_UPLOAD=$(s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+              ls ${config.offsiteBackups.s3Bucket} | \
+              grep success | awk '{ print $4 }' | \
+              cut -d '.' -f 2 | sort | tail -n 1)
           
-          pushd $WORK_DIR
-            # Obtain each of the partial archives
-            s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
-              --multipart-chunk-size-mb=500 \
-              get "${config.offsiteBackups.s3Bucket}/$UPLOAD_STEM.$LATEST_UPLOAD.part*" .
+            pushd $WORK_DIR
+              # Obtain each of the partial archives
+              s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} \
+                --multipart-chunk-size-mb=500 \
+                get "${config.offsiteBackups.s3Bucket}/$UPLOAD_STEM.$LATEST_UPLOAD.part*" .
           
-            for part in ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz.gpg; do 
-              # Decrypt each partial archive one at a time
-              gpg --decrypt --always-trust --recipient ${config.offsiteBackups.gnupgRecipient} \
-                --homedir ${config.offsiteBackups.gnupgHomeDir} $part > ''${part%.gpg}; 
-              rm $part
-            done
+              for part in ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz.gpg; do 
+                # Decrypt each partial archive one at a time
+                gpg --decrypt --always-trust --recipient ${config.offsiteBackups.gnupgRecipient} \
+                  --homedir ${config.offsiteBackups.gnupgHomeDir} $part > ''${part%.gpg}; 
+                rm $part
+              done
 
-            # Concatenate and extract partial archives
-            cat ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz | tar -xzf - -C $RESTORE_PATH
+              # Concatenate and extract partial archives
+              cat ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz | tar -xzf - -C $RESTORE_PATH
 
-            # Remove partial archives
-            rm ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz
-          popd
-        ''
+              # Remove partial archives
+              rm ./$UPLOAD_STEM.$LATEST_UPLOAD.part*.tar.gz
+            popd
+          ''
+        )
       )
-    ) config.offsiteBackups.backupProfiles;
+      config.offsiteBackups.backupProfiles;
 
     # Required for GnuPG
     programs.gnupg.agent = {
@@ -106,8 +108,8 @@
       "offsite-backup" = {
         enable = true;
         path = [ pkgs.gzip pkgs.gawk pkgs.gnutar pkgs.gnupg pkgs.s3cmd ];
-        script = lib.strings.concatMapStrings 
-          (backupProfile: 
+        script = lib.strings.concatMapStrings
+          (backupProfile:
             ''
               BUCKET_NAME="${config.offsiteBackups.s3Bucket}"
               UPLOAD_STEM="${backupProfile.prefix}"
@@ -146,7 +148,8 @@
                 s3cmd --config=${config.offsiteBackups.s3cmdConfigFile} rm $FILE; \
               done
             ''
-          ) config.offsiteBackups.backupProfiles;
+          )
+          config.offsiteBackups.backupProfiles;
         postStop =
           ''
             # Remove GNU's lock

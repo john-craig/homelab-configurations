@@ -5,7 +5,8 @@ let
   wgIp = "10.100.0.2/24";
   bastion0Pubkey = "znu1Ld2uFAVnyjC/wEzkvBgA1Q6KW/GzLd2+Q8egLBE="; # Replace with Server A's public key
   endpoint = "45.33.8.38:51820"; # Server A's public IP and port
-in {
+in
+{
   networking.wireguard.interfaces.${wgInterface} = {
     ips = [ wgIp ];
     privateKeyFile = config.sops.secrets."wireguard/root/private-key.b64".path;
