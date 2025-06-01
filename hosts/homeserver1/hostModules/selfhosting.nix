@@ -232,19 +232,19 @@
           };
         };
 
-        "home-assistant" = {
-          enable = true;
-          containers."hass" = {
-            volumes = {
-              "/etc/localtime".hostPath = "/etc/localtime";
-              "/config".hostPath = "/srv/container/home-assistant/config";
-            };
+        # "home-assistant" = {
+        #   enable = true;
+        #   containers."hass" = {
+        #     volumes = {
+        #       "/etc/localtime".hostPath = "/etc/localtime";
+        #       "/config".hostPath = "/srv/container/home-assistant/config";
+        #     };
 
-            ports = {
-              "8123".hostPort = "8123";
-            };
-          };
-        };
+        #     ports = {
+        #       "8123".hostPort = "8123";
+        #     };
+        #   };
+        # };
 
         "homepage" = {
           enable = true;
@@ -785,7 +785,7 @@
       };
 
       proxyConf = {
-        internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^10\.100\.0\.16)`)";
+        internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^10\.100\.0\.[0-9]+)`)";
         network = "chiliahedron-services";
         tlsResolver = "chiliahedron-resolver";
       };

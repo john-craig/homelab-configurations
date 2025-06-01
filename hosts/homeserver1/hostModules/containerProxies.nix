@@ -83,6 +83,25 @@
           };
         };
       };
+
+      dynamicConfigOptions = {
+        http = {
+          routers."home-assistant" = {
+            entryPoints = [ "websecure" ];
+            rule = "Host(`home-assistant.chiliahedron.wtf`) && HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^10\.100\.0\.[0-9]+)`)";
+            service = "home-assistant";
+            tls = {
+              certResolver = "chiliahedron-resolver";
+            };
+          };
+
+          services."home-assistant" = {
+            loadBalancer.servers = [
+              { url = "http://192.168.1.8:8123"; }
+            ];
+          };
+        };
+      };
     };
   };
 }

@@ -15,6 +15,7 @@
       ./hostModules/personalSite.nix
       ./hostModules/selfhosting.nix
       ./hostModules/apcupsd.nix
+      ./hostModules/homeAssistant.nix
 
       # ./hostModules/networking/tailscale.nix
       ./hostModules/networking/dns.nix
