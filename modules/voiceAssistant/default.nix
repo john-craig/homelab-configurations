@@ -16,8 +16,35 @@
       config.voiceAssistant.role == "satellite")
     {
       # Satellite configurations
-      services.wyoming.openwakeword = {
+      services.wyoming.openwakeword = let 
+        openwakeword = pkgs.wyoming-openwakeword.overrideAttrs (oldAttrs: {
+          propagatedBuildInputs =  [
+            pkgs.python3Packages.wyoming
+            pkgs.python3Packages.ai-edge-litert
+          ];
+
+          patches = (oldAttrs.patches or []) ++ [
+            (pkgs.writeText "use-ai-edge-litert.patch" ''
+              diff --git a/wyoming_openwakeword/openwakeword.py b/wyoming_openwakeword/openwakeword.py
+              index bbcf1fb..0b975ca 100644
+              --- a/wyoming_openwakeword/openwakeword.py
+              +++ b/wyoming_openwakeword/openwakeword.py
+              @@ -6,7 +6,8 @@ from typing import Dict, List, Optional, TextIO
+              import numpy as np
+
+              try:
+              -    import tflite_runtime.interpreter as tflite
+              +#    import tflite_runtime.interpreter as tflite
+              +     import ai_edge_litert.interpreter as tflite
+              except ModuleNotFoundError:
+                  import tensorflow.lite as tflite
+              from wyoming.wake import Detection
+            '')
+          ];
+        });
+      in {
         enable = true;
+        package = openwakeword;
         preloadModels = [
           "hey_rhasspy"
         ];

@@ -94,6 +94,93 @@
     role = "satellite";
   };
 
+    # Satellite configurations
+  services.wyoming.openwakeword = let 
+    ai-edge-litert = pkgs.python3Packages.buildPythonPackage rec {
+      pname = "ai-edge-litert";
+      version = "1.3.0";
+
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/17/99/528cb51c01190500120237f59c1015124d66be51c9db730fcbd431fb9c27/ai_edge_litert-1.3.0-cp312-cp312-manylinux_2_17_x86_64.whl";
+        hash = "sha256-Dqmy/l3p56AMfGxfeb3RrOOckzpXZ1FiECD36wuMzKM="; # Replace this with actual hash
+      };
+
+      format = "wheel";
+
+      meta = with pkgs.lib; {
+        description = "LiteRT is the official solution for running machine learning models on mobile and embedded devices.";
+        homepage = "https://ai.google.dev/edge/litert/";
+        license = licenses.asl20;
+        platforms = platforms.linux ++ platforms.darwin;
+      };
+    };
+    openwakeword = pkgs.wyoming-openwakeword.overrideAttrs (oldAttrs: {
+      propagatedBuildInputs =  [
+        pkgs.python3Packages.numpy
+        pkgs.python3Packages.wyoming
+        ai-edge-litert
+      ];
+
+      postPatch = (oldAttrs.postPatch or "") + ''
+        substituteInPlace wyoming_openwakeword/openwakeword.py \
+          --replace "import tflite_runtime.interpreter as tflite" \
+                    "import ai_edge_litert.interpreter as tflite"
+      '';
+    });
+  in {
+    enable = true;
+    package = openwakeword;
+    preloadModels = [
+      "hey_rhasspy"
+    ];
+
+    uri = "tcp://0.0.0.0:10400";
+
+    extraArgs = [
+      "--debug"
+    ];
+  };
+
+  services.wyoming.satellite = {
+    enable = true;
+
+    area = "Living Room";
+
+    user = "display";
+    group = "pipewire";
+    uri = "tcp://0.0.0.0:10700";
+    microphone.command = "arecord -D pipewire -r 16000 -c 1 -f S16_LE -t raw";
+    sound.command = "aplay -D pipewire -r 22050 -c 1 -f S16_LE -t raw";
+    sounds.awake = builtins.fetchurl {
+      url = "https://github.com/rhasspy/wyoming-satellite/raw/master/sounds/awake.wav";
+      sha256 = "6b25dd2abaf7537865222ca9fd6e14fbf723458526fb79bbe29d8261d1320724";
+    };
+    sounds.done = builtins.fetchurl {
+      url = "https://github.com/rhasspy/wyoming-satellite/raw/master/sounds/done.wav";
+      sha256 = "bc5c914bfa860a77fa9d88ac2d96601adfede578cf146637ec98b5688911a951";
+    };
+    # sounds = {
+    #   awake = "/home/display/media/by_category/audio/sounds/awake.wav";
+    #   done = "/home/display/media/by_category/audio/sounds/done.wav";
+    # };
+
+    extraArgs = [
+      "--wake-uri"
+      "tcp://0.0.0.0:10400"
+      "--wake-word-name"
+      "hey_rhasspy"
+
+      "--startup-command"
+      "echo $(date +%s) > /tmp/started.txt"
+      "--detect-command"
+      "echo $(date +%s) > /tmp/detecting.txt"
+      "--detection-command"
+      "echo $(date +%s) > /tmp/detected.txt"
+
+      "--debug"
+    ];
+  };
+
   # Screen Saver
   screenSaver = {
     enable = true;
