@@ -9,6 +9,9 @@
 
     "pyipp"
     "tuya_sharing"
+
+    "piper"
+    "whisper"
   ];
   config = {
     # external_url = "https://home-assistant.chiliahedron.wtf";

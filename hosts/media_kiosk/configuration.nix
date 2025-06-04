@@ -149,8 +149,8 @@
     user = "display";
     group = "pipewire";
     uri = "tcp://0.0.0.0:10700";
-    microphone.command = "arecord -D pipewire -r 16000 -c 1 -f S16_LE -t raw";
-    sound.command = "aplay -D pipewire -r 22050 -c 1 -f S16_LE -t raw";
+    # microphone.command = "arecord -D default -r 16000 -c 1 -f S16_LE -t raw";
+    # sound.command = "aplay -D default -r 22050 -c 1 -f S16_LE -t raw";
     sounds.awake = builtins.fetchurl {
       url = "https://github.com/rhasspy/wyoming-satellite/raw/master/sounds/awake.wav";
       sha256 = "6b25dd2abaf7537865222ca9fd6e14fbf723458526fb79bbe29d8261d1320724";
