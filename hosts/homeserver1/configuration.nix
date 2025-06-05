@@ -9,7 +9,6 @@
     [
       ./hardware-configuration.nix
 
-      ./hostModules/containerProxies.nix
       ./hostModules/linkArchiver.nix
       ./hostModules/summaryGenerator.nix
       ./hostModules/personalSite.nix
@@ -21,6 +20,7 @@
       ./hostModules/networking/dns.nix
       ./hostModules/networking/nfs.nix
       ./hostModules/networking/wireguard.nix
+      ./hostModules/networking/proxies.nix
 
       ./hostSecrets
     ];
@@ -65,8 +65,27 @@
 
   garbageCollect.enable = true;
 
-  containerProxies = {
+  serviceProxies = {
     enable = true;
+
+    resolverName = "chiliahedron-resolver";
+    internalRules = "HeadersRegexp(`X-Real-Ip`, `(^192\.168\.[0-9]+\.[0-9]+)|(^10\.100\.0\.[0-9]+)`)";
+    
+    containers = {
+      enable = true;
+      networkName = "chiliahedron-services";
+    };
+    extraProxies = [
+      {
+        hostname = "home-assistant.chiliahedron.wtf";
+        redirect = "http://192.168.1.8:8123";
+      }
+      # Cache proxies
+      {
+        hostname = "cache.pacman.chiliahedron.wtf";
+        redirect = "http://192.168.1.5:4647";
+      }
+    ];
   };
 
   selfhosting.enable = true;

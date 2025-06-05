@@ -7,8 +7,8 @@
     "met"
     "radio_browser"
 
-    "pyipp"
-    "tuya_sharing"
+    # "pyipp"
+    # "tuya_sharing"
   ];
   config = {
     # external_url = "https://home-assistant.chiliahedron.wtf";
