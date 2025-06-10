@@ -62,11 +62,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1745177117,
-        "narHash": "sha256-DKSmozwEaX54VbqD/r3kRu1zY+BX/yBMfVc6nDwmlKc=",
+        "lastModified": 1749556642,
+        "narHash": "sha256-LH+woUnOQfMxTFNxjvGHBJUS4wBD8QkarbjoM1e6xuI=",
         "ref": "refs/heads/main",
-        "rev": "14cb38b93f12e184fccb2720ce2457d832faddd3",
-        "revCount": 40,
+        "rev": "ee6747859d9911218a0437603fab88a978ee6ff4",
+        "revCount": 42,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/gallipedal-module"
       },
@@ -300,11 +300,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1746821051,
-        "narHash": "sha256-NBfIVmBwxGMuXyD3gAFqXxKjMKfwC/jPxY92FAq8Rrs=",
+        "lastModified": 1749556409,
+        "narHash": "sha256-rz4nPFEYOPDAc91UrNKE9KigpwVACDLlaqpY3Kb5XbY=",
         "ref": "refs/heads/main",
-        "rev": "cb7468ee7b80cf7c415c92fb19c810d3f89d6e1a",
-        "revCount": 79,
+        "rev": "0236656fa931055579508441b84c0d767fb833a4",
+        "revCount": 96,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
       },
