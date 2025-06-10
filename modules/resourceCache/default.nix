@@ -58,13 +58,21 @@
     (let
       # dustman
       dustman = (pkgs.writeShellScriptBin "dustman" ''
-        #!/usr/bin/env bash
-
         set -euo pipefail
 
         GENERATIONS=2
         BASE_DIR="/var/lib/dustman"
+        PIDFILE="$BASE_DIR/dustman.pid"
         TIMESTAMP=$(date +%s)
+
+        if [[ -f "$PIDFILE" ]]; then
+          echo "PID file already exists: $PIDFILE"
+          exit 1
+        fi
+
+        # Create the PID file with the current shell's PID
+        echo "$$" > "$PIDFILE"
+        echo "PID $$ written to $PIDFILE"
 
         DRY_RUN=false
         if [[ "''${1:-}" == "--dry-run" ]]; then
@@ -102,7 +110,7 @@
               continue
             fi
 
-            if ! cmp -s "$CURR" "$PREV"; then
+            if ! ${pkgs.diffutils}/bin/cmp -s "$CURR" "$PREV"; then
               echo "Resources changed on host $HOST"
               changed=true
               if $DRY_RUN; then
@@ -128,6 +136,7 @@
               echo "[dry-run] Would execute $LIST_ACTION and save to $STALE_LIST"
               touch "$STALE_LIST"
             else
+              echo "Generating stale list for resource $RESOURCE"
               "$LIST_ACTION" > "$STALE_LIST"
             fi
           else
@@ -144,7 +153,8 @@
             if $DRY_RUN; then
               echo "[dry-run] Would filter lines from $CURR out of $STALE_LIST"
             else
-              grep -vxFf "$CURR" "$STALE_LIST" > "''${STALE_LIST}.tmp" && mv "''${STALE_LIST}.tmp" "$STALE_LIST" || true
+              echo "Filtering stale list against current resources on host $HOST_DIR"
+              ${pkgs.gnugrep}/bin/grep -vxFf "$CURR" "$STALE_LIST" > "''${STALE_LIST}.tmp" && mv "''${STALE_LIST}.tmp" "$STALE_LIST" || true
             fi
           done
 
@@ -158,7 +168,8 @@
             if $DRY_RUN; then
               echo "[dry-run] Would append matching lines from $OLD_GEN to $NEW_GEN"
             else
-              grep -Fxf "$STALE_LIST" "$OLD_GEN" > "$NEW_GEN" || true
+              echo "Shifting generation $i to $((i+1)) for resource $RESOURCE"
+              ${pkgs.gnugrep}/bin/grep -Fxf "$STALE_LIST" "$OLD_GEN" > "$NEW_GEN" || true
             fi
           done
 
@@ -166,6 +177,7 @@
           if $DRY_RUN; then
             echo "[dry-run] Would copy $STALE_LIST to $RESOURCE_DIR/generations/gen-1"
           else
+            echo "Copying stale list to generation 1 for resource $RESOURCE"
             cp "$STALE_LIST" "$RESOURCE_DIR/generations/gen-1"
           fi
 
@@ -176,8 +188,7 @@
             if $DRY_RUN; then
               echo "[dry-run] Would execute $CLEAN_ACTION with $FINAL_GEN"
             else
-              echo "Pruning the following resources:"
-              cat $FINAL_GEN
+              echo "Pruning resources for resource $RESOURCE"
               "$CLEAN_ACTION" "$FINAL_GEN"
             fi
           else
@@ -204,19 +215,9 @@
           fi
         done
 
+        echo "Cleaning up pidfile"
+        rm $PIDFILE
       '');
-
-      dustmanPolkitRule = ''
-        polkit.addRule(function(action, subject) {
-          if (
-            action.id == "org.freedesktop.systemd1.manage-units" &&
-            action.lookup("unit") == "dustman.service" &&
-            subject.user == "cacher"
-          ) {
-            return polkit.Result.YES;
-          }
-        });
-      '';
     in lib.mkIf
       (config.resourceCache.enable &&
         (config.resourceCache.role == "server" ||
@@ -229,8 +230,6 @@
 
           dustman
         ];
-
-        security.polkit.enable = true;
 
         # Ensure the directory exists
         systemd.tmpfiles.rules = [
@@ -252,8 +251,6 @@
             ExecStart = "${dustman}/bin/dustman";
           };
         };
-
-        environment.etc."polkit-1/rules.d/50-allow-cacher-dustman.rules".text = dustmanPolkitRule;
 
         # Open firewall port
         networking.firewall.allowedTCPPorts = [ 4647 ];
@@ -289,10 +286,57 @@
       let
         cacheDir = "/srv/cache/nix";
         nix-list-cache = (pkgs.writeShellScriptBin "nix-list-cache" ''
-          ${pkgs.findutils}/bin/find ${cacheDir}/store -maxdepth 1 -mindepth 1 -printf "/nix/store/%f\n"
+          ${pkgs.findutils}/bin/find "${cacheDir}/store/narinfo" -type f -name '*.narinfo' -print0 | \
+            ${pkgs.findutils}/bin/xargs -0 ${pkgs.gnugrep}/bin/grep '^StorePath: ' | \
+            ${pkgs.gnused}/bin/sed 's/^.*StorePath: //'
         '');
         nix-clean-cache = (pkgs.writeShellScriptBin "nix-clean-cache" ''
-          NIX_STORE_DIR=${cacheDir} nix-store --delete /nix/store/
+          set -euo pipefail
+          cache_root="${cacheDir}/store"
+
+          # Check for input argument
+          if [ "$#" -ne 1 ]; then
+            echo "Usage: $0 <file-with-list-of-files-to-delete>"
+            exit 1
+          fi
+
+          LIST_FILE="$1"
+
+          # Check that the file exists
+          if [ ! -f "$LIST_FILE" ]; then
+            echo "Error: File '$LIST_FILE' not found"
+            exit 1
+          fi
+
+          # Process each line (file path)
+          while IFS= read -r file || [ -n "$file" ]; do
+            # Skip empty lines or comments
+            [[ -z "$file" || "$file" =~ ^# ]] && continue
+            
+            echo "Removing store path: $file"
+            base_name="$(basename $file | cut -d '-' -f 1)"  # e.g., zzir016pfzpv61pq1wf20vwrd8vh01j9-my-package
+
+            # Compute narinfo path
+            narinfo_path="$cache_root/narinfo/''${base_name:0:1}/''${base_name:0:2}/''${base_name}.narinfo"
+
+            if [[ ! -f "$narinfo_path" ]]; then
+              echo "Error: .narinfo not found: $narinfo_path"
+              exit 1
+            fi
+
+            # Extract NAR path from URL field in narinfo
+            nar_relative_path=$(${pkgs.gnugrep}/bin/grep '^URL: ' "$narinfo_path" | cut -d' ' -f2)
+            nar_path="$cache_root/$nar_relative_path"
+
+            echo "Deleting:"
+            echo "  $nar_path"
+            echo "  $narinfo_path"
+
+            rm -f "$nar_path" "$narinfo_path"
+          done < "$LIST_FILE"
+
+          echo "Done."
+
         '');
 
         nix-update-cache = (pkgs.writeShellScriptBin "nix-update-cache" ''
@@ -305,18 +349,8 @@
             config.resourceCache.role == "both") &&
           config.resourceCache.resources.nix.enable)
         {
-
-          environment.etc."nix-cache/nix.conf".text = ''
-            store = /srv/cache/nix/store
-            sandbox = false
-            trusted-users = root, cacher
-          '';
-
           systemd.tmpfiles.rules = [
             "d ${cacheDir} 0755 root root - -"
-            # "d ${cacheDir}/store 0755 root root - -"
-            # "d ${cacheDir}/var/nix 0755 root root - -"
-            # "d ${cacheDir}/var/nix/daemon-socket 0755 root root - -"
 
             "A ${cacheDir} - - - - user::rwx"
             "A ${cacheDir} - - - - group::r-x"
@@ -337,6 +371,8 @@
             "L+ /var/lib/dustman/nix/actions/update - - - - ${nix-update-cache}/bin/nix-update-cache"
           ];
 
+          users.users."cacher".extraGroups = [ "npcs" ];
+
           services.ncps = {
             enable = true;
 
@@ -349,23 +385,13 @@
             };
 
             cache = {
-              hostName = "pxe_server";
+              hostName = "cache.nix.chiliahedron.wtf";
               dataPath = "/srv/cache/nix";
+
+              allowPutVerb = true;
+              allowDeleteVerb = true;
             };
           };
-
-          # services.harmonia = {
-          #   enable = true;
-          #   settings = {
-          #     bind = "0.0.0.0:5001";
-          #     real_nix_store = "/srv/cache/nix/store";
-          #     virtual_nix_store = "/nix/store";
-          #   };
-          # };
-          # systemd.services.harmonia.environment = {
-          #   RUST_LOG = "debug";
-          #   # NIX_STORE_DIR = "/srv/cache/nix/store";
-          # };
         }
     )
     ##################################################
@@ -374,16 +400,18 @@
     (
       let
         cacheServer = "192.168.1.5";
+        cacheURL = "cache.nix.chiliahedron.wtf";
         cacheDir = "/srv/cache/nix";
         cacherIdentityFile = config.resourceCache.credentials.privateKey;
+
         nix-push-cache = (pkgs.writeShellScriptBin "nix-push-cache" ''
           LOCAL_CACHE_LIST=/tmp/nix-$(date +%s)-cache-list
-          REMOTE_CACHE_DIR=/var/lib/dustman/nix/hosts/$(hostname)
+          REMOTE_CACHE_DIR=/var/lib/dustman/nix/hosts/$(${pkgs.nettools}/bin/hostname)
 
           NIX_SSHOPTS="-i ${cacherIdentityFile}" \
-            ${pkgs.nix}/bin/nix copy --substitute-on-destination \
+          ${pkgs.nix}/bin/nix copy --substitute-on-destination \
             --no-check-sigs \
-            --to ssh-ng://cacher@${cacheServer}?remote-store=${cacheDir} \
+            --to https://${cacheURL} \
             /run/current-system
         
           ${pkgs.nix}/bin/nix path-info --recursive /run/current-system > $LOCAL_CACHE_LIST
@@ -395,6 +423,7 @@
             cacher@${cacheServer}:$REMOTE_CACHE_DIR/curr
         
           rm $LOCAL_CACHE_LIST
+          ${pkgs.openssh}/bin/ssh -i ${cacherIdentityFile} cacher@${cacheServer} "nohup dustman 2>&1 | logger --tag 'dustman'"
         '');
       in
       lib.mkIf
@@ -405,11 +434,19 @@
         {
           nix.settings = {
             substituters = lib.mkBefore [
-              "http://192.168.1.5:5001?priority=10"
+              "https://cache.nix.chiliahedron.wtf"
+            ];
+
+            trusted-public-keys = [ 
+              "pxe_server:TT307Bq/qCuarPYKr12W3EvfOMO1kqKAzji6pGICZes="
             ];
 
             experimental-features = [ "nix-command" ];
           };
+
+          system.activationScripts.pushCache.text = ''
+            ${nix-push-cache}/bin/nix-push-cache 2>&1 | ${pkgs.util-linux}/bin/logger --tag 'push-cache'
+          '';
 
           environment.systemPackages = [
             nix-push-cache
@@ -426,8 +463,6 @@
           ls ${cacheDir}
         '');
         pacman-clean-cache = (pkgs.writeShellScriptBin "pacman-clean-cache" ''
-          #!/usr/bin/env bash
-
           set -euo pipefail
 
           # Check for input argument

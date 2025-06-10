@@ -36,6 +36,8 @@
     autoPrune.enable = true;
   };
 
+  resourceCache.enable = lib.mkForce false;
+
   # Enable ACME with DNS challenge support
   # security.acme = {
   #   acceptTerms = true;

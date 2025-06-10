@@ -39,4 +39,14 @@
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
   };
+
+  resourceCache = {
+    enable = true;
+
+    role = lib.mkDefault "client";
+    credentials.privateKey = config.sops.secrets."openssh/root/cacher".path;
+    resources = {
+      nix.enable = true;
+    };
+  };
 }

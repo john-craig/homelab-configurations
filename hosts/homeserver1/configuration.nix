@@ -85,6 +85,10 @@
         hostname = "cache.pacman.chiliahedron.wtf";
         redirect = "http://192.168.1.5:4647";
       }
+      {
+        hostname = "cache.nix.chiliahedron.wtf";
+        redirect = "http://192.168.1.5:5001";
+      }
     ];
   };
 
@@ -93,17 +97,6 @@
   personalSite.enable = true;
   linkArchiver.enable = true;
   summaryGenerator.enable = true;
-
-
-  resourceCache = {
-    enable = true;
-
-    role = "client";
-    credentials.privateKey = config.sops.secrets."openssh/root/cacher".path;
-    resources = {
-      nix.enable = true;
-    };
-  };
 
   automatedBackups = {
     enable = true;
