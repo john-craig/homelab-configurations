@@ -9,6 +9,10 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      ./hostModules/secureBackups.nix
+      ./hostModules/yubikey.nix
+      ./hostModules/tang.nix
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -18,17 +22,8 @@
 
   environment.systemPackages = with pkgs; [
     openssl
-    libfido2
-    yubikey-manager
     gnupg
     pinentry
-
-    # Uncomment the below if you need python3 with specific packages 
-    #
-    # (python3.withPackages(ps: with ps; [
-    #   requests
-    #   ...
-    # ]))
   ];
 
   garbageCollect.enable = true;
@@ -55,33 +50,6 @@
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-  };
-
-  # Required for Yubikey and GnuPG
-  services.pcscd.enable = true;
-
-  systemd.services."cryptsetup@" = {
-    onFailure = [
-      # TODO: add some kind of notifier here
-    ];
-  };
-
-  services.tang = {
-    enable = true;
-
-    ipAddressAllow = [ "192.168.1.0/24" ];
-    listenStream = [ "0.0.0.0:7654" ];
-  };
-
-  # Ensure that the tang server doesn't work if the bind mount
-  # for /var/lib/private isn't there
-  systemd.sockets.tangd = {
-    after = [
-      "var-lib-private-tang.mount"
-    ];
-    requires = [
-      "var-lib-private-tang.mount"
-    ];
   };
 
   # SSH Key Backups
@@ -137,15 +105,28 @@
     };
   };
 
+  notifiedServices = {
+    enable = true;
+
+    method.gotify = {
+      tokenPath = "/run/secrets/gotify/notifier/api_key";
+      url = "https://gotify.chiliahedron.wtf";
+    };
+  };
+
+  secureBackups = {
+    enable = true;
+    secureDevices = [
+      "bcdc30d8-a44e-4f50-8fdb-199b39723f38"
+    ];
+  };
+
   userProfiles.service = {
     enable = true;
     authorizedKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJ/qmEMkHrkww4SsAjS+7f9qzLXJ6zDTcyzqjrgEkYN"
     ];
   };
-
-  # For later:
-  # - bcdc30d8-a44e-4f50-8fdb-199b39723f38
 
   system.stateVersion = "24.05";
 

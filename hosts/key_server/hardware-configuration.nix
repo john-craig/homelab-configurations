@@ -21,24 +21,6 @@
       fsType = "ext4";
     };
 
-  environment.etc."crypttab".text = ''
-    crypt0            UUID=90da273f-3369-40c4-a34c-760869f2687f - nofail,fido2-device=auto,token-timeout=0,headless=true
-  '';
-
-  fileSystems."/sec" =
-    {
-      device = "/dev/mapper/crypt0";
-      fsType = "btrfs";
-      options = [ "nofail" ];
-    };
-
-  # Bind mount from the `sec` filesystem
-  fileSystems."/var/lib/private/tang" = {
-    device = "/sec/tang";
-    options = [ "bind" "nofail" ];
-    depends = [ "/sec" ];
-  };
-
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
