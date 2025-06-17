@@ -15,6 +15,7 @@
       ./hostModules/selfhosting.nix
       ./hostModules/apcupsd.nix
       ./hostModules/homeAssistant.nix
+      ./hostModules/torrenting.nix
 
       # ./hostModules/networking/tailscale.nix
       ./hostModules/networking/dns.nix
@@ -53,14 +54,6 @@
     "A /srv/documents group::rwx"
     "A /srv/documents mask::rwx"
     "A /srv/documents other::---"
-
-    "Z /srv/downloads/lidarr 777"
-    "Z /srv/downloads/tv-sonarr 777"
-    "Z /srv/downloads/radarr 777"
-    "Z /srv/downloads/readarr 777"
-    "Z /srv/media/by_category/audio/music 777"
-    "Z /srv/media/by_category/video/shows 777"
-    "Z /srv/media/by_category/video/movies 777"
   ];
 
   garbageCollect.enable = true;

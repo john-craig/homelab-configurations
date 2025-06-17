@@ -16,10 +16,6 @@ gallipedal:
             LIDARR_API_KEY: ENC[AES256_GCM,data:bCD9GzPKZDXyP8gkugZDYLvetcKv3zk3cZBIdlvOA1w=,iv:axtzo/wKgtGmGI34VxCoHFjs1/wqrJZDoxXE5x9ns8c=,tag:hQ7Nhqe8UGsyf1vGjCk2Ng==,type:str]
             RSLSYNC_SECRET: ENC[AES256_GCM,data:nwYRFrtvtuztHClbwh18dfB+5u7H6zlzN5XS7Vm9kuha,iv:WrU7o5E+nGUq1tzw2D1PRB6f+TK+xGQVC1HCHvVGMF0=,tag:139hBRIspkcvGLcgAp/7vg==,type:str]
 sops:
-    kms: []
-    gcp_kms: []
-    azure_kv: []
-    hc_vault: []
     age:
         - recipient: age10f3mclyxqf7ry5vje5ec7s7d8f8fz5xcr5un3npgqfsc4candg8svy08d2
           enc: |
@@ -39,8 +35,7 @@ sops:
             YUtyNkYyZVNnVXB5OW84eHRxMjdJUlUKkwt8eQsqnQtvEQIKhjf071Utw8u123V+
             rGUtRKeu49b+f4tMWv6Gc54D7VUTZujd+96/qzyrI4+G5IXUks0MEw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-04-24T21:02:52Z"
-    mac: ENC[AES256_GCM,data:E7P2vuvI28qO1t1cicEjzjVEU68F9z8ICanPzttg+0val5FzlKYC714cP9rSERV0dObauXuvScsy8Ro75wGQTLV45TZHdgo6dpawsFEjSaGdeL0ITtukb9oFREKZ2eYSPCLMTpsxdsUseukDViJ6hs0LFnDxyqo6Y6pv8m5k0cU=,iv:tg9iquTKkwlGTZB51PiEIABQLAm/okdfKccaByOG5hQ=,tag:f4V2toHDqCuruu9BIrQhFA==,type:str]
-    pgp: []
+    lastmodified: "2025-06-17T11:16:33Z"
+    mac: ENC[AES256_GCM,data:2xGZ2vuqXgAEHl+nBm4XIgd/elyxgt/tSehGK7CmRQW1wPRLq4N7VhNzJg7d3gUTwuXE84K4KR6O0R3eaHYKMggdiBOzvIJfz/RiNqxulmoHgvdEwGQW2MYQVS00HzaUwvwFy1KjfLRTmhYG3vDmIzHcwgYMCa/gD06G2wrS4as=,iv:9XExOfUC2Hxc8g5GacLFch9xo6EC+ynIAvZZsg0Pe4k=,tag:2j2Z91rcC0dLwp1tSlKWuQ==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.9.1
+    version: 3.10.2

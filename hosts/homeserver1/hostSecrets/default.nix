@@ -36,6 +36,12 @@
     sopsFile = ./gallipedal.yaml;
   };
 
+  sops.secrets."torrenting/sshfs/SSHFS_PASSWORD" = {
+    mode = "0400";
+
+    sopsFile = ./torrenting.yaml;
+  };
+
   sops.secrets."tailscale/root/authkey" = {
     mode = "0440";
 

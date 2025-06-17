@@ -1,0 +1,27 @@
+torrenting:
+    sshfs:
+        SSHFS_PASSWORD: ENC[AES256_GCM,data:TV9RJYVLzlkB1nTJC4g5Ww==,iv:Ix2qwuKzaCQzHVHhiiAKqP57KsJk+77FTcN28ikDsyw=,tag:nv9IhocFAVL7qN9eLfhEaw==,type:str]
+sops:
+    age:
+        - recipient: age10f3mclyxqf7ry5vje5ec7s7d8f8fz5xcr5un3npgqfsc4candg8svy08d2
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLZjNQYnFrWCs3NDlrVFhC
+            c0I5T3ZZd3FqdFU2M2s4bDBJSHRZS0RwRkNzCmY3ZllNRFBYUzUvVnhOc3RFQWlj
+            alQyaHpqMUZPUTFFbkdURkYzSUtjQWsKLS0tIHlCTy9pdFRRa2J2Y2tXaVg3dERt
+            YWZ3dWVsYUJ0eDV0MzZSVXhtM1BFS1EKlC4++jzNQYSqBwsOKm7rwVOLrVZdBITE
+            RcMjPX5Um/7DH1CwU/PSOgzF6oPQNkiuhuBx4IDXn73ighCLSrMhfQ==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age162twaalu4sss2schj9hg9g3v8k88u006v9u6q7ler65hqn3mzpwqunj3he
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA5L1JZVCtYR3VNeVdnRElS
+            TFU3MDRiSEtoQVFoem51SXRreW9HVGZqbWpFCmJRcWR2Yjg3emFhdUpja3VScUd5
+            UTBhQ1VFR3J5TXBYbDZ0ZmRyVld4UFEKLS0tIGppQnp5SHpjSC9xZkxzemZyZ09a
+            NzZDUllDMWtCcmZrVGloTlkwb2g0d3cK88aFXTnZ93MvBAGDc+dIis1GqL4KpZqm
+            79Y5RWF+glucR55P1VOK3Kr9bLvSCz1Mxr1HkRGXfpfr5hTw3zHTtA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-06-16T10:46:18Z"
+    mac: ENC[AES256_GCM,data:mBlETXVRfX3nYi5hWvUFWbwuBeP9+5KszwrPHM7NgM5U4dDG7P8z3hVvNFTDWDJ1+71/PMA5BnLj/m0/sbb77ER5YA0ZF29sHCnyGHc8QN16VRKhEh0NwAgLORWjZJ6BpoV+OLZzEnxJnpgHMfF/C18g6UpJnamHFTHOCrCXA6k=,iv:VHcUSyNd3JwrcX+JXBY4/lUfs2KtOC0GC4y8J4cTl3o=,tag:xNQgFu761y5I3bw6zsR73A==,type:str]
+    unencrypted_suffix: _unencrypted
+    version: 3.10.2
