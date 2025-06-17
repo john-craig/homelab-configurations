@@ -207,6 +207,11 @@ in
       wantedBy = [ "multi-user.target" ];
 
       script = ''
+          # Get the PID of the wireguard container
+        wireguard_pid=$(${pkgs.podman}/bin/podman inspect --format '{{.State.Pid}}' torrenting-wireguard)
+
+        # Use nsenter to enter its network namespace and run sshfs
+        ${pkgs.util-linux}/bin/nsenter --net=/proc/$wireguard_pid/ns/net \
         ${pkgs.coreutils}/bin/cat ${passwordFile} | \
         ${pkgs.sshfs}/bin/sshfs \
           -o password_stdin \
