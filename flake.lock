@@ -300,11 +300,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1749556409,
-        "narHash": "sha256-rz4nPFEYOPDAc91UrNKE9KigpwVACDLlaqpY3Kb5XbY=",
+        "lastModified": 1750331965,
+        "narHash": "sha256-CATW+eRDo0+LWJNIHABjTxxlCeqWc5Aro5wJrWnAOq8=",
         "ref": "refs/heads/main",
-        "rev": "0236656fa931055579508441b84c0d767fb833a4",
-        "revCount": 96,
+        "rev": "52fb80bd6597dc242b0a9bbf1030665d17bb38f9",
+        "revCount": 98,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
       },
