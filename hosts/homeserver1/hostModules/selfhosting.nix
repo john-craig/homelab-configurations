@@ -260,7 +260,7 @@
         };
 
         "invidious" = {
-          enable = false;
+          enable = true;
           containers = {
             "invidious" = {
               volumes = {
