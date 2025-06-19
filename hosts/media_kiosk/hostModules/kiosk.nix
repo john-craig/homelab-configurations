@@ -10,7 +10,29 @@
 
     home-manager.users.display.programs.chromium = {
       enable = true;
-      extensions = [ "cjpalhdlnbpafiamejdnhcphjbkeiagm" ]; # ublock origin
+      # extensions = [ "cjpalhdlnbpafiamejdnhcphjbkeiagm" ]; # ublock origin
+      extensions =
+      let
+        createChromiumExtensionFor = browserVersion: { id, sha256, version }:
+          {
+            inherit id;
+            crxPath = builtins.fetchurl {
+              url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${browserVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc";
+              name = "${id}.crx";
+              inherit sha256;
+            };
+            inherit version;
+          };
+        createChromiumExtension = createChromiumExtensionFor (lib.versions.major pkgs.ungoogled-chromium.version);
+      in
+      [
+        (createChromiumExtension {
+          # adblocker for youtube
+          id = "cmedhionkhpnakcndndgjdbohmhepckk";
+          sha256 = "sha256:1qbz56w7rwhcbsb9mg3n3fsgcqz4vxkww38jpcnf67z16zbpk1y5";
+          version = "7.0.4";
+        })
+      ];
       commandLineArgs = [
         "--remote-debugging-port=9222"
         "--remote-allow-origins=*"
