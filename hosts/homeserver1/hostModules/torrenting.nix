@@ -142,7 +142,7 @@ in
 
         "yt-dlp-webui" = {
           volumes = {
-            "/downloads".hostPath = "/srv/media/by_category/audio/music/Uncategorized";
+            "/downloads".hostPath = "/srv/media/by_category/uncategorized";
           };
 
           ports = {
