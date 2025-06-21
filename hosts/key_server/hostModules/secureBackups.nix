@@ -79,7 +79,7 @@ in {
       services.udev.extraRules = lib.strings.concatMapStrings
         (deviceUUID:
           ''
-            ACTION=="add", KERNEL=="sd*", ENV{ID_FS_UUID}=="${deviceUUID}", TAG+="systemd",  ENV{SYSTEMD_WANTS}+="secure-backup.service"
+            ACTION=="add",KERNEL=="sd*",ENV{ID_FS_UUID}=="${deviceUUID}",TAG+="systemd",ENV{SYSTEMD_WANTS}+="secure-backup.service"
           '')
         config.secureBackups.secureDevices;
 
