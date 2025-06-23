@@ -214,7 +214,7 @@
             rm -f "$STALE_LIST" "$FINAL_GEN"
           fi
         done
-
+        
         echo "Cleaning up pidfile"
         rm $PIDFILE
       '');
@@ -405,8 +405,16 @@
         cacherIdentityFile = config.resourceCache.credentials.privateKey;
 
         nix-push-cache = (pkgs.writeShellScriptBin "nix-push-cache" ''
-          LOCAL_CACHE_LIST=/tmp/nix-$(date +%s)-cache-list
+          LOCAL_CACHE_LIST_CURR=/tmp/pacman-$(date +%s)-cache-list-curr
+          LOCAL_CACHE_LIST_PREV=/tmp/pacman-$(date +%s)-cache-list-prev
           REMOTE_CACHE_DIR=/var/lib/dustman/nix/hosts/$(${pkgs.nettools}/bin/hostname)
+
+          if ${pkgs.openssh}/bin/ssh -q -o BatchMode=yes -o ConnectTimeout=5 -i ${cacherIdentityFile} cacher@${cacheServer} true; then
+            :
+          else
+            echo "Cacher server is unreachable"
+            exit 0
+          fi
 
           NIX_SSHOPTS="-i ${cacherIdentityFile}" \
           ${pkgs.nix}/bin/nix copy --substitute-on-destination \
@@ -414,16 +422,24 @@
             --to https://${cacheURL} \
             /run/current-system
         
-          ${pkgs.nix}/bin/nix path-info --recursive /run/current-system > $LOCAL_CACHE_LIST
+          ${pkgs.nix}/bin/nix path-info --recursive /run/current-system > $LOCAL_CACHE_LIST_CURR
           ${pkgs.openssh}/bin/ssh -i ${cacherIdentityFile} \
             cacher@${cacheServer} \
             "mkdir -p $REMOTE_CACHE_DIR"
-          ${pkgs.openssh}/bin/scp -i ${cacherIdentityFile} \
-            $LOCAL_CACHE_LIST \
+          ${pkgs.openssh}/bin/scp -q -i ${cacherIdentityFile} \
+            $LOCAL_CACHE_LIST_CURR \
             cacher@${cacheServer}:$REMOTE_CACHE_DIR/curr
-        
-          rm $LOCAL_CACHE_LIST
+          ${pkgs.openssh}/bin/scp -q -i ${cacherIdentityFile} \
+            cacher@${cacheServer}:$REMOTE_CACHE_DIR/prev \
+            $LOCAL_CACHE_LIST_PREV
+
           ${pkgs.openssh}/bin/ssh -i ${cacherIdentityFile} cacher@${cacheServer} "nohup dustman 2>&1 | logger --tag 'dustman'"
+
+          NUM_CHANGED=$(${pkgs.diffutils}/bin/diff -y --suppress-common-lines $LOCAL_CACHE_LIST_CURR $LOCAL_CACHE_LIST_PREV | ${pkgs.coreutils}/bin/wc -l)
+          echo "Number of changed packages: $NUM_CHANGED"
+          
+          rm -f $LOCAL_CACHE_LIST_CURR
+          rm -f $LOCAL_CACHE_LIST_PREV
         '');
       in
       lib.mkIf
