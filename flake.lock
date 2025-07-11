@@ -83,11 +83,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1746243165,
-        "narHash": "sha256-DQycVmlyLQNLjLJ/FzpokVmbxGQ8HjQQ4zN4nyq2vII=",
+        "lastModified": 1750604619,
+        "narHash": "sha256-wNMm3ioA7q83UBDBQDew47bbjyvhOIcUcpjRFq3kHBY=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c0962eeeabfb8127713f859ec8a5f0e86dead0f2",
+        "rev": "39b7903eaba5579046f7069b9d85d3ef4f2f972c",
         "type": "github"
       },
       "original": {
@@ -187,11 +187,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1746206129,
-        "narHash": "sha256-JA4DynBKhY7t4DdJZTuomRLAiXFDUgCGGwxgt+XGiik=",
+        "lastModified": 1750386251,
+        "narHash": "sha256-1ovgdmuDYVo5OUC5NzdF+V4zx2uT8RtsgZahxidBTyw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9a7caecf30a0494c88b7daeeed29244cd9a52e7d",
+        "rev": "076e8c6678d8c54204abcb4b1b14c366835a58bb",
         "type": "github"
       },
       "original": {
@@ -300,11 +300,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1750331965,
-        "narHash": "sha256-CATW+eRDo0+LWJNIHABjTxxlCeqWc5Aro5wJrWnAOq8=",
+        "lastModified": 1752267369,
+        "narHash": "sha256-EV1nNN1bV/ZHAAC8TXw17lab4jgWEZTHacBQaNnH89I=",
         "ref": "refs/heads/main",
-        "rev": "52fb80bd6597dc242b0a9bbf1030665d17bb38f9",
-        "revCount": 98,
+        "rev": "65cbd710b944efe9b19d4986bc155d02af97fcd4",
+        "revCount": 102,
         "type": "git",
         "url": "https://gitea.chiliahedron.wtf/chiliahedron/user-environment-configurations"
       },
