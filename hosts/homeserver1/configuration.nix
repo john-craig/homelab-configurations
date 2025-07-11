@@ -16,6 +16,7 @@
       ./hostModules/apcupsd.nix
       ./hostModules/homeAssistant.nix
       ./hostModules/torrenting.nix
+      ./hostModules/feedTheBeast.nix
 
       # ./hostModules/networking/tailscale.nix
       ./hostModules/networking/dns.nix

@@ -8,6 +8,11 @@ let
   homeserver1Pubkey = "FOGqroNciRPSDqptv/VVNz+ESr4UvmB8djEhK87mgGc=";
   pixel4aPubkey = "sK4dhOJbASYTpOkxB3I3Vzx1bmUPKvvremXr+t6f6CU=";
   laptopPubkey = "iLXcO6WzweMsIRzI54/diOHJXGlsDXpubXjIDif4Z2U=";
+
+  profileLag = {
+    pubkey = "5q3Ke4VR/+q2ETqb1r428W51/LV+pnpMHgljzNSmkW0=";
+    ipAddress = "10.100.0.56";
+  };
 in
 {
   networking.firewall.allowedUDPPorts = [ wgPort ];
@@ -29,6 +34,10 @@ in
       {
         publicKey = laptopPubkey;
         allowedIPs = [ "10.100.0.33/32" ];
+      }
+      {
+        publicKey = profileLag.pubkey;
+        allowedIPs = [ "${profileLag.ipAddress}/32" ];
       }
     ];
   };
